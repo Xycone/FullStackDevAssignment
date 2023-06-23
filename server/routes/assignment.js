@@ -149,18 +149,4 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
-
-
-
-// Joseph's part
-
-
-
-
-// Raye's part
-
-
-
-
-// Anqi's part
 module.exports = router;
