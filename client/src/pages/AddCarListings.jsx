@@ -38,7 +38,7 @@ function AddCarListings() {
             data.model = data.model.trim();
             data.range = Number(data.range);
             data.price = Number(data.price);
-            http.post("/assignment", data).then((res) => {
+            http.post("/cars", data).then((res) => {
                 console.log(res.data);
                 navigate("/cars");
             });

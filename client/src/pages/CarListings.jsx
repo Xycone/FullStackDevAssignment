@@ -19,13 +19,13 @@ function CarListings() {
   };
 
   const getCars = () => {
-    http.get('/assignment').then((res) => {
+    http.get('/cars').then((res) => {
       setAssignmentList(res.data);
     });
   };
 
   const searchCars = () => {
-    http.get(`/assignment?search=${search}`).then((res) => {
+    http.get(`/cars?search=${search}`).then((res) => {
       setAssignmentList(res.data);
     });
   };
@@ -50,7 +50,7 @@ function CarListings() {
   };
 
   const deleteCars = (id) => {
-    http.delete(`/assignment/${id}`).then((res) => {
+    http.delete(`/cars/${id}`).then((res) => {
       console.log(res.data);
       navigate(0);
     });

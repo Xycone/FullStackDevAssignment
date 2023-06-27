@@ -19,7 +19,7 @@ function EditCarListings() {
     });
 
     useEffect(() => {
-        http.get(`/assignment/${id}`).then((res) => {
+        http.get(`/cars/${id}`).then((res) => {
             setCars(res.data);
         });
         //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +51,7 @@ function EditCarListings() {
             data.model = data.model.trim();
             data.range = Number(data.range);
             data.price = Number(data.price);
-            http.put(`/assignment/${id}`, data).then((res) => {
+            http.put(`/cars/${id}`, data).then((res) => {
                 console.log(res.data);
                 navigate("/cars");
             });

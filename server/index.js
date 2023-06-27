@@ -11,8 +11,8 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-const assignmentRoute = require('./routes/assignment');
-app.use("/assignment", assignmentRoute);
+const assignmentRoute = require('./routes/cars');
+app.use("/cars", assignmentRoute);
 
 require('dotenv').config();
 const db = require('./models');
