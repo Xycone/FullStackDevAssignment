@@ -1,5 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
     const Cars = sequelize.define("Cars", {
+        imageFile: {
+            type: DataTypes.STRING
+        },
         make: {
             type: DataTypes.STRING,
             allowNull: false

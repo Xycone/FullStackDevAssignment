@@ -4,6 +4,8 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static('public'));
 
 // Simple Route
 app.get("/", (req, res) => {
@@ -13,6 +15,8 @@ app.get("/", (req, res) => {
 // Routes
 const assignmentRoute = require('./routes/cars');
 app.use("/cars", assignmentRoute);
+const fileRoute = require('./routes/file');
+app.use("/file", fileRoute);
 
 require('dotenv').config();
 const db = require('./models');

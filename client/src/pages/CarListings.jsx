@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
 import http from '../http';
-import { AccessTime, Search, Clear, Edit, Delete, AddCircle } from '@mui/icons-material';
+import { AccessTime, Search, Clear, Edit, Delete, Preview } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import global from '../global';
 import { Link } from 'react-router-dom';
@@ -83,9 +83,9 @@ function CarListings() {
 
         <Box sx={{ flexGrow: 1 }} />
         <Link to="/addcars" style={{ textDecoration: 'none' }}>
-          <IconButton color="primary" sx={{ padding: '4px' }}>
-            <AddCircle />
-          </IconButton>
+          <Button variant='contained'>
+            Add Listing
+          </Button>
         </Link>
       </Box>
 
@@ -101,6 +101,7 @@ function CarListings() {
                 <TableCell align="center">Price/day</TableCell>
                 <TableCell align="center">Rental Status</TableCell>
                 <TableCell align="center">Added On</TableCell>
+                <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -154,6 +155,13 @@ function CarListings() {
                         </Button>
                       </DialogActions>
                     </Dialog>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/viewcars/${cars.id}`}>
+                      <IconButton color="primary" sx={{ padding: '4px' }}>
+                        <Preview />
+                      </IconButton>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
