@@ -103,7 +103,6 @@ function CarListings() {
                 <TableCell align="center">Added On</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -155,13 +154,6 @@ function CarListings() {
                         </Button>
                       </DialogActions>
                     </Dialog>
-                  </TableCell>
-                  <TableCell>
-                    <Link to={`/viewcars/${cars.id}`}>
-                      <IconButton color="primary" sx={{ padding: '4px' }}>
-                        <Preview />
-                      </IconButton>
-                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

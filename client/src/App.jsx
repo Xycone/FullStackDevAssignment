@@ -7,7 +7,6 @@ from 'react-router-dom';
 import CarListings from './pages/CarListings';
 import AddCarListings from './pages/AddCarListings';
 import EditCarListings from './pages/EditCarListings';
-import ViewCarListings from './pages/ViewCarListings';
 import Login from './pages/Login';
 
 function App() {
@@ -57,7 +56,6 @@ function App() {
           <Route path={"/cars"} element={<CarListings />} />
           <Route path={"/addcars"} element={<AddCarListings /> }/>
           <Route path={"/editcars/:id"} element={<EditCarListings />} />
-          <Route path={"/viewcars/:id"} element={<ViewCarListings />} />
           <Route path={"/login"} element={<Login />} />
         </Routes>
       </Container>
