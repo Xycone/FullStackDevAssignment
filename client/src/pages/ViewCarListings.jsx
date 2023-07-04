@@ -77,10 +77,10 @@ function ViewCarListings() {
                                         )
                                     }
                                     <CardContent>
-                                        <Typography variant="h6" sx={{ mb: 1 }}>
+                                        <Typography variant="h5" sx={{ mb: 1 }}>
                                             {cars.make} {cars.model}
                                         </Typography>
-                                        <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+                                        <Typography variant="h6" sx={{ whiteSpace: 'pre-wrap'}}>
                                             S${cars.price}/day
                                         </Typography>
                                     </CardContent>
