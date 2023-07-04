@@ -11,6 +11,7 @@ import ViewCarListings from './pages/ViewCarListings';
 import Login from './pages/Login';
 import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
+import Payment from './pages/Payment';
 
 function App() {
   
@@ -53,6 +54,11 @@ function App() {
                 Contact Us
               </Typography>
             </Link>
+            <Link to="/payment" >
+              <Typography>
+                Payment
+              </Typography>
+            </Link>
             <Box sx={{ flexGrow: 1 }}></Box>
               {user && (
                 <>
@@ -78,6 +84,7 @@ function App() {
           <Route path={"/login"} element={<Login />} />
           <Route path={"/feedback"} element={<AllFeedback />}/>
           <Route path={"/contactus"} element={<ContactUs />}/>
+          <Route path={"/payment"} element={<Payment />}/>
         </Routes>
       </Container>
     </Router>
