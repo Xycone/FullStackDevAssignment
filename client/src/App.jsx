@@ -7,6 +7,7 @@ from 'react-router-dom';
 import CarListings from './pages/CarListings';
 import AddCarListings from './pages/AddCarListings';
 import EditCarListings from './pages/EditCarListings';
+import ViewCarListings from './pages/ViewCarListings';
 import Login from './pages/Login';
 
 function App() {
@@ -32,7 +33,12 @@ function App() {
             </Link>
             <Link to="/cars" >
               <Typography>
-                Car Listings
+                Car Listings(Admin)
+              </Typography>
+            </Link>
+            <Link to="/viewcars" >
+              <Typography>
+                Car Listing(User)
               </Typography>
             </Link>
             <Box sx={{ flexGrow: 1 }}></Box>
@@ -56,6 +62,7 @@ function App() {
           <Route path={"/cars"} element={<CarListings />} />
           <Route path={"/addcars"} element={<AddCarListings /> }/>
           <Route path={"/editcars/:id"} element={<EditCarListings />} />
+          <Route path={"/viewcars"} element={<ViewCarListings />} />
           <Route path={"/login"} element={<Login />} />
         </Routes>
       </Container>
