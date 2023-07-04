@@ -8,6 +8,8 @@ import CarListings from './pages/CarListings';
 import AddCarListings from './pages/AddCarListings';
 import EditCarListings from './pages/EditCarListings';
 import Login from './pages/Login';
+import AllFeedback from './pages/AllFeedback';
+import ContactUs from './pages/ContactUs';
 
 function App() {
   
@@ -35,6 +37,16 @@ function App() {
                 Car Listings
               </Typography>
             </Link>
+            <Link to="/feedback" >
+              <Typography>
+                All feedback
+              </Typography>
+            </Link>
+            <Link to="/contactus" >
+              <Typography>
+                Contact Us
+              </Typography>
+            </Link>
             <Box sx={{ flexGrow: 1 }}></Box>
               {user && (
                 <>
@@ -57,6 +69,8 @@ function App() {
           <Route path={"/addcars"} element={<AddCarListings /> }/>
           <Route path={"/editcars/:id"} element={<EditCarListings />} />
           <Route path={"/login"} element={<Login />} />
+          <Route path={"/feedback"} element={<AllFeedback />}/>
+          <Route path={"/contactus"} element={<ContactUs />}/>
         </Routes>
       </Container>
     </Router>

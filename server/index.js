@@ -13,6 +13,8 @@ app.get("/", (req, res) => {
 // Routes
 const assignmentRoute = require('./routes/cars');
 app.use("/cars", assignmentRoute);
+const feedbackRoute = require('./routes/feedback');
+app.use("/feedback", feedbackRoute);
 
 require('dotenv').config();
 const db = require('./models');
