@@ -62,7 +62,7 @@ function ViewCarListings() {
                     <Clear />
                 </IconButton>
             </Box>
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
                 {
                     assignmentList.map((cars, i) => {
                         return (
@@ -76,11 +76,11 @@ function ViewCarListings() {
                                             </AspectRatio>
                                         )
                                     }
-                                    <CardContent>
-                                        <Typography variant="h6" sx={{ mb: 1 }}>
+                                    <CardContent textAlign="center">
+                                        <Typography variant="h5" sx={{ mb: 1 }} textAlign="center">
                                             {cars.make} {cars.model}
                                         </Typography>
-                                        <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+                                        <Typography varaint="h6" sx={{ whiteSpace: 'pre-wrap' }} textAlign="center">
                                             S${cars.price}/day
                                         </Typography>
                                     </CardContent>
