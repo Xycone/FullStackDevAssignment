@@ -117,6 +117,11 @@ function AddCarListings() {
                             error={formik.touched.price && Boolean(formik.errors.price)}
                             helperText={formik.touched.price && formik.errors.price}
                         />
+                        <Box sx={{ mt: 2 }}>
+                            <Button variant="contained" type="submit">
+                                Create Listing
+                            </Button>
+                        </Box>
                     </Grid>
                     <Grid item xs={12} md={6} lg={4}>
                         <Box sx={{ textAlign: 'center', mt: 2 }} >
@@ -135,11 +140,6 @@ function AddCarListings() {
                             }
                         </Box>
                     </Grid>
-                    <Box sx={{ mt: 2 }}>
-                        <Button variant="contained" type="submit">
-                            Create Listing
-                        </Button>
-                    </Box>
                 </Grid>
             </Box>
             <ToastContainer />
