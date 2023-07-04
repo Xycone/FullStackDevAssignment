@@ -53,7 +53,6 @@ function UpdateUser() {
     },
   });
   const deleteUser = () => {
-    const navigate = useNavigate();
     http.delete(`/user/${id}`).then((res) => {
       console.log(res.data);
       navigate("/user");
