@@ -32,7 +32,6 @@ router.post("/", validateToken, async (req, res) => {
 
     data.make = data.make.trim();
     data.model = data.model.trim();
-    data.userId = req.user.id;
     let result = await Cars.create(data);
     res.json(result);
 });
