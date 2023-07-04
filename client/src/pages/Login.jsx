@@ -44,11 +44,12 @@ function Login() {
           localStorage.setItem("accessToken", res.data.accessToken);
           setUser(res.data.user);
           navigate("/");
+          window.location.reload();
         })
         .catch(function (err) {
           //toast.error(`${err.response.data.message}`);
           console.log("onSubmit", err)
-          toast.error(err.message);
+          toast.error(`${err.response.data.message}`);
         });
     },
   });

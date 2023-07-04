@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { Cars, Sequelize } = require('../models');
 const yup = require("yup");
+const { validateToken } = require('../middlewares/auth');
 
 
 
 // Sean's part
 
 // Create Car Listing
-router.post("/", async (req, res) => {
+router.post("/", validateToken, async (req, res) => {
     let data = req.body;
 
     // Validate request body
@@ -31,6 +32,7 @@ router.post("/", async (req, res) => {
 
     data.make = data.make.trim();
     data.model = data.model.trim();
+    data.userId = req.user.id;
     let result = await Cars.create(data);
     res.json(result);
 });
