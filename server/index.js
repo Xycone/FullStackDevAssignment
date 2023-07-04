@@ -19,6 +19,10 @@ const discountroute = require('./routes/discounts');
 app.use("/discounts", discountroute);
 const fileRoute = require('./routes/file');
 app.use("/file", fileRoute);
+const feedbackRoute = require('./routes/feedback');
+app.use("/feedback", feedbackRoute);
+const userRoute = require('./routes/user');
+app.use("/user", userRoute);
 
 require('dotenv').config();
 const db = require('./models');

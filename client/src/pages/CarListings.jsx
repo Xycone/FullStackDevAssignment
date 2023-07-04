@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
 import http from '../http';
-import { AccessTime, Search, Clear, Edit, Delete, Preview } from '@mui/icons-material';
+import { AccessTime, Search, Clear, Edit, Delete } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import global from '../global';
 import { Link } from 'react-router-dom';
@@ -103,7 +103,6 @@ function CarListings() {
                 <TableCell align="center">Added On</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -155,13 +154,6 @@ function CarListings() {
                         </Button>
                       </DialogActions>
                     </Dialog>
-                  </TableCell>
-                  <TableCell>
-                    <Link to={`/viewcars/${cars.id}`}>
-                      <IconButton color="primary" sx={{ padding: '4px' }}>
-                        <Preview />
-                      </IconButton>
-                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
