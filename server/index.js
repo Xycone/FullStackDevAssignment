@@ -15,6 +15,8 @@ app.get("/", (req, res) => {
 // Routes
 const assignmentRoute = require('./routes/cars');
 app.use("/cars", assignmentRoute);
+const discountroute = require('./routes/discounts');
+app.use("/discounts", discountroute);
 const fileRoute = require('./routes/file');
 app.use("/file", fileRoute);
 
