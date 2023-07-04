@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
 import http from '../http';
-import { AccessTime, Search, Clear, Edit, Delete, AddCircle } from '@mui/icons-material';
+import { AccessTime, Search, Clear, Edit, Delete } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import global from '../global';
 import { Link } from 'react-router-dom';
@@ -19,13 +19,13 @@ function CarListings() {
   };
 
   const getCars = () => {
-    http.get('/assignment').then((res) => {
+    http.get('/cars').then((res) => {
       setAssignmentList(res.data);
     });
   };
 
   const searchCars = () => {
-    http.get(`/assignment?search=${search}`).then((res) => {
+    http.get(`/cars?search=${search}`).then((res) => {
       setAssignmentList(res.data);
     });
   };
@@ -50,7 +50,7 @@ function CarListings() {
   };
 
   const deleteCars = (id) => {
-    http.delete(`/assignment/${id}`).then((res) => {
+    http.delete(`/cars/${id}`).then((res) => {
       console.log(res.data);
       navigate(0);
     });
@@ -83,9 +83,9 @@ function CarListings() {
 
         <Box sx={{ flexGrow: 1 }} />
         <Link to="/addcars" style={{ textDecoration: 'none' }}>
-          <IconButton color="primary" sx={{ padding: '4px' }}>
-            <AddCircle />
-          </IconButton>
+          <Button variant='contained'>
+            Add Listing
+          </Button>
         </Link>
       </Box>
 
