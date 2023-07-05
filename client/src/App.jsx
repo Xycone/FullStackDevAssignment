@@ -23,6 +23,14 @@ import ContactUs from './pages/ContactUs';
 import Payment from './pages/Payment';
 import ReportGen from './pages/ReportGeneration';
 
+// theme
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
+const theme = createTheme({
+  palette: {
+    primary: green,
+  },
+});
 
 function App() {
 
@@ -41,46 +49,52 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <AppBar position="static" className='AppBar'>
-        <Container>
-          <Toolbar disableGutters={true}>
-            <Link to="/">
-              <Typography variant="h6" component="div">
-                Learning
-              </Typography>
-            </Link>
-            <Link to="/cars" >
-              <Typography>
-                Car Listings(Admin)
-              </Typography>
-            </Link>
-            <Link to="/reportgen" >
-              <Typography>
-                Report Generation
-              </Typography>
-            </Link>
-            <Link to="/feedback" >
-              <Typography>
-                All feedback
-              </Typography>
-            </Link>
-            <Link to="/contactus" >
-              <Typography>
-                Contact Us
-              </Typography>
-            </Link>
-            <Link to="/payment" >
-              <Typography>
-                Payment
-              </Typography>
-            </Link>
-            <Box sx={{ flexGrow: 1 }}></Box>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <AppBar position="static" className='AppBar'>
+          <Container>
+            <Toolbar disableGutters={true}>
+              <Link to="/">
+                <Typography variant="h6" component="div">
+                  Learning
+                </Typography>
+              </Link>
+              <Link to="/cars" >
+                <Typography>
+                  Car Listings(Admin)
+                </Typography>
+              </Link>
+              <Link to="/viewcars" >
+                <Typography>
+                  Car Listings(User)
+                </Typography>
+              </Link>
+              <Link to="/reportgen" >
+                <Typography>
+                  Report Generation
+                </Typography>
+              </Link>
+              <Link to="/feedback" >
+                <Typography>
+                  All feedback
+                </Typography>
+              </Link>
+              <Link to="/contactus" >
+                <Typography>
+                  Contact Us
+                </Typography>
+              </Link>
+              <Link to="/payment" >
+                <Typography>
+                  Payment
+                </Typography>
+              </Link>
+              <Box sx={{ flexGrow: 1 }}></Box>
               {user && (
                 <>
                   <Typography>{user.name}</Typography>
                   <Typography>
-                    <Button style={{color: "white", marginLeft: "20px"}}onClick={logout}>Logout</Button>
+                    <Button style={{ color: "white", marginLeft: "20px" }} onClick={logout}>Logout</Button>
                   </Typography>
                 </>
               )
@@ -90,21 +104,22 @@ function App() {
                   <Link to="/login" ><Typography>Login</Typography></Link>
                 </>
               )}
-          </Toolbar>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <Container>
+          <Routes>
+            <Route path={"/cars"} element={<CarListings />} />
+            <Route path={"/addcars"} element={<AddCarListings />} />
+            <Route path={"/editcars/:id"} element={<EditCarListings />} />
+            <Route path={"/viewcars"} element={<ViewCarListings />} />
+            <Route path={"/login"} element={<Login />} />
+            <Route path={"/feedback"} element={<AllFeedback />} />
+            <Route path={"/contactus"} element={<ContactUs />} />
+          </Routes>
         </Container>
-      </AppBar>
-      <Container>
-        <Routes>
-          <Route path={"/cars"} element={<CarListings />} />
-          <Route path={"/addcars"} element={<AddCarListings /> }/>
-          <Route path={"/editcars/:id"} element={<EditCarListings />} />
-          <Route path={"/viewcars"} element={<ViewCarListings />} />
-          <Route path={"/login"} element={<Login />} />
-          <Route path={"/feedback"} element={<AllFeedback />}/>
-          <Route path={"/contactus"} element={<ContactUs />}/>
-        </Routes>
-      </Container>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 

@@ -52,7 +52,7 @@ function CarListings() {
   const deleteCars = (id) => {
     http.delete(`/cars/${id}`).then((res) => {
       console.log(res.data);
-      navigate(0);
+      window.location.reload();
     });
   }
 
