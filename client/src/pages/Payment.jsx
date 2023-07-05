@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import http from '../http';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AspectRatio from '@mui/joy/AspectRatio';
 import Datetime from 'react-datetime';
 
 function Payment() {
@@ -18,8 +17,7 @@ function Payment() {
             price: "",
             cardno: "",
             cvc: "",
-            expirydate: "",
-            date: Datetime.date.now()
+            expirydate: ""
         },
 
 
@@ -56,7 +54,7 @@ function Payment() {
             data.make = data.make.trim();
             data.model = data.model.trim();
             data.price = Number(data.price);
-            data.date = Datetime.date.now();
+            data.date = data.date;
             http.post("/payment", data).then((res) => {
                 console.log(res.data);
                 navigate("/payment");
