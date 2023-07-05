@@ -20,8 +20,8 @@ import UserTable from './pages/UserTable';
 import UpdateUser from './pages/UpdateUser';
 import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
-import Payment from './pages/Payment';
-import ReportGen from './pages/ReportGeneration';
+import Payment from './pages/payment';
+import AddPayment from './pages/AddPayment';
 
 // theme
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -64,14 +64,14 @@ function App() {
                   Car Listings(Admin)
                 </Typography>
               </Link>
-              <Link to="/viewcars" >
+              <Link to="/payment" >
                 <Typography>
-                  Car Listings(User)
+                  Report
                 </Typography>
               </Link>
-              <Link to="/reportgen" >
+              <Link to="/apayment" >
                 <Typography>
-                  Report Generation
+                  Payment
                 </Typography>
               </Link>
               <Link to="/feedback" >
@@ -116,6 +116,9 @@ function App() {
             <Route path={"/login"} element={<Login />} />
             <Route path={"/feedback"} element={<AllFeedback />} />
             <Route path={"/contactus"} element={<ContactUs />} />
+            <Route path={"/apayment"} element={<AddPayment />} />
+            <Route path={"/payment"} element={<Payment />} />
+            <Route path={"/register"} element={<Register />} />
           </Routes>
         </Container>
       </Router>
