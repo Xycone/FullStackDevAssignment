@@ -122,11 +122,11 @@ router.put("/update/:id", async (req, res) => {
     return;
   }
   // Check request user id
-  // let userId = req.user.id;
-  // if (user.userId != userId) {
-  //   res.sendStatus(403);
-  //   return;
-  // }
+  let userId = req.user.id;
+  if (user.userId != userId) {
+    res.sendStatus(403);
+    return;
+  }
   if (!user) {
     res.sendStatus(404);
     return;
