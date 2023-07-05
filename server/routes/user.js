@@ -145,16 +145,16 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
-// router.get("/auth", validateToken, (req, res) => {
-//   let userInfo = {
-//     id: req.user.id,
-//     email: req.user.email,
-//     name: req.user.name,
-//   };
-//   res.json({
-//     user: userInfo,
-//   });
-// });
+router.get("/auth", validateToken, (req, res) => {
+  let userInfo = {
+    id: req.user.id,
+    email: req.user.email,
+    name: req.user.name,
+  };
+  res.json({
+    user: userInfo,
+  });
+});
 
 router.delete("/:id", async (req, res) => {
   let id = req.params.id;

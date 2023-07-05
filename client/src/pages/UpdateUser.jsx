@@ -12,6 +12,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 function UpdateUser() {
   const navigate = useNavigate();

@@ -15,17 +15,11 @@ import UserTable from './pages/UserTable';
 import UpdateUser from './pages/UpdateUser';
 import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
-
 function App() {
   
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // if (localStorage.getItem("accessToken")) {
-    //   http.get('/user/auth').then((res) => {
-    //     setUser(res.data.user);
-    //     });
-    // }
   }, []);
   const logout = () => {
     localStorage.clear();

@@ -1,5 +1,21 @@
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('./fonts/Comfortaa-Regular.ttf') format('truetype');
+  /* Add additional src lines for other font weights if necessary */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* If you have other font weights and styles, add them similarly using different font-family names */
+@font-face {
+  font-family: 'Comfortaa Bold';
+  src: url('../fonts/Comfortaa-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family:'Courier New', Courier, monospace;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light;
