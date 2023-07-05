@@ -18,9 +18,10 @@ function Payment() {
             price: "",
             cardno: "",
             cvc: "",
-            expirydate: ""
+            expirydate: "",
+            date: Datetime.date.now()
         },
-    
+
 
         validationSchema: yup.object().shape({
             make: yup.string().trim()

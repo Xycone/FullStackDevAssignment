@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
 import Payment from './pages/Payment';
+import ReportGen from './pages/ReportGeneration';
 
 function App() {
   
@@ -39,9 +40,9 @@ function App() {
                 Car Listings(Admin)
               </Typography>
             </Link>
-            <Link to="/viewcars" >
+            <Link to="/reportgen" >
               <Typography>
-                Car Listing(User)
+                Report Generation
               </Typography>
             </Link>
             <Link to="/feedback" >
@@ -85,6 +86,7 @@ function App() {
           <Route path={"/feedback"} element={<AllFeedback />}/>
           <Route path={"/contactus"} element={<ContactUs />}/>
           <Route path={"/payment"} element={<Payment />}/>
+          <Route path={"/reportgen"} element={<ReportGen />}/>
         </Routes>
       </Container>
     </Router>
