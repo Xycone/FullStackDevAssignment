@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     });
+    Feedback.associate = (models) => {
+        Feedback.belongsTo(models.User, {
+            foreignKey: "userId",
+            as: 'user'
+        });
+    };
 
     return Feedback;
 }

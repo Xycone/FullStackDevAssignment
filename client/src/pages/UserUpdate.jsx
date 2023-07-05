@@ -49,14 +49,14 @@ function UpdateUser() {
       data.email = data.email.trim();
       http.put(`/user/update/${id}`, data).then((res) => {
         console.log(res.data);
-        navigate("/usertable");
+        navigate("/userprofile");
       });
     },
   });
   const deleteUser = () => {
     http.delete(`/user/${id}`).then((res) => {
       console.log(res.data);
-      navigate("/usertable");
+      navigate("/");
     });
   };
   const [open, setOpen] = useState(false);
@@ -112,7 +112,7 @@ function UpdateUser() {
         <DialogTitle>Delete Tutorial</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this User?
+            Are you sure you want to delete your account?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -128,3 +128,4 @@ function UpdateUser() {
   );
 }
 export default UpdateUser;
+

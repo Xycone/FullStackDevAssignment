@@ -44,11 +44,12 @@ function Login() {
           localStorage.setItem("accessToken", res.data.accessToken);
           setUser(res.data.user);
           navigate("/");
+          window.location.reload();
         })
         .catch(function (err) {
           //toast.error(`${err.response.data.message}`);
           console.log("onSubmit", err)
-          toast.error(err.message);
+          toast.error(`${err.response.data.message}`);
         });
     },
   });
@@ -93,16 +94,23 @@ function Login() {
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
+        <Link to="/enteremail">
+          <Typography sx={{ fontSize: 20}}>
+            Forgot password?
+          </Typography>
+        </Link>
         <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
           Login
         </Button>
-        <Link to="/register">
-          <Typography variant="h6">
+      </Box>
+      <ToastContainer />
+      <Box sx={{marginTop: "30vh"}}>
+      <Link to="/register">
+          <Typography sx={{ fontSize: 20}}>
             Don't have an account? Sign up now!
           </Typography>
         </Link>
       </Box>
-      <ToastContainer />
     </Box>
   );
 }

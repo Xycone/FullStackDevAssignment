@@ -1,24 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { Cars, Sequelize } = require('../models');
+const { Payment, Sequelize } = require('../models');
 const yup = require("yup");
-const { validateToken } = require('../middlewares/auth');
 
 
 
-// Sean's part
+// Joseph's part
 
 // Create Car Listing
-router.post("/", validateToken, async (req, res) => {
+router.post("/", async (req, res) => {
     let data = req.body;
 
     // Validate request body
     let validationSchema = yup.object().shape({
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
-        range: yup.number().min(0).required(),
-        price: yup.number().min(0.01).required(),
-        status: yup.boolean().required()
+        price: yup.number().min(0.01).required()
     });
     try {
         await validationSchema.validate(data,
@@ -32,15 +29,14 @@ router.post("/", validateToken, async (req, res) => {
 
     data.make = data.make.trim();
     data.model = data.model.trim();
-    data.userId = req.user.id;
-    let result = await Cars.create(data);
+    let result = await Payment.create(data);
     res.json(result);
 });
 
 
 // View Car Listing
 //router.get("/", async (req, res) => {
-//    let list = await Cars.findAll({
+//    let list = await Payment.findAll({
 //        order: [['createdAt', 'ASC']]
 //    });
 //    res.json(list);
@@ -58,7 +54,7 @@ router.get("/", async (req, res) => {
         ];
     }
 
-    let list = await Cars.findAll({
+    let list = await Payment.findAll({
         where: condition,
         order: [['createdAt', 'ASC']]
     });
@@ -69,13 +65,13 @@ router.get("/", async (req, res) => {
 // View Car Listing By ID
 router.get("/:id", async (req, res) => {
     let id = req.params.id;
-    let cars = await Cars.findByPk(id);
+    let payment = await Payment.findByPk(id);
     // Check id not found
-    if (!cars) {
+    if (!payment) {
         res.sendStatus(404);
         return;
     }
-    res.json(cars);
+    res.json(payment);
 });
 
 
@@ -83,8 +79,8 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
     let id = req.params.id;
     // Check id not found 
-    let cars = await Cars.findByPk(id);
-    if (!cars) {
+    let payment = await Payment.findByPk(id);
+    if (!payment) {
         res.sendStatus(404);
         return;
     }
@@ -110,7 +106,7 @@ router.put("/:id", async (req, res) => {
 
     data.make = data.make.trim();
     data.model = data.model.trim();
-    let num = await Cars.update(data, {
+    let num = await Payment.update(data, {
         where: { id: id }
     });
     if (num == 1) {
@@ -120,7 +116,7 @@ router.put("/:id", async (req, res) => {
     }
     else {
         res.status(400).json({
-            message: `Cannot update car listing with id ${id}.`
+            message: `Cannot update payment listing with id ${id}.`
         });
     }
 });
@@ -130,13 +126,13 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     let id = req.params.id;
     // Check id not found
-    let cars = await Cars.findByPk(id);
-    if (!cars) {
+    let payment = await Payment.findByPk(id);
+    if (!payment) {
         res.sendStatus(404);
         return;
     }
     
-    let num = await Cars.destroy({
+    let num = await Payment.destroy({
         where: { id: id }
     })
     if (num == 1) {

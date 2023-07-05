@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         range: {
-            type: DataTypes.DECIMAL(20,1),
+            type: DataTypes.DECIMAL(20, 1),
             allowNull: false
         },
         price: {
-            type: DataTypes.DECIMAL(20,2),
+            type: DataTypes.DECIMAL(20, 2),
             allowNull: false
         },
         status: {
@@ -24,5 +24,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     });
+    Cars.associate = (models) => {
+        Cars.belongsTo(models.User, {
+            foreignKey: "userId",
+            as: 'user'
+        });
+    };
     return Cars;
 }

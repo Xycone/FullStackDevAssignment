@@ -1,22 +1,7 @@
-@font-face {
-  font-family: 'Comfortaa';
-  src: url('./fonts/Comfortaa-Regular.ttf') format('truetype');
-  /* Add additional src lines for other font weights if necessary */
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* If you have other font weights and styles, add them similarly using different font-family names */
-@font-face {
-  font-family: 'Comfortaa Bold';
-  src: url('../fonts/Comfortaa-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
 
 :root {
-  font-family:'Courier New', Courier, monospace;
-  line-height: 1.5;
+  line-height: 2;
   font-weight: 400;
   color-scheme: light;
   font-synthesis: none;
@@ -24,6 +9,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  margin-left: 0% !important;
 }
 
 body {

@@ -251,7 +251,7 @@ function AllFeedback() {
                       <DialogTitle>Delete Listing</DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          Are you sure you want to delete this listing?
+                          Are you sure you want to delete the feedback?
                         </DialogContentText>
                       </DialogContent>
                       <DialogActions>

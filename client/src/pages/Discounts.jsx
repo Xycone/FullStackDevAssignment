@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
 import http from '../http';
-import { AccessTime, Search, Clear, Edit, Delete } from '@mui/icons-material';
+import { AccessTime, Search, Clear, Edit, Delete, Preview } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import global from '../global';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 
 
-function CarListings() {
+function Discounts() {
   const navigate = useNavigate();
   const [assignmentList, setAssignmentList] = useState([]);
   const [search, setSearch] = useState('');
@@ -18,41 +18,41 @@ function CarListings() {
     setSearch(e.target.value);
   };
 
-  const getCars = () => {
-    http.get('/cars').then((res) => {
+  const getDiscounts = () => {
+    http.get('/discounts').then((res) => {
       setAssignmentList(res.data);
     });
   };
 
-  const searchCars = () => {
-    http.get(`/cars?search=${search}`).then((res) => {
+  const searchDiscounts = () => {
+    http.get(`/discounts?search=${search}`).then((res) => {
       setAssignmentList(res.data);
     });
   };
 
   useEffect(() => {
-    getCars();
+    getDiscounts();
   }, []);
 
   const onSearchKeyDown = (e) => {
     if (e.key === "Enter") {
-      searchCars();
+      searchDiscounts();
     }
   };
 
   const onClickSearch = () => {
-    searchCars();
+    searchDiscounts();
   }
 
   const onClickClear = () => {
     setSearch('');
-    getCars();
+    getDiscounts();
   };
 
-  const deleteCars = (id) => {
-    http.delete(`/cars/${id}`).then((res) => {
+  const deleteDiscounts = (id) => {
+    http.delete(`/discounts/${id}`).then((res) => {
       console.log(res.data);
-      window.location.reload();
+      navigate(0);
     });
   }
 
@@ -69,11 +69,11 @@ function CarListings() {
   return (
     <Box>
       <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-        Car Listings
+        Discounts
       </Typography>
 
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
-        <Input value={search} placeholder="Search for car" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
+        <Input value={search} placeholder="Search for discount" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
         <IconButton color="primary" onClick={onClickSearch}>
           <Search />
         </IconButton>
@@ -82,9 +82,9 @@ function CarListings() {
         </IconButton>
 
         <Box sx={{ flexGrow: 1 }} />
-        <Link to="/addcars" style={{ textDecoration: 'none' }}>
+        <Link to="/adddiscount" style={{ textDecoration: 'none' }}>
           <Button variant='contained'>
-            Add Listing
+            Add Discount
           </Button>
         </Link>
       </Box>
@@ -95,52 +95,53 @@ function CarListings() {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Id</TableCell>
-                <TableCell align="center">Make</TableCell>
-                <TableCell align="center">Model</TableCell>
-                <TableCell align="center">Range</TableCell>
-                <TableCell align="center">Price/day</TableCell>
-                <TableCell align="center">Rental Status</TableCell>
+                <TableCell align="center">Discount</TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center">Discount Type</TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center">End Date</TableCell>
                 <TableCell align="center">Added On</TableCell>
+                <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {assignmentList.map((cars) => (
-                <TableRow key={cars.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell align="center">{cars.id}</TableCell>
-                  <TableCell align="center">{cars.make}</TableCell>
-                  <TableCell align="center">{cars.model}</TableCell>
-                  <TableCell align="center">{cars.range}</TableCell>
-                  <TableCell align="center">{cars.price}</TableCell>
-                  <TableCell align="center">{cars.status.toString()}</TableCell>
+              {assignmentList.map((discounts) => (
+                <TableRow key={discounts.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell align="center">{discounts.id}</TableCell>
+                  <TableCell align="center">{discounts.discount}</TableCell>
+                  <TableCell align="center"></TableCell>
+                  <TableCell align="center">{discounts.disctype}</TableCell>
+                  <TableCell align="center"></TableCell>
+                  <TableCell align="center">{discounts.enddate}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
                       <AccessTime sx={{ mr: 1 }} />
                       <Typography>
-                        {dayjs(cars.createdAt).format(global.datetimeFormat)}
+                        {dayjs(discounts.createdAt).format(global.datetimeFormat)}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/editcars/${cars.id}`}>
+                    <Link to={`/editdiscount/${discounts.id}`}>
                       <IconButton color="primary" sx={{ padding: '4px' }}>
                         <Edit />
                       </IconButton>
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(cars.id)}>
+                    <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(discounts.id)}>
                       <Delete />
                     </IconButton>
                     <Dialog open={open} onClose={handleClose}>
                       <DialogTitle>
-                        Delete Listing
+                        Delete Discount
                       </DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          Are you sure you want to delete this listing?
+                          Are you sure you want to delete discount?
                         </DialogContentText>
                       </DialogContent>
                       <DialogActions>
@@ -149,11 +150,18 @@ function CarListings() {
                           Cancel
                         </Button>
                         <Button variant="contained" color="error"
-                          onClick={() => deleteCars(listing_id)}>
+                          onClick={() => deleteDiscounts(listing_id)}>
                           Delete
                         </Button>
                       </DialogActions>
                     </Dialog>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/discounts/${discounts.id}`}>
+                      <IconButton color="primary" sx={{ padding: '4px' }}>
+                        <Preview />
+                      </IconButton>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
@@ -165,4 +173,4 @@ function CarListings() {
   );
 }
 
-export default CarListings;
+export default Discounts;

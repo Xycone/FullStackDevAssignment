@@ -9,6 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import UpdateUser from './UpdateUser';
 
+const greyBoxStyle = {
+  backgroundColor: "#D2D2D2", // Grey background color
+  color: "black", 
+};
+
 function UserTable() {
   const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
@@ -57,9 +62,9 @@ function UserTable() {
   }
 
   const [open, setOpen] = useState(false);
-  const [listing_id, setId] = useState(0);
+  const [userIdToDelete, setUserIdToDelete] = useState(0);
   const handleOpen = (id) => {
-    setId(id)
+    setUserIdToDelete(id);
     setOpen(true);
   };
   const handleClose = () => {
@@ -80,30 +85,41 @@ function UserTable() {
         <IconButton color="primary" onClick={onClickClear}>
           <Clear />
         </IconButton>
-
       </Box>
 
       <Grid container spacing={2}>
         <TableContainer component={Paper}>
-          <Table aria-label='car table'>
+          <Table aria-label="car table">
             <TableHead>
-              <TableRow>
+              <TableRow style={greyBoxStyle}>
                 <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Email</TableCell>
+                <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {userList.map((users) => (
-                <TableRow key={users.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableRow
+                  key={users.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  style={greyBoxStyle}
+                >
                   <TableCell align="center">{users.id}</TableCell>
                   <TableCell align="center">{users.name}</TableCell>
                   <TableCell align="center">{users.email}</TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
-                      color="text.secondary">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        mb: 1,
+                        justifyContent: "center",
+                      }}
+                      color="text.secondary"
+                    >
                       <AccessTime sx={{ mr: 1 }} />
                       <Typography>
                         {dayjs(users.createdAt).format(global.datetimeFormat)}
@@ -112,31 +128,39 @@ function UserTable() {
                   </TableCell>
                   <TableCell>
                     <Link to={`/updateuser/${users.id}`}>
-                      <IconButton color="primary" sx={{ padding: '4px' }}>
+                      <IconButton color="primary" sx={{ padding: "4px" }}>
                         <Edit />
                       </IconButton>
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(users.id)}>
+                    <IconButton
+                      color="primary"
+                      sx={{ padding: "4px" }}
+                      onClick={() => handleOpen(users.id)}
+                    >
                       <Delete />
                     </IconButton>
                     <Dialog open={open} onClose={handleClose}>
-                      <DialogTitle>
-                        Delete User
-                      </DialogTitle>
+                      <DialogTitle>Delete User</DialogTitle>
                       <DialogContent>
                         <DialogContentText>
                           Are you sure you want to delete this user?
                         </DialogContentText>
                       </DialogContent>
                       <DialogActions>
-                        <Button variant="contained" color="inherit"
-                          onClick={handleClose}>
+                        <Button
+                          variant="contained"
+                          color="inherit"
+                          onClick={handleClose}
+                        >
                           Cancel
                         </Button>
-                        <Button variant="contained" color="error"
-                          onClick={() => deleteUser(listing_id)}>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => deleteUser(userIdToDelete)}
+                        >
                           Delete
                         </Button>
                       </DialogActions>

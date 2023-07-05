@@ -12,16 +12,18 @@ app.get("/", (req, res) => {
     res.send("Welcome!");
 });
 
-// Routes
 const assignmentRoute = require('./routes/cars');
 app.use("/cars", assignmentRoute);
+const discountroute = require('./routes/discounts');
+app.use("/discounts", discountroute);
 const fileRoute = require('./routes/file');
 app.use("/file", fileRoute);
 const feedbackRoute = require('./routes/feedback');
 app.use("/feedback", feedbackRoute);
+const paymentRoute = require('./routes/payment');
+app.use("/payment", paymentRoute);
 const userRoute = require('./routes/user');
 app.use("/user", userRoute);
-
 require('dotenv').config();
 const db = require('./models');
 db.sequelize.sync({ alter: true }).then(() => {

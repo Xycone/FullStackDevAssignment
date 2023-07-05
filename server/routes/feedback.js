@@ -48,6 +48,10 @@ router.put("/:id",  async (req, res) => {
     }
 });
 router.post("/",  async (req, res) => {
+    if (!req.user || !req.user.id) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
     let data = req.body;
     let validationSchema = yup.object().shape({
         rating: yup.string().trim().required(),
@@ -65,7 +69,7 @@ router.post("/",  async (req, res) => {
     data.rating = data.rating.trim();
     data.description = data.description.trim();
     data.responded = false;
-    // data.userId = req.user.id;
+    data.userId = req.user.id;
     let result = await Feedback.create(data);
     res.json(result);
 });
