@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import http from '../http';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Datetime from 'react-datetime';
 
 function Payment() {
     const navigate = useNavigate();
