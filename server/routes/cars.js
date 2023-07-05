@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { Cars, Sequelize } = require('../models');
 const yup = require("yup");
+const { validateToken } = require('../middlewares/auth');
 
 
 
 // Sean's part
 
 // Create Car Listing
-router.post("/", async (req, res) => {
+router.post("/", validateToken, async (req, res) => {
     let data = req.body;
 
     // Validate request body

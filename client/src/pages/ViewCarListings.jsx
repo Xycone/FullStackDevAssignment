@@ -6,6 +6,7 @@ import global from '../global';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AspectRatio from '@mui/joy/AspectRatio';
+import '../css/ViewCarListings.css';
 
 function ViewCarListings() {
     const navigate = useNavigate();
@@ -67,7 +68,7 @@ function ViewCarListings() {
                     assignmentList.map((cars, i) => {
                         return (
                             <Grid item xs={12} md={6} lg={4} key={cars.id}>
-                                <Card>
+                                <Card className="ListingCard">
                                     {
                                         cars.imageFile && (
                                             <AspectRatio>
@@ -76,11 +77,11 @@ function ViewCarListings() {
                                             </AspectRatio>
                                         )
                                     }
-                                    <CardContent textAlign="center">
-                                        <Typography variant="h5" sx={{ mb: 1 }} textAlign="center">
+                                    <CardContent>
+                                        <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>
                                             {cars.make} {cars.model}
                                         </Typography>
-                                        <Typography varaint="h6" sx={{ whiteSpace: 'pre-wrap' }} textAlign="center">
+                                        <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap'}}>
                                             S${cars.price}/day
                                         </Typography>
                                     </CardContent>

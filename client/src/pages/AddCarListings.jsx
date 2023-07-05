@@ -20,22 +20,28 @@ function AddCarListings() {
             status: false
         },
 
-        validationSchema: yup.object().shape({
-            make: yup.string().trim()
-                .min(3, 'Make of the car must be at least 3 characters')
-                .max(100, 'Make of the car must be at most 100 characters')
-                .required('Make of the car is required'),
-            model: yup.string().trim()
-                .min(1, 'Model of the car must be at least 1 character')
-                .max(150, 'Model of the car must be at most 150 characters')
-                .required('Model of the car is required'),
-            range: yup.number()
-                .min(0, 'Range of the car must be at least 0km')
-                .required('Range of the car is required'),
-            price: yup.number()
-                .min(0.01, 'Price of the car must be at least S$0.01/day')
-                .required('Price of the car is required')
-        }),
+    validationSchema: yup.object().shape({
+      make: yup
+        .string()
+        .trim()
+        .min(3, "Make of the car must be at least 3 characters")
+        .max(100, "Make of the car must be at most 100 characters")
+        .required("Make of the car is required"),
+      model: yup
+        .string()
+        .trim()
+        .min(1, "Model of the car must be at least 1 character")
+        .max(150, "Model of the car must be at most 150 characters")
+        .required("Model of the car is required"),
+      range: yup
+        .number()
+        .min(0, "Range of the car must be at least 0km")
+        .required("Range of the car is required"),
+      price: yup
+        .number()
+        .min(0.01, "Price of the car must be at least S$0.01/day")
+        .required("Price of the car is required"),
+    }),
 
         onSubmit: (data) => {
             if (imageFile) {
@@ -147,4 +153,4 @@ function AddCarListings() {
     )
 }
 
-export default AddCarListings
+export default AddCarListings;
