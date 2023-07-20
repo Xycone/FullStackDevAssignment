@@ -22,7 +22,6 @@ import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
 import Payment from './pages/PaymentRecords';
 import AddPayment from './pages/MakePayment';
-import RG from './pages/ReportGeneration';
 
 // theme
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -126,7 +125,6 @@ function App() {
               <Route path={"/payment"} element={<Payment />} />
               <Route path={"/register"} element={<Register />} />
               <Route path={"/usertable"} element={<UserTable />}></Route>
-              <Route path={"/rg"} element={<RG />}></Route>
             </Routes>
           </Container>
         </Router>
