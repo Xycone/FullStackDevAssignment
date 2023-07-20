@@ -10,62 +10,54 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } 
 
 
 function Payment() {
-    const navigate = useNavigate();
-    const [paymentList, setPaymentList] = useState([]);
-    const [search, setSearch] = useState('');
-    // const { user } = useContext(UserContext);
-    const onSearchChange = (e) => {
-        setSearch(e.target.value);
-    };
+  const navigate = useNavigate();
+  const [paymentList, setPaymentList] = useState([]);
+  const [search, setSearch] = useState('');
+  // const { user } = useContext(UserContext);
+  const onSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
 
-    const getPayment = () => {
-        http.get('/payment').then((res) => {
-            setPaymentList(res.data);
-        });
-    };
-    const searchPayment = () => {
-        http.get(`/payment?search=${search}`).then((res) => {
-            setPaymentList(res.data);
-        });
-    };
-    useEffect(() => {
-        getPayment();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    const onSearchKeyDown = (e) => {
-        if (e.key === "Enter") {
-            searchPayment();
-        }
-    };
-    const onClickSearch = () => {
-        searchPayment();
+  const getPayment = () => {
+    http.get('/payment').then((res) => {
+      setPaymentList(res.data);
+    });
+  };
+  const searchPayment = () => {
+    http.get(`/payment?search=${search}`).then((res) => {
+      setPaymentList(res.data);
+    });
+  };
+  useEffect(() => {
+    getPayment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const onSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchPayment();
     }
-    const onClickClear = () => {
-        setSearch('');
-        getPayment();
-    };
-    const deletePayment = (id) => {
-      http.delete(`/payment/${id}`).then((res) => {
-        console.log(res.data);
-        navigate(0);
-      });
-    };
-    const [open, setOpen] = useState(false);
-    const [open1, setOpen1] = useState(false);
-    const [listing_id, setId] = useState(0);
-    const handleOpen = (id) => {
-        setId(id)
-        setOpen(true);
-      };
-    const handleClose = () => {
-        setOpen(false);
-    };
-    const handleOpen1 = (id) => {
-      setId(id)
-      setOpen1(true);
-    };
+  };
+  const onClickSearch = () => {
+    searchPayment();
+  }
+  const onClickClear = () => {
+    setSearch('');
+    getPayment();
+  };
+  const deletePayment = (id) => {
+    http.delete(`/payment/${id}`).then((res) => {
+      console.log(res.data);
+      navigate(0);
+    });
+  };
+  const [open1, setOpen1] = useState(false);
+  const [listing_id, setId] = useState(0);
+  const handleOpen1 = (id) => {
+    setId(id)
+    setOpen1(true);
+  };
   const handleClose1 = () => {
-      setOpen1(false);
+    setOpen1(false);
   };
   const editPayment = (id, payment) => {
     http.put(`/payment/${id}`, payment).then((res) => {
@@ -73,32 +65,32 @@ function Payment() {
       navigate(0);
     });
   };
-    useEffect(() => {
-        http.get('/payment').then((res) => {
-            console.log(res.data);
-            setPaymentList(res.data);
-        });
-    }, []);
-    return (
-        <Box>
-            <Typography variant="h5" sx={{ my: 2 }}>
-                Payment
-            </Typography>
+  useEffect(() => {
+    http.get('/payment').then((res) => {
+      console.log(res.data);
+      setPaymentList(res.data);
+    });
+  }, []);
+  return (
+    <Box>
+      <Typography variant="h5" sx={{ my: 2 }}>
+        Payment
+      </Typography>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Input value={search} placeholder="Search"
-                    onChange={onSearchChange}
-                    onKeyDown={onSearchKeyDown} />
-                <IconButton color="primary"
-                    onClick={onClickSearch}>
-                    <Search />
-                </IconButton>
-                <IconButton color="primary"
-                    onClick={onClickClear}>
-                    <Clear />
-                </IconButton>
-                <Box sx={{ flexGrow: 1 }} />
-                {/* {
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Input value={search} placeholder="Search"
+          onChange={onSearchChange}
+          onKeyDown={onSearchKeyDown} />
+        <IconButton color="primary"
+          onClick={onClickSearch}>
+          <Search />
+        </IconButton>
+        <IconButton color="primary"
+          onClick={onClickClear}>
+          <Clear />
+        </IconButton>
+        <Box sx={{ flexGrow: 1 }} />
+        {/* {
                     user && (
                         <Link to="/addpayment" style={{ textDecoration: 'none' }}>
                             <Button variant='contained'>
@@ -107,8 +99,8 @@ function Payment() {
                         </Link>
                     )
                 } */}
-            </Box>
-            <Grid container spacing={2}>
+      </Box>
+      <Grid container spacing={2}>
         <TableContainer component={Paper}>
           <Table aria-label='payment table'>
             <TableHead>
@@ -143,29 +135,11 @@ function Payment() {
                     </Box>
                   </TableCell>
                   <TableCell>
-                  <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(payment.id)}>
-                      <Edit />
-                    </IconButton>
-                    <Dialog open={open} onClose={handleClose}>
-                      <DialogTitle>
-                        Send an email response
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Are you sure you want to send an email response?
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button variant="contained" color="inherit"
-                          onClick={handleClose}>
-                          Cancel
-                        </Button>
-                        <Button variant="contained" color="error"
-                          onClick={() => editPayment(listing_id, {"rating": listing_id.rating, "description": listing_id.description,"responded": true})}>
-                          Send
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
+                    <Link to={`/editcars/${payment.date}`}>
+                      <IconButton color="primary" sx={{ padding: '4px' }}>
+                        <Edit />
+                      </IconButton>
+                    </Link>
                   </TableCell>
                   <TableCell>
                     <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen1(payment.id)}>
@@ -198,8 +172,8 @@ function Payment() {
           </Table>
         </TableContainer>
       </Grid>
-        </Box>
-    )
+    </Box>
+  )
 }
 
 export default Payment

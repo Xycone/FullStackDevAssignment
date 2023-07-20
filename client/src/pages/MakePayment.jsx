@@ -10,6 +10,14 @@ import dayjs from 'dayjs';
 
 function Payment() {
     const navigate = useNavigate();
+    const current = new Date();
+    const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+    const [assignmentList, setAssignmentList] = useState([]);
+    const getCars = () => {
+        http.get('/cars').then((res) => {
+            setAssignmentList(res.data);
+        });
+    };
     const formik = useFormik({
         initialValues: {
             car_id: "",
@@ -19,7 +27,7 @@ function Payment() {
             cardno: "",
             cvc: "",
             expirydate: "",
-            date: ""
+            date: date
         },
 
 
@@ -46,15 +54,13 @@ function Payment() {
                 .max(3, 'CVC number cannot be more than 3 digits')
                 .required('CVC number is needed'),
             expirydate: yup.string().trim()
-                .min(4, 'Expiry date cannot be less than 4 digits')
-                .max(4, 'Expiry date cannot be more than 4 digits')
-                .required('Expiry date is needed'),
-            date: yup.string().trim()
+                .min(5, 'Expiry date cannot be less than 4 digits')
+                .max(5, 'Expiry date cannot be more than 4 digits')
+                .required('Expiry date is needed')
                 .matches(
-                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
-                    'Invalid date format. Please use dd/mm/yyyy.'
+                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])/,
+                    'Invalid date format. Please use mm/yy.'
                 )
-                .required('Date is required')
         }),
 
         onSubmit: (data) => {
@@ -133,14 +139,6 @@ function Payment() {
                             onChange={formik.handleChange}
                             error={formik.touched.expirydate && Boolean(formik.errors.expirydate)}
                             helperText={formik.touched.expirydate && formik.errors.expirydate}
-                        />
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Date:"
-                            name="date"
-                            value={formik.values.date}
-                            onChange={formik.handleChange}
-                            error={formik.touched.date && Boolean(formik.errors.date)}
-                            helperText={formik.touched.date && formik.errors.date}
                         />
                         <Box sx={{ mt: 2 }}>
                             <Button variant="contained" type="submit">
