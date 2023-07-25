@@ -89,9 +89,9 @@ function App() {
                     Contact Us
                   </Typography>
                 </Link>
-                <Link to="/rg" >
+                <Link to="/payment" >
                   <Typography>
-                    Report
+                  Report
                   </Typography>
                 </Link>
                 <Box sx={{ flexGrow: 1 }}></Box>

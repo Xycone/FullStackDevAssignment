@@ -17,7 +17,6 @@ router.post("/", async (req, res) => {
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
         price: yup.number().min(0.01).required(),
-        date: yup.string().required().matches(/^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,'Invalid date format. Please use dd/mm/yyyy.')
     });
     try {
         await validationSchema.validate(data,

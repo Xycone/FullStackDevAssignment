@@ -58,8 +58,8 @@ function Payment() {
                 .max(5, 'Expiry date cannot be more than 4 digits')
                 .required('Expiry date is needed')
                 .matches(
-                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])/,
-                    'Invalid date format. Please use mm/yy.'
+                    /^(0[1-9]|1[0-2])\/?([0-9]{2})$/,
+                    'Invalid date format. Please use dd/mm/yyyy.'
                 )
         }),
 
