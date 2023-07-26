@@ -95,8 +95,7 @@ function CarListings() {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Id</TableCell>
-                <TableCell align="center">Make</TableCell>
-                <TableCell align="center">Model</TableCell>
+                <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Range</TableCell>
                 <TableCell align="center">Price/day</TableCell>
                 <TableCell align="center">Rental Status</TableCell>
@@ -109,8 +108,7 @@ function CarListings() {
               {assignmentList.map((cars) => (
                 <TableRow key={cars.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell align="center">{cars.id}</TableCell>
-                  <TableCell align="center">{cars.make}</TableCell>
-                  <TableCell align="center">{cars.model}</TableCell>
+                  <TableCell align="center">{cars.make} {cars.model}</TableCell>
                   <TableCell align="center">{cars.range}</TableCell>
                   <TableCell align="center">{cars.price}</TableCell>
                   <TableCell align="center">{cars.status.toString()}</TableCell>
