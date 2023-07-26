@@ -23,18 +23,27 @@ import ContactUs from './pages/ContactUs';
 import Payment from './pages/PaymentRecords';
 import AddPayment from './pages/MakePayment';
 
-// theme
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#1b5e20',
-      },
-      secondary: {
-        main: '#66bb6a',
+import {
+  experimental_extendTheme as materialExtendTheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  THEME_ID as MATERIAL_THEME_ID,
+} from '@mui/material/styles';
+
+const materialTheme = materialExtendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: '#1b5e20',
+        },
+        secondary: {
+          main: '#66bb6a',
+        },
       },
     },
+  },
 });
+
 
 function App() {
 
@@ -53,7 +62,7 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
+    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <UserContext.Provider value={{ user, setUser }}>
         <Router>
           <AppBar position="static" className='AppBar'>
@@ -91,7 +100,7 @@ function App() {
                 </Link>
                 <Link to="/payment" >
                   <Typography>
-                  Report
+                    Report
                   </Typography>
                 </Link>
                 <Box sx={{ flexGrow: 1 }}></Box>
@@ -129,7 +138,7 @@ function App() {
           </Container>
         </Router>
       </UserContext.Provider>
-    </ThemeProvider>
+    </MaterialCssVarsProvider>
   );
 }
 
