@@ -6,6 +6,7 @@ import global from '../global';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AspectRatio from '@mui/joy/AspectRatio';
+import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 import '../css/ViewCarListings.css';
 
 function ViewCarListings() {
@@ -71,17 +72,19 @@ function ViewCarListings() {
                                 <Card className="ListingCard">
                                     {
                                         cars.imageFile && (
-                                            <AspectRatio>
-                                                <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${cars.imageFile}`} alt="cars">
-                                                </Box>
-                                            </AspectRatio>
+                                            <JoyCssVarsProvider>
+                                                <AspectRatio>
+                                                    <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${cars.imageFile}`} alt="cars">
+                                                    </Box>
+                                                </AspectRatio>
+                                            </JoyCssVarsProvider>
                                         )
                                     }
                                     <CardContent>
                                         <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>
                                             {cars.make} {cars.model}
                                         </Typography>
-                                        <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap'}}>
+                                        <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap' }}>
                                             S${cars.price}/day
                                         </Typography>
                                     </CardContent>
