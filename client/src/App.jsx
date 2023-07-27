@@ -73,9 +73,14 @@ function App() {
                     Learning
                   </Typography>
                 </Link>
-                <Link to="/cars" >
+                <Link to="/listings" >
                   <Typography>
                     Car Listings(Admin)
+                  </Typography>
+                </Link>
+                <Link to="/viewlistings" >
+                  <Typography>
+                    Car Listings(User)
                   </Typography>
                 </Link>
                 <Link to="/apayment" >
@@ -123,10 +128,10 @@ function App() {
           </AppBar>
           <Container>
             <Routes>
-              <Route path={"/cars"} element={<CarListings />} />
-              <Route path={"/addcars"} element={<AddCarListings />} />
-              <Route path={"/editcars/:id"} element={<EditCarListings />} />
-              <Route path={"/viewcars"} element={<ViewCarListings />} />
+              <Route path={"/listings"} element={<CarListings />} />
+              <Route path={"/addlistings"} element={<AddCarListings />} />
+              <Route path={"/editlistings/:id"} element={<EditCarListings />} />
+              <Route path={"/viewlistings"} element={<ViewCarListings />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/feedback"} element={<AllFeedback />} />
               <Route path={"/contactus"} element={<ContactUs />} />

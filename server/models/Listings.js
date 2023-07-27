@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Cars = sequelize.define("Cars", {
+    const Listings = sequelize.define("Listings", {
         imageFile: {
             type: DataTypes.STRING
         },
@@ -19,16 +19,20 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL(20, 2),
             allowNull: false
         },
-        status: {
-            type: DataTypes.BOOLEAN,
+        available: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        total: {
+            type: DataTypes.INTEGER,
             allowNull: false
         }
     });
-    Cars.associate = (models) => {
-        Cars.belongsTo(models.User, {
+    Listings.associate = (models) => {
+        Listings.belongsTo(models.User, {
             foreignKey: "userId",
             as: 'user'
         });
     };
-    return Cars;
+    return Listings;
 }

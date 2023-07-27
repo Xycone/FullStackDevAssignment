@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Cars, Sequelize } = require('../models');
+const { Listings, Sequelize } = require('../models');
 const yup = require("yup");
 const { validateToken } = require('../middlewares/auth');
 
@@ -18,7 +18,8 @@ router.post("/", validateToken, async (req, res) => {
         model: yup.string().trim().min(1).max(150).required(),
         range: yup.number().min(0).required(),
         price: yup.number().min(0.01).required(),
-        status: yup.boolean().required()
+        available: yup.number().min(0).integer().required(),
+        total: yup.number().min(0).integer().required()
     });
     try {
         await validationSchema.validate(data,
@@ -33,14 +34,14 @@ router.post("/", validateToken, async (req, res) => {
     data.make = data.make.trim();
     data.model = data.model.trim();
     data.userId = req.user.id;
-    let result = await Cars.create(data);
+    let result = await Listings.create(data);
     res.json(result);
 });
 
 
 // View Car Listing
 //router.get("/", async (req, res) => {
-//    let list = await Cars.findAll({
+//    let list = await Listings.findAll({
 //        order: [['createdAt', 'ASC']]
 //    });
 //    res.json(list);
@@ -58,7 +59,7 @@ router.get("/", async (req, res) => {
         ];
     }
 
-    let list = await Cars.findAll({
+    let list = await Listings.findAll({
         where: condition,
         order: [['createdAt', 'ASC']]
     });
@@ -69,13 +70,13 @@ router.get("/", async (req, res) => {
 // View Car Listing By ID
 router.get("/:id", async (req, res) => {
     let id = req.params.id;
-    let cars = await Cars.findByPk(id);
+    let listings = await Listings.findByPk(id);
     // Check id not found
-    if (!cars) {
+    if (!listings) {
         res.sendStatus(404);
         return;
     }
-    res.json(cars);
+    res.json(listings);
 });
 
 
@@ -83,8 +84,8 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
     let id = req.params.id;
     // Check id not found 
-    let cars = await Cars.findByPk(id);
-    if (!cars) {
+    let listings = await Listings.findByPk(id);
+    if (!listings) {
         res.sendStatus(404);
         return;
     }
@@ -96,7 +97,8 @@ router.put("/:id", async (req, res) => {
         model: yup.string().trim().min(1).max(150).required(),
         range: yup.number().min(0).required(),
         price: yup.number().min(0.01).required(),
-        status: yup.boolean().required()
+        available: yup.number().min(0).integer().required(),
+        total: yup.number().min(0).integer().required()
     });
     try {
         await validationSchema.validate(data,
@@ -110,7 +112,7 @@ router.put("/:id", async (req, res) => {
 
     data.make = data.make.trim();
     data.model = data.model.trim();
-    let num = await Cars.update(data, {
+    let num = await Listings.update(data, {
         where: { id: id }
     });
     if (num == 1) {
@@ -130,13 +132,13 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     let id = req.params.id;
     // Check id not found
-    let cars = await Cars.findByPk(id);
-    if (!cars) {
+    let listings = await Listings.findByPk(id);
+    if (!listings) {
         res.sendStatus(404);
         return;
     }
     
-    let num = await Cars.destroy({
+    let num = await Listings.destroy({
         where: { id: id }
     })
     if (num == 1) {

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
     User.associate = (models) => {
-        User.hasMany(models.Cars, {
+        User.hasMany(models.Listings, {
             foreignKey: "userId",
             onDelete: "cascade"
         });

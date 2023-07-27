@@ -10,23 +10,24 @@ function EditCarListings() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const [cars, setCars] = useState({
+    const [listings, setListings] = useState({
         make: "",
         model: "",
         range: "",
         price: "",
-        status: false
+        available: "",
+        total: "",
     });
 
     useEffect(() => {
-        http.get(`/cars/${id}`).then((res) => {
-            setCars(res.data);
+        http.get(`/listings/${id}`).then((res) => {
+            setListings(res.data);
         });
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const formik = useFormik({
-        initialValues: cars,
+        initialValues: listings,
         enableReinitialize: true,
 
         validationSchema: yup.object().shape({
@@ -51,9 +52,11 @@ function EditCarListings() {
             data.model = data.model.trim();
             data.range = Number(data.range);
             data.price = Number(data.price);
-            http.put(`/cars/${id}`, data).then((res) => {
+            data.available = Number(data.available)
+            data.total = Number(data.total)
+            http.put(`/listings/${id}`, data).then((res) => {
                 console.log(res.data);
-                navigate("/cars");
+                navigate("/listings");
             });
         }
     });

@@ -18,35 +18,35 @@ function ViewCarListings() {
         setSearch(e.target.value);
     };
 
-    const getCars = () => {
-        http.get('/cars').then((res) => {
+    const getListings = () => {
+        http.get('/listings').then((res) => {
             setAssignmentList(res.data);
         });
     };
 
-    const searchCars = () => {
-        http.get(`/cars?search=${search}`).then((res) => {
+    const searchListings = () => {
+        http.get(`/listings?search=${search}`).then((res) => {
             setAssignmentList(res.data);
         });
     };
 
     useEffect(() => {
-        getCars();
+        getListings();
     }, []);
 
     const onSearchKeyDown = (e) => {
         if (e.key === "Enter") {
-            searchCars();
+            searchListings();
         }
     };
 
     const onClickSearch = () => {
-        searchCars();
+        searchListings();
     }
 
     const onClickClear = () => {
         setSearch('');
-        getCars();
+        getListings();
     };
 
     return (
@@ -66,15 +66,15 @@ function ViewCarListings() {
             </Box>
             <Grid container spacing={4}>
                 {
-                    assignmentList.map((cars, i) => {
+                    assignmentList.map((listings, i) => {
                         return (
-                            <Grid item xs={12} md={6} lg={4} key={cars.id}>
+                            <Grid item xs={12} md={6} lg={4} key={listings.id}>
                                 <Card className="ListingCard">
                                     {
-                                        cars.imageFile && (
+                                        listings.imageFile && (
                                             <JoyCssVarsProvider>
                                                 <AspectRatio>
-                                                    <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${cars.imageFile}`} alt="cars">
+                                                    <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${listings.imageFile}`} alt="listings">
                                                     </Box>
                                                 </AspectRatio>
                                             </JoyCssVarsProvider>
@@ -82,10 +82,10 @@ function ViewCarListings() {
                                     }
                                     <CardContent>
                                         <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>
-                                            {cars.make} {cars.model}
+                                            {listings.make} {listings.model}
                                         </Typography>
                                         <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap' }}>
-                                            S${cars.price}/day
+                                            S${listings.price}/day
                                         </Typography>
                                     </CardContent>
                                 </Card>
