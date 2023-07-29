@@ -14,6 +14,9 @@ import CarListings from './pages/CarListings';
 import AddCarListings from './pages/AddCarListings';
 import EditCarListings from './pages/EditCarListings';
 import ViewCarListings from './pages/ViewCarListings';
+import CarItem from './pages/CarItem';
+import AddCarItem from './pages/AddCarItem';
+import EditCarItem from './pages/EditCarItem';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserTable from './pages/UserTable';
@@ -83,6 +86,11 @@ function App() {
                     Car Listings(User)
                   </Typography>
                 </Link>
+                <Link to="/cars" >
+                  <Typography>
+                    Car Item(Admin)
+                  </Typography>
+                </Link>
                 <Link to="/apayment" >
                   <Typography>
                     Checkout
@@ -132,6 +140,9 @@ function App() {
               <Route path={"/addlistings"} element={<AddCarListings />} />
               <Route path={"/editlistings/:id"} element={<EditCarListings />} />
               <Route path={"/viewlistings"} element={<ViewCarListings />} />
+              <Route path={"/cars"} element={<CarItem />} />
+              <Route path={"/addcars"} element={<AddCarItem />} />
+              <Route path={"/editcars/:id"} element={<EditCarItem />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/feedback"} element={<AllFeedback />} />
               <Route path={"/contactus"} element={<ContactUs />} />

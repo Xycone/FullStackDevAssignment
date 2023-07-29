@@ -64,6 +64,8 @@ function CarListings() {
     setOpen(false);
   };
 
+  
+
   return (
     <Box>
       <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
@@ -96,10 +98,10 @@ function CarListings() {
                 <TableCell align="center">Car</TableCell>
                 <TableCell align="center">Range</TableCell>
                 <TableCell align="center">Price/day</TableCell>
-                <TableCell align="center">Added On</TableCell>
-                <TableCell align="center">Added By</TableCell>
                 <TableCell align="center">Available</TableCell>
                 <TableCell align="center">Total</TableCell>
+                <TableCell align="center">Created On</TableCell>
+                <TableCell align="center"></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -111,6 +113,8 @@ function CarListings() {
                   <TableCell align="center">{listings.make} {listings.model}</TableCell>
                   <TableCell align="center">{listings.range}</TableCell>
                   <TableCell align="center">{listings.price}</TableCell>
+                  <TableCell align="center">{listings.available}</TableCell>
+                  <TableCell align="center">{listings.total}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
@@ -120,9 +124,7 @@ function CarListings() {
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell align="center">{listings.user.name}</TableCell>
-                  <TableCell align="center">{listings.available}</TableCell>
-                  <TableCell align="center">{listings.total}</TableCell>
+                  <TableCell align="center">~ Added By {listings.user.name}</TableCell>
                   <TableCell>
                     <Link to={`/editlistings/${listings.id}`}>
                       <IconButton color="primary" sx={{ padding: '4px' }}>

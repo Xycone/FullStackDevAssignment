@@ -15,6 +15,8 @@ app.get("/", (req, res) => {
 // Routes
 const listingRoute = require('./routes/listings');
 app.use("/listings", listingRoute);
+const carRoute = require('./routes/cars');
+app.use("/cars", carRoute)
 const discountroute = require('./routes/discounts');
 app.use("/discounts", discountroute);
 const fileRoute = require('./routes/file');
