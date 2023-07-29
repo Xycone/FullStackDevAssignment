@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Listings, Sequelize } = require('../models');
+const { User, Listings, Sequelize } = require('../models');
 const yup = require("yup");
 const { validateToken } = require('../middlewares/auth');
 
@@ -61,7 +61,8 @@ router.get("/", async (req, res) => {
 
     let list = await Listings.findAll({
         where: condition,
-        order: [['createdAt', 'ASC']]
+        order: [['createdAt', 'ASC']],
+        include: { model: User, as: "user", attributes: ['name']}
     });
     res.json(list);
 });

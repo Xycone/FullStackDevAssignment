@@ -120,7 +120,7 @@ function CarListings() {
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell align="center">{listings.userId}</TableCell>
+                  <TableCell align="center">{listings.user.name}</TableCell>
                   <TableCell align="center">{listings.available}</TableCell>
                   <TableCell align="center">{listings.total}</TableCell>
                   <TableCell>
