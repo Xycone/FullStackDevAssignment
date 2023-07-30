@@ -116,6 +116,16 @@ function App() {
                     Report
                   </Typography>
                 </Link>
+                <Link to="/discounts" >
+                  <Typography>
+                    Discounts
+                  </Typography>
+                </Link>
+                 <Link to="/viewdiscount" >
+                  <Typography>
+                    Discount(User)
+                  </Typography>
+                </Link>
                 <Box sx={{ flexGrow: 1 }}></Box>
                 {user && (
                   <>
@@ -150,6 +160,11 @@ function App() {
               <Route path={"/payment"} element={<Payment />} />
               <Route path={"/register"} element={<Register />} />
               <Route path={"/usertable"} element={<UserTable />}></Route>
+              <Route path={"/discounts"} element={<Discounts />} />
+              <Route path={"/editdiscount/:id"} element={<EditDiscount />} />
+              <Route path={"/adddiscount"} element={<AddDiscount />} />
+              <Route path={"/viewdiscount"} element={<ViewDiscounts />} />
+
             </Routes>
           </Container>
         </Router>
