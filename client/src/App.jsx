@@ -153,6 +153,8 @@ function App() {
               <Route path={"/payment"} element={<Payment />} />
               <Route path={"/register"} element={<Register />} />
               <Route path={"/usertable"} element={<UserTable />}></Route>
+              <Route path={"/updateuser/:id"} element={<UpdateUser />}></Route>
+              
             </Routes>
           </Container>
         </Router>
