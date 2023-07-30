@@ -9,7 +9,9 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } 
 
 
 function CarListings() {
-  const [assignmentList, setAssignmentList] = useState([]);
+  const [listingList, setListingList] = useState([]);
+  const [carList, setCarList] = useState([]);
+  const [listingCarCounts, setListingCarCounts] = useState({});
   const [search, setSearch] = useState('');
 
   const onSearchChange = (e) => {
@@ -18,19 +20,39 @@ function CarListings() {
 
   const getListings = () => {
     http.get('/listings').then((res) => {
-      setAssignmentList(res.data);
+      setListingList(res.data);
+    });
+  };
+
+  const getCars = () => {
+    http.get('/cars').then((res) => {
+      setCarList(res.data);
     });
   };
 
   const searchListings = () => {
     http.get(`/listings?search=${search}`).then((res) => {
-      setAssignmentList(res.data);
+      setListingList(res.data);
     });
   };
 
   useEffect(() => {
+    // Fetch data from Listing table
     getListings();
+    // Fetch data from Car table
+    getCars();
   }, []);
+
+  useEffect(() => {
+    // Calculate the count of child objects for each Listing in the carList array
+    const childCounts = carList.reduce((acc, child) => {
+      acc[child.listingId] = (acc[child.listingId] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Set the calculated counts
+    setListingCarCounts(childCounts);
+  }, [carList]);
 
   const onSearchKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -107,14 +129,14 @@ function CarListings() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {assignmentList.map((listings, i) => (
+              {listingList.map(listings => (
                 <TableRow key={listings.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell align="center">{listings.id}</TableCell>
                   <TableCell align="center">{listings.make} {listings.model}</TableCell>
                   <TableCell align="center">{listings.range}</TableCell>
                   <TableCell align="center">{listings.price}</TableCell>
                   <TableCell align="center">{listings.available}</TableCell>
-                  <TableCell align="center">{listings.total}</TableCell>
+                  <TableCell align="center">{listingCarCounts[listings.id] || 0}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
