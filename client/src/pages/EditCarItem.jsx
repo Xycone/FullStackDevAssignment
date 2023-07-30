@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import http from '../http';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Select, FormControl, InputLabel, MenuItem  } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -16,7 +16,16 @@ function EditCarItem() {
         serviceStatus: true,
     });
 
+    const [assignmentList, setAssignmentList] = useState([]);
+
+    const getListings = () => {
+        http.get('/listings').then((res) => {
+            setAssignmentList(res.data);
+        });
+    };
+
     useEffect(() => {
+        getListings();
         http.get(`/cars/${id}`).then((res) => {
             setCars(res.data);
         });
@@ -31,13 +40,13 @@ function EditCarItem() {
             listingId: yup
                 .number()
                 .min(0, "Please enter a valid id")
-                .required("Please enter the listing id of the listing that this car belongs to"),
+                .required("Listing Id is required"),
             currentLocation: yup
                 .string()
                 .trim()
-                .min(3, "currentLocation of the car must be at least 3 characters")
-                .max(100, "currentLocation of the car must be at most 100 characters")
-                .required("currentLocation of the car is required"),
+                .min(3, "Current location of the car must be at least 3 characters")
+                .max(100, "Current location of the car must be at most 100 characters")
+                .required("Current location of the car is required"),
         }),
 
         onSubmit: (data) => {
@@ -58,25 +67,32 @@ function EditCarItem() {
             <Box component="form" onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={8}>
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Listing Id:"
-                            name="listingId"
-                            value={formik.values.listingId}
-                            onChange={formik.handleChange}
-                            error={formik.touched.make && Boolean(formik.errors.make)}
-                            helperText={formik.touched.make && formik.errors.make}
-                        />
+                    <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Listing Id:</InputLabel>
+                            <Select
+                                label="Listing Id:"
+                                name="listingId"
+                                value={formik.values.listingId}
+                                onChange={formik.handleChange}
+                                error={formik.touched.listingId && Boolean(formik.errors.listingId)}
+                            >
+                                {assignmentList.map((listings) => (
+                                <MenuItem key={listings.id} value={listings.id}>{listings.id}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
                         <TextField fullWidth margin="normal" autoComplete="off"
                             label="Current Location:"
                             name="currentLocation"
                             value={formik.values.currentLocation}
                             onChange={formik.handleChange}
-                            error={formik.touched.make && Boolean(formik.errors.make)}
-                            helperText={formik.touched.make && formik.errors.make}
+                            error={formik.touched.currentLocation && Boolean(formik.errors.currentLocation)}
+                            helperText={formik.touched.currentLocation && formik.errors.currentLocation}
                         />
                         <Box sx={{ mt: 2 }}>
                             <Button variant="contained" type="submit">
-                                Create Listing
+                                Edit Car Item
                             </Button>
                         </Box>
                     </Grid>
