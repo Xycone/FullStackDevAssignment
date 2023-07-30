@@ -16,14 +16,14 @@ function EditDiscounts() {
     const { id } = useParams()
 
     const [discounts, setDiscounts] = useState({
-            discount: "",
-            disctype: "$",
-            // reqtype: "",
-            // minspend: "",
-            // cartype: "",
-            enddate: ""
+        discount: "",
+        disctype: "$",
+        // reqtype: "",
+        // minspend: "",
+        // cartype: "",
+        enddate: ""
 
-        });
+    });
 
     useEffect(() => {
         http.get(`/discounts/${id}`).then((res) => {
@@ -40,11 +40,8 @@ function EditDiscounts() {
         validationSchema: yup.object().shape({
             discount: yup
                 .number()
-                .required('Discount is required')
-                .when('disctype', {
-                    is: '%',
-                    then: yup.number().max(100, 'Discount cannot be more than 100%'),
-                }),
+                .required('Discount is required'),
+
             enddate: yup.string()
                 .matches(
                     /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
@@ -88,6 +85,7 @@ function EditDiscounts() {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={8}>
                         <TextField margin="normal" autoComplete="off"
+                        type="number"
                             style={{ width: '75%' }}
                             label="Discount"
                             name="discount"
@@ -100,7 +98,7 @@ function EditDiscounts() {
                         <FormControl margin="normal">
                             <InputLabel>Type</InputLabel>
                             <Select
-                                name="type"
+                                name="disctype"
                                 style={{ width: '200%' }}
                                 value={formik.values.disctype}
                                 onChange={formik.handleChange}
