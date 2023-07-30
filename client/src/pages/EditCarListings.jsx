@@ -21,8 +21,6 @@ function EditCarListings() {
         model: "",
         range: "",
         price: "",
-        available: "",
-        total: "",
     });
 
     useEffect(() => {
@@ -59,8 +57,6 @@ function EditCarListings() {
             data.model = data.model.trim();
             data.range = Number(data.range);
             data.price = Number(data.price);
-            data.available = Number(data.available)
-            data.total = Number(data.total)
             http.put(`/listings/${id}`, data).then((res) => {
                 console.log(res.data);
                 navigate("/listings");
