@@ -7,12 +7,17 @@ import global from '../global';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
-import UpdateUser from './UpdateUser';
 
 function UserTable() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [userList, setUserList] = useState([]);
   const [search, setSearch] = useState('');
+
+  const logout = () => {
+    localStorage.clear();
+    window.location = "/";
+  };
 
   const onSearchChange = (e) => {
     setSearch(e.target.value);
@@ -34,6 +39,14 @@ function UserTable() {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      http.get('/user/auth').then((res) => {
+        setUser(res.data.user);
+      });
+    }
+  }, []);
+
   const onSearchKeyDown = (e) => {
     if (e.key === "Enter") {
       searchUser();
@@ -50,9 +63,14 @@ function UserTable() {
   };
 
   const deleteUser = (id) => {
+    const isLoggedUser = id === user.id;
     http.delete(`/user/${id}`).then((res) => {
       console.log(res.data);
+      if (isLoggedUser) {
+        logout()
+      } else {
       navigate(0);
+      }
     });
   }
 

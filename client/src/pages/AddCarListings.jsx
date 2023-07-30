@@ -18,8 +18,6 @@ function AddCarListings() {
             model: "",
             range: "",
             price: "",
-            available: "",
-            total: "",
         },
 
         validationSchema: yup.object().shape({
@@ -55,8 +53,6 @@ function AddCarListings() {
             data.model = data.model.trim();
             data.range = Number(data.range);
             data.price = Number(data.price);
-            data.available = Number(data.available)
-            data.total = Number(data.total)
             http.post("/listings", data).then((res) => {
                 console.log(res.data);
                 navigate("/listings");

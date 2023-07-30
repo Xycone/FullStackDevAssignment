@@ -17,6 +17,7 @@ import ViewCarListings from './pages/ViewCarListings';
 import CarItem from './pages/CarItem';
 import AddCarItem from './pages/AddCarItem';
 import EditCarItem from './pages/EditCarItem';
+import CreateBooking from './pages/CreateBooking';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserTable from './pages/UserTable';
@@ -31,6 +32,7 @@ import {
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
   THEME_ID as MATERIAL_THEME_ID,
 } from '@mui/material/styles';
+import { Create } from '@mui/icons-material';
 
 const materialTheme = materialExtendTheme({
   colorSchemes: {
@@ -153,6 +155,7 @@ function App() {
               <Route path={"/cars"} element={<CarItem />} />
               <Route path={"/addcars"} element={<AddCarItem />} />
               <Route path={"/editcars/:id"} element={<EditCarItem />} />
+              <Route path={"/createbooking/:id"} element={<CreateBooking />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/feedback"} element={<AllFeedback />} />
               <Route path={"/contactus"} element={<ContactUs />} />

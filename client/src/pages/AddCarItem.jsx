@@ -26,7 +26,7 @@ function AddCarItem() {
         initialValues: {
             listingId: "",
             currentLocation: "",
-            serviceStatus: true,
+            serviceStatus: false,
         },
 
         validationSchema: yup.object().shape({
@@ -69,8 +69,8 @@ function AddCarItem() {
                                 onChange={formik.handleChange}
                                 error={formik.touched.listingId && Boolean(formik.errors.listingId)}
                             >
-                                {assignmentList.map((listings, i) => (
-                                <MenuItem key={i} value={listings.id}>{listings.id}</MenuItem>
+                                {assignmentList.map((listings) => (
+                                <MenuItem key={listings.id} value={listings.id}>{listings.id}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -85,7 +85,7 @@ function AddCarItem() {
                         />
                         <Box sx={{ mt: 2 }}>
                             <Button variant="contained" type="submit">
-                                Create Listing
+                                Create Car Item
                             </Button>
                         </Box>
                     </Grid>

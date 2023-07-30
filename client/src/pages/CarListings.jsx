@@ -36,6 +36,7 @@ function CarListings() {
     });
   };
 
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   useEffect(() => {
     // Fetch data from Listing table
     getListings();
@@ -44,14 +45,36 @@ function CarListings() {
   }, []);
 
   useEffect(() => {
-    // Calculate the count of child objects for each Listing in the carList array
-    const childCounts = carList.reduce((acc, child) => {
-      acc[child.listingId] = (acc[child.listingId] || 0) + 1;
-      return acc;
-    }, {});
+    if (carList.length > 0) { // Check if carList has data before calculating counts
+      // Calculate the count of all child objects for each Listing in the carList array
+      const allChildCounts = carList.reduce((acc, child) => {
+        acc[child.listingId] = (acc[child.listingId] || 0) + 1;
+        return acc;
+      }, {});
 
-    // Set the calculated counts
-    setListingCarCounts(childCounts);
+      // Calculate the count of available child objects for each Listing in the carList array
+      const availableChildCounts = carList.reduce((acc, child) => {
+        if (child.serviceStatus === false) { // Assuming "available" is a boolean attribute
+          acc[child.listingId] = (acc[child.listingId] || 0) + 1;
+        }
+        return acc;
+      }, {});
+
+      // Set the calculated counts
+      setListingCarCounts({
+        all: allChildCounts,
+        available: availableChildCounts,
+      });
+    } else {
+      const allChildCounts = {};
+      const availableChildCounts = {};
+      setListingCarCounts({
+        all: allChildCounts,
+        available: availableChildCounts,
+      });
+    }
+
+    setIsLoading(false); // Data has been loaded, set isLoading to false
   }, [carList]);
 
   const onSearchKeyDown = (e) => {
@@ -86,7 +109,7 @@ function CarListings() {
     setOpen(false);
   };
 
-  
+
 
   return (
     <Box>
@@ -128,60 +151,70 @@ function CarListings() {
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {listingList.map(listings => (
-                <TableRow key={listings.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell align="center">{listings.id}</TableCell>
-                  <TableCell align="center">{listings.make} {listings.model}</TableCell>
-                  <TableCell align="center">{listings.range}</TableCell>
-                  <TableCell align="center">{listings.price}</TableCell>
-                  <TableCell align="center">{listings.available}</TableCell>
-                  <TableCell align="center">{listingCarCounts[listings.id] || 0}</TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
-                      color="text.secondary">
-                      <AccessTime sx={{ mr: 1 }} />
-                      <Typography>
-                        {dayjs(listings.createdAt).format(global.datetimeFormat)}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell align="center">~ Added By {listings.user.name}</TableCell>
-                  <TableCell>
-                    <Link to={`/editlistings/${listings.id}`}>
-                      <IconButton color="primary" sx={{ padding: '4px' }}>
-                        <Edit />
-                      </IconButton>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(listings.id)}>
-                      <Delete />
-                    </IconButton>
-                    <Dialog open={open} onClose={handleClose}>
-                      <DialogTitle>
-                        Delete Listing
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Are you sure you want to delete this listing?
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button variant="contained" color="inherit"
-                          onClick={handleClose}>
-                          Cancel
-                        </Button>
-                        <Button variant="contained" color="error"
-                          onClick={() => deleteListings(listing_id)}>
-                          Delete
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
+            {isLoading ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    <Typography>Loading...</Typography>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {listingList.map(listings => (
+                  <TableRow key={listings.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell align="center">{listings.id}</TableCell>
+                    <TableCell align="center">{listings.make} {listings.model}</TableCell>
+                    <TableCell align="center">{listings.range}</TableCell>
+                    <TableCell align="center">{listings.price}</TableCell>
+                    <TableCell align="center">{listingCarCounts.available[listings.id] || 0}</TableCell>
+                    <TableCell align="center">{listingCarCounts.all[listings.id] || 0}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
+                        color="text.secondary">
+                        <AccessTime sx={{ mr: 1 }} />
+                        <Typography>
+                          {dayjs(listings.createdAt).format(global.datetimeFormat)}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">~ Added By {listings.user.name}</TableCell>
+                    <TableCell>
+                      <Link to={`/editlistings/${listings.id}`}>
+                        <IconButton color="primary" sx={{ padding: '4px' }}>
+                          <Edit />
+                        </IconButton>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(listings.id)}>
+                        <Delete />
+                      </IconButton>
+                      <Dialog open={open} onClose={handleClose}>
+                        <DialogTitle>
+                          Delete Listing
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Are you sure you want to delete this listing?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button variant="contained" color="inherit"
+                            onClick={handleClose}>
+                            Cancel
+                          </Button>
+                          <Button variant="contained" color="error"
+                            onClick={() => deleteListings(listing_id)}>
+                            Delete
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       </Grid>

@@ -18,14 +18,6 @@ module.exports = (sequelize, DataTypes) => {
         price: {
             type: DataTypes.DECIMAL(20, 2),
             allowNull: false
-        },
-        available: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        total: {
-            type: DataTypes.INTEGER,
-            allowNull: false
         }
     });
     Listings.associate = (models) => {

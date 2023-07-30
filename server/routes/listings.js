@@ -17,9 +17,7 @@ router.post("/", validateToken, async (req, res) => {
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
         range: yup.number().min(0).required(),
-        price: yup.number().min(0.01).required(),
-        available: yup.number().min(0).integer().required(),
-        total: yup.number().min(0).integer().required()
+        price: yup.number().min(0.01).required()
     });
     try {
         await validationSchema.validate(data,
@@ -97,9 +95,7 @@ router.put("/:id", async (req, res) => {
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
         range: yup.number().min(0).required(),
-        price: yup.number().min(0.01).required(),
-        available: yup.number().min(0).integer().required(),
-        total: yup.number().min(0).integer().required()
+        price: yup.number().min(0.01).required()
     });
     try {
         await validationSchema.validate(data,
