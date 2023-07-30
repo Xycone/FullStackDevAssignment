@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     });
+    User.associate = (models) => {
+        User.hasMany(models.Listings, {
+            foreignKey: "userId",
+            onDelete: "cascade"
+        });
+    };
 
     return User;
 }

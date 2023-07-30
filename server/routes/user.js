@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { User, Sequelize } = require("../models");
 const yup = require("yup");
 const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/auth");
@@ -122,11 +122,11 @@ router.put("/update/:id", async (req, res) => {
     return;
   }
   // Check request user id
-  // let userId = req.user.id;
-  // if (user.userId != userId) {
-  //   res.sendStatus(403);
-  //   return;
-  // }
+  let userId = req.user.id;
+  if (user.userId != userId) {
+    res.sendStatus(403);
+    return;
+  }
   if (!user) {
     res.sendStatus(404);
     return;
@@ -145,38 +145,38 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
-// router.get("/auth", validateToken, (req, res) => {
-//   let userInfo = {
-//     id: req.user.id,
-//     email: req.user.email,
-//     name: req.user.name,
-//   };
-//   res.json({
-//     user: userInfo,
-//   });
-// });
+router.get("/auth", validateToken, (req, res) => {
+  let userInfo = {
+    id: req.user.id,
+    email: req.user.email,
+    name: req.user.name,
+  };
+  res.json({
+    user: userInfo,
+  });
+});
 
 router.delete("/:id", async (req, res) => {
   let id = req.params.id;
   // Check id not found
   let user = await User.findByPk(id);
   if (!user) {
-      res.sendStatus(404);
-      return;
+    res.sendStatus(404);
+    return;
   }
-  
+
   let num = await User.destroy({
-      where: { id: id }
+    where: { id: id }
   })
   if (num == 1) {
-      res.json({
-          message: "User was deleted successfully."
-      });
+    res.json({
+      message: "User was deleted successfully."
+    });
   }
   else {
-      res.status(400).json({
-          message: `Cannot delete user with id ${id}.`
-      });
+    res.status(400).json({
+      message: `Cannot delete user with id ${id}.`
+    });
   }
 });
 
@@ -184,15 +184,15 @@ router.get("/", async (req, res) => {
   let condition = {};
   let search = req.query.search;
   if (search) {
-      condition[Sequelize.Op.or] = [
-          { name: { [Sequelize.Op.like]: `%${search}%` } },
-          { email: { [Sequelize.Op.like]: `%${search}%` } }
-      ];
+    condition[Sequelize.Op.or] = [
+      { name: { [Sequelize.Op.like]: `%${search}%` } },
+      { email: { [Sequelize.Op.like]: `%${search}%` } }
+    ];
   }
 
   let list = await User.findAll({
-      where: condition,
-      order: [['createdAt', 'ASC']]
+    where: condition,
+    order: [['createdAt', 'ASC']]
   });
   res.json(list);
 });
@@ -202,8 +202,8 @@ router.get("/:id", async (req, res) => {
   let user = await User.findByPk(id);
   // Check id not found
   if (!user) {
-      res.sendStatus(404);
-      return;
+    res.sendStatus(404);
+    return;
   }
   res.json(user);
 });

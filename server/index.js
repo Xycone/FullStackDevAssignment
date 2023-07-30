@@ -13,14 +13,19 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-const assignmentRoute = require('./routes/cars');
-app.use("/cars", assignmentRoute);
+const listingRoute = require('./routes/listings');
+app.use("/listings", listingRoute);
+const carRoute = require('./routes/cars');
+app.use("/cars", carRoute)
 const discountroute = require('./routes/discounts');
 app.use("/discounts", discountroute);
 const fileRoute = require('./routes/file');
 app.use("/file", fileRoute);
 const feedbackRoute = require('./routes/feedback');
 app.use("/feedback", feedbackRoute);
+const paymentRoute = require('./routes/payment');
+app.use("/payment", paymentRoute);
+
 const userRoute = require('./routes/user');
 app.use("/user", userRoute);
 

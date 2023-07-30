@@ -6,6 +6,8 @@ import global from '../global';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AspectRatio from '@mui/joy/AspectRatio';
+import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
+import '../css/ViewCarListings.css';
 
 function ViewCarListings() {
     const navigate = useNavigate();
@@ -16,35 +18,35 @@ function ViewCarListings() {
         setSearch(e.target.value);
     };
 
-    const getCars = () => {
-        http.get('/cars').then((res) => {
+    const getListings = () => {
+        http.get('/listings').then((res) => {
             setAssignmentList(res.data);
         });
     };
 
-    const searchCars = () => {
-        http.get(`/cars?search=${search}`).then((res) => {
+    const searchListings = () => {
+        http.get(`/listings?search=${search}`).then((res) => {
             setAssignmentList(res.data);
         });
     };
 
     useEffect(() => {
-        getCars();
+        getListings();
     }, []);
 
     const onSearchKeyDown = (e) => {
         if (e.key === "Enter") {
-            searchCars();
+            searchListings();
         }
     };
 
     const onClickSearch = () => {
-        searchCars();
+        searchListings();
     }
 
     const onClickClear = () => {
         setSearch('');
-        getCars();
+        getListings();
     };
 
     return (
@@ -62,26 +64,28 @@ function ViewCarListings() {
                     <Clear />
                 </IconButton>
             </Box>
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
                 {
-                    assignmentList.map((cars, i) => {
+                    assignmentList.map((listings, i) => {
                         return (
-                            <Grid item xs={12} md={6} lg={4} key={cars.id}>
-                                <Card>
+                            <Grid item xs={12} md={6} lg={4} key={listings.id}>
+                                <Card className="ListingCard">
                                     {
-                                        cars.imageFile && (
-                                            <AspectRatio>
-                                                <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${cars.imageFile}`} alt="cars">
-                                                </Box>
-                                            </AspectRatio>
+                                        listings.imageFile && (
+                                            <JoyCssVarsProvider>
+                                                <AspectRatio>
+                                                    <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${listings.imageFile}`} alt="listings">
+                                                    </Box>
+                                                </AspectRatio>
+                                            </JoyCssVarsProvider>
                                         )
                                     }
                                     <CardContent>
-                                        <Typography variant="h6" sx={{ mb: 1 }}>
-                                            {cars.make} {cars.model}
+                                        <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>
+                                            {listings.make} {listings.model}
                                         </Typography>
-                                        <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                                            S${cars.price}/day
+                                        <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap' }}>
+                                            S${listings.price}/day
                                         </Typography>
                                     </CardContent>
                                 </Card>
