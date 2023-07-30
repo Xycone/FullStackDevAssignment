@@ -135,25 +135,31 @@ function CarListings() {
       </Box>
 
       <Grid container spacing={2}>
-        {isLoading ? (
-          <Typography>Loading...</Typography>
-        ) : listingList.length > 0 ? ( // Check if there are listings in the array
-          <TableContainer component={Paper}>
-            <Table aria-label='car table'>
-              <TableHead>
+        <TableContainer component={Paper}>
+          <Table aria-label='car table'>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Listing Id</TableCell>
+                <TableCell align="center">Car</TableCell>
+                <TableCell align="center">Range</TableCell>
+                <TableCell align="center">Price/day</TableCell>
+                <TableCell align="center">Available</TableCell>
+                <TableCell align="center">Total</TableCell>
+                <TableCell align="center">Created On</TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            {isLoading ? (
+              <TableBody>
                 <TableRow>
-                  <TableCell align="center">Listing Id</TableCell>
-                  <TableCell align="center">Car</TableCell>
-                  <TableCell align="center">Range</TableCell>
-                  <TableCell align="center">Price/day</TableCell>
-                  <TableCell align="center">Available</TableCell>
-                  <TableCell align="center">Total</TableCell>
-                  <TableCell align="center">Created On</TableCell>
-                  <TableCell align="center"></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell colSpan={8} align="center">
+                    <Typography>Loading...</Typography>
+                  </TableCell>
                 </TableRow>
-              </TableHead>
+              </TableBody>
+            ) : (
               <TableBody>
                 {listingList.map(listings => (
                   <TableRow key={listings.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -208,11 +214,9 @@ function CarListings() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <Typography>No listings available.</Typography> // Display a message when there are no listings
-        )}
+            )}
+          </Table>
+        </TableContainer>
       </Grid>
     </Box>
   );

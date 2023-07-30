@@ -69,26 +69,28 @@ function ViewCarListings() {
                     assignmentList.map((listings, i) => {
                         return (
                             <Grid item xs={12} md={6} lg={4} key={listings.id}>
-                                <Card className="ListingCard">
-                                    {
-                                        listings.imageFile && (
-                                            <JoyCssVarsProvider>
-                                                <AspectRatio>
-                                                    <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${listings.imageFile}`} alt="listings">
-                                                    </Box>
-                                                </AspectRatio>
-                                            </JoyCssVarsProvider>
-                                        )
-                                    }
-                                    <CardContent>
-                                        <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>
-                                            {listings.make} {listings.model}
-                                        </Typography>
-                                        <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap' }}>
-                                            S${listings.price}/day
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
+                                <Link className="Link" to={`/createbooking/${listings.id}`}>
+                                    <Card className="ListingCard">
+                                        {
+                                            listings.imageFile && (
+                                                <JoyCssVarsProvider>
+                                                    <AspectRatio>
+                                                        <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${listings.imageFile}`} alt="listings">
+                                                        </Box>
+                                                    </AspectRatio>
+                                                </JoyCssVarsProvider>
+                                            )
+                                        }
+                                        <CardContent>
+                                            <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>
+                                                {listings.make} {listings.model}
+                                            </Typography>
+                                            <Typography variant="h6" textAlign="center" sx={{ whiteSpace: 'pre-wrap' }}>
+                                                S${listings.price}/day
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
                             </Grid>
                         );
                     })
