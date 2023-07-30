@@ -36,6 +36,7 @@ function CarListings() {
     });
   };
 
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   useEffect(() => {
     // Fetch data from Listing table
     getListings();
@@ -44,14 +45,29 @@ function CarListings() {
   }, []);
 
   useEffect(() => {
-    // Calculate the count of child objects for each Listing in the carList array
-    const childCounts = carList.reduce((acc, child) => {
-      acc[child.listingId] = (acc[child.listingId] || 0) + 1;
-      return acc;
-    }, {});
+    if (carList.length > 0) { // Check if carList has data before calculating counts
+      // Calculate the count of all child objects for each Listing in the carList array
+      const allChildCounts = carList.reduce((acc, child) => {
+        acc[child.listingId] = (acc[child.listingId] || 0) + 1;
+        return acc;
+      }, {});
+    
+      // Calculate the count of available child objects for each Listing in the carList array
+      const availableChildCounts = carList.reduce((acc, child) => {
+        if (child.serviceStatus === false) { // Assuming "available" is a boolean attribute
+          acc[child.listingId] = (acc[child.listingId] || 0) + 1;
+        }
+        return acc;
+      }, {});
+    
+      // Set the calculated counts
+      setListingCarCounts({
+        all: allChildCounts,
+        available: availableChildCounts,
+      });
 
-    // Set the calculated counts
-    setListingCarCounts(childCounts);
+      setIsLoading(false); // Data has been loaded, set isLoading to false
+    }
   }, [carList]);
 
   const onSearchKeyDown = (e) => {
@@ -86,7 +102,7 @@ function CarListings() {
     setOpen(false);
   };
 
-  
+
 
   return (
     <Box>
@@ -112,6 +128,9 @@ function CarListings() {
       </Box>
 
       <Grid container spacing={2}>
+      {isLoading ? (
+          <Typography>Loading...</Typography> // Show loading message if data is not ready
+        ) : (
         <TableContainer component={Paper}>
           <Table aria-label='car table'>
             <TableHead>
@@ -135,8 +154,8 @@ function CarListings() {
                   <TableCell align="center">{listings.make} {listings.model}</TableCell>
                   <TableCell align="center">{listings.range}</TableCell>
                   <TableCell align="center">{listings.price}</TableCell>
-                  <TableCell align="center">{listings.available}</TableCell>
-                  <TableCell align="center">{listingCarCounts[listings.id] || 0}</TableCell>
+                  <TableCell align="center">{listingCarCounts.available[listings.id] || 0}</TableCell>
+                  <TableCell align="center">{listingCarCounts.all[listings.id] || 0}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
@@ -184,6 +203,7 @@ function CarListings() {
             </TableBody>
           </Table>
         </TableContainer>
+        )}
       </Grid>
     </Box>
   );

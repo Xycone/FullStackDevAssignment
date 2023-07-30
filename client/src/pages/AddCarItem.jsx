@@ -26,7 +26,7 @@ function AddCarItem() {
         initialValues: {
             listingId: "",
             currentLocation: "",
-            serviceStatus: true,
+            serviceStatus: false,
         },
 
         validationSchema: yup.object().shape({
