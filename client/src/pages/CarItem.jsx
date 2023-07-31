@@ -10,9 +10,16 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } 
 function CarItem() {
     const [assignmentList, setAssignmentList] = useState([]);
     const [search, setSearch] = useState('');
+    const [listingList, setListingList] = useState([]);
   
     const onSearchChange = (e) => {
       setSearch(e.target.value);
+    };
+
+    const getListings = () => {
+      http.get('/listings').then((res) => {
+        setListingList(res.data);
+      });
     };
   
     const getCars = () => {
@@ -29,6 +36,7 @@ function CarItem() {
   
     useEffect(() => {
       getCars();
+      getListings();
     }, []);
   
     const onSearchKeyDown = (e) => {
@@ -79,11 +87,13 @@ function CarItem() {
           </IconButton>
   
           <Box sx={{ flexGrow: 1 }} />
+          {listingList.length > 0 && (
           <Link to="/addcars" style={{ textDecoration: 'none' }}>
             <Button variant='contained'>
               Add Car
             </Button>
           </Link>
+          )}
         </Box>
   
         <Grid container spacing={2}>
