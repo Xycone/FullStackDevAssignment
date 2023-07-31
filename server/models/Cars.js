@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     Cars.associate = (models) => {
         Cars.belongsTo(models.Listings, {
             foreignKey: "listingId",
-            as: 'cars',
+            as: 'listing',
             onDelete: "cascade"
         });
     };

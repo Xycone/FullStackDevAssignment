@@ -108,26 +108,6 @@ function App() {
                     All feedback
                   </Typography>
                 </Link>
-                <Link to="/contactus" >
-                  <Typography>
-                    Contact Us
-                  </Typography>
-                </Link>
-                <Link to="/payment" >
-                  <Typography>
-                    Report
-                  </Typography>
-                </Link>
-                <Link to="/discounts" >
-                  <Typography>
-                    Discounts
-                  </Typography>
-                </Link>
-                 <Link to="/viewdiscount" >
-                  <Typography>
-                    Discount(User)
-                  </Typography>
-                </Link>
                 <Box sx={{ flexGrow: 1 }}></Box>
                 {user && (
                   <>
@@ -164,7 +144,6 @@ function App() {
               <Route path={"/register"} element={<Register />} />
               <Route path={"/usertable"} element={<UserTable />}></Route>
               <Route path={"/updateuser/:id"} element={<UpdateUser />}></Route>
-              
               <Route path={"/discounts"} element={<Discounts />} />
               <Route path={"/editdiscount/:id"} element={<EditDiscount />} />
               <Route path={"/adddiscount"} element={<AddDiscount />} />
