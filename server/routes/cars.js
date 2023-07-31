@@ -53,7 +53,7 @@ router.get("/", async (req, res) => {
     let list = await Cars.findAll({
         where: condition,
         order: [['createdAt', 'ASC']],
-        include: { model: Listings, as: "listing", attributes: ['make', 'model', 'range', 'price']}
+        include: { model: Listings, as: "listing", attributes: ['make', 'model', 'range', 'price', 'imageFile']}
     });
     res.json(list);
 });

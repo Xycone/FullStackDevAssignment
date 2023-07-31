@@ -9,6 +9,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import AspectRatio from '@mui/joy/AspectRatio';
+import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 
 function CreateBooking() {
   const { id } = useParams();
@@ -21,10 +23,7 @@ function CreateBooking() {
     });
   }, []);
 
-  // Convert id to a number after fetching carList with listingId as numbers
   const idAsNumber = parseInt(id, 10);
-
-  // Find the first car with matching listingId
   const matchingCar = carList.find((car) => car.listingId === idAsNumber);
   const tomorrow = dayjs().add(1, 'day');
 
@@ -35,6 +34,7 @@ function CreateBooking() {
     make: "",
     model: "",
     range: "",
+    totalAmount: 0, // Add totalAmount field to initialValues
   };
 
   const validationSchema = yup.object().shape({
@@ -58,14 +58,28 @@ function CreateBooking() {
         make: matchingCar.listing.make,
         model: matchingCar.listing.model,
         range: matchingCar.listing.range,
+        price: matchingCar.listing.price,
       };
-      // Handle form submission here
+
       http.post("/listings", formData).then((res) => {
         console.log(res.data);
         navigate("/listings");
       });
     },
   });
+
+  // Calculate the total amount whenever the form values for startDate or endDate change
+  useEffect(() => {
+    if (matchingCar) {
+      const startDate = dayjs(formik.values.startDate);
+      const endDate = dayjs(formik.values.endDate);
+      const diffInDays = endDate.diff(startDate, 'day');
+      const totalAmount = matchingCar.listing.price * diffInDays;
+  
+      // Update the total amount in the formik values, checking for NaN and setting it to 0 if needed
+      formik.setFieldValue('totalAmount', isNaN(totalAmount) ? 0 : totalAmount);
+    }
+  }, [formik.values.startDate, formik.values.endDate, matchingCar]);
 
   return (
     <Box>
@@ -76,25 +90,33 @@ function CreateBooking() {
           {matchingCar ? (
             <>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} mb={10}>
                   <Grid item xs={12} md={6} lg={8}>
                     <Box component="form" onSubmit={formik.handleSubmit}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={6} lg={8} mt={10}>
                           <Card>
+                            {matchingCar.listing.imageFile && (
+                              <JoyCssVarsProvider>
+                                <AspectRatio>
+                                  <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${matchingCar.listing.imageFile}`} alt="listings" />
+                                </AspectRatio>
+                              </JoyCssVarsProvider>
+                            )}
                             <CardContent sx={{ whiteSpace: 'pre-wrap' }}>
-                              <Typography variant="h5" textAlign="center" sx={{ mb: 1 }}>{matchingCar.listing.make} {matchingCar.listing.model}</Typography>
                               <Typography variant="h6">Car ID: {matchingCar.id}</Typography>
                               <Typography variant="h6">Make: {matchingCar.listing.make}</Typography>
                               <Typography variant="h6">Model: {matchingCar.listing.model}</Typography>
                               <Typography variant="h6">Range (EPA est.): {matchingCar.listing.range}km</Typography>
+                              <Typography variant="h6">Total: S${formik.values.totalAmount}</Typography>
                               <DemoContainer components={['DateField', 'DateField']}>
                                 <Grid container spacing={2}>
-                                  <Grid item xs={12} sm={6}>
+                                  <Grid item xs={12} sm={6} mt={2}>
                                     <input type="hidden" name="carId" value={matchingCar.id} />
                                     <input type="hidden" name="make" value={matchingCar.listing.make} />
                                     <input type="hidden" name="model" value={matchingCar.listing.model} />
                                     <input type="hidden" name="range" value={matchingCar.listing.range} />
+                                    <input type="hidden" name="price" value={matchingCar.listing.price} />
                                     <DateField
                                       label="Start Date"
                                       value={dayjs(formik.values.startDate)}
@@ -104,7 +126,7 @@ function CreateBooking() {
                                       helperText={formik.touched.startDate && formik.errors.startDate}
                                     />
                                   </Grid>
-                                  <Grid item xs={12} sm={6}>
+                                  <Grid item xs={12} sm={6} mt={2}>
                                     <DateField
                                       label="End Date"
                                       value={dayjs(formik.values.endDate)}
@@ -132,12 +154,11 @@ function CreateBooking() {
             </>
           ) : (
             <Typography>Car Not Found</Typography>
-          )
-          }
+          )}
         </>
       )}
-    </Box >
+    </Box>
   );
 }
 
-export default CreateBooking
+export default CreateBooking;
