@@ -45,6 +45,9 @@ function CreateBooking() {
     endDate: yup
       .date()
       .min(tomorrow.add(1, 'day').toDate(), ({ min }) => `End date has to be at least one day after ${dayjs(min).format('DD/MM/YYYY')}`)
+      .when('startDate', (startDate, schema) => { // Use 'when' to add a dependent validation
+        return schema.min(dayjs(startDate).add(1, 'day').toDate(), 'End date has to be at least one day after the start date');
+      })
       .required("End date is required"),
   });
 
