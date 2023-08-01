@@ -13,9 +13,10 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
+        car_id: yup.string().trim().required(),
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
-        price: yup.number().min(0.01).required()
+        price: yup.number().min(0.01).required(),
     });
     try {
         await validationSchema.validate(data,
@@ -26,9 +27,10 @@ router.post("/", async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
-
+    data.car_id = data.car_id.trim();
     data.make = data.make.trim();
     data.model = data.model.trim();
+    data.date = data.date.trim();
     let result = await Payment.create(data);
     res.json(result);
 });
@@ -50,7 +52,8 @@ router.get("/", async (req, res) => {
     if (search) {
         condition[Sequelize.Op.or] = [
             { make: { [Sequelize.Op.like]: `%${search}%` } },
-            { model: { [Sequelize.Op.like]: `%${search}%` } }
+            { model: { [Sequelize.Op.like]: `%${search}%` } },
+            { date: { [Sequelize.Op.like]: `%${search}%` } }
         ];
     }
 
@@ -88,11 +91,12 @@ router.put("/:id", async (req, res) => {
     let data = req.body;
     // Validate request body
     let validationSchema = yup.object().shape({
+        car_id: yup.string().trim().required(),
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
         range: yup.number().min(0).required(),
         price: yup.number().min(0.01).required(),
-        status: yup.boolean().required()
+        date: yup.string().trim().matches(/^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,'Invalid date format. Please use dd/mm/yyyy.').required('Date is required')
     });
     try {
         await validationSchema.validate(data,
@@ -103,9 +107,10 @@ router.put("/:id", async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
-
+    data.car_id = data.car_id.trim();
     data.make = data.make.trim();
     data.model = data.model.trim();
+    data.date = data.date.trim();
     let num = await Payment.update(data, {
         where: { id: id }
     });

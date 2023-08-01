@@ -11,7 +11,8 @@ router.get("/", async (req, res) => {
     if (search) {
         condition[Sequelize.Op.or] = [
             { discount: { [Sequelize.Op.like]: `%${search}%` } },
-            { id: { [Sequelize.Op.like]: `%${search}%` } }
+            { id: { [Sequelize.Op.like]: `%${search}%` } },
+            { disctype: { [Sequelize.Op.like]: `%${search}%` } }
         ];
     }
 
@@ -27,18 +28,18 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
-        discount: yup.number()
-            .min(1, 'At least 1 character')
-            .required('Required'),
-        disctype: yup.string().required(),
-        // reqtype: yup.string(),
-        // minspend: yup.number().min(1),
-        enddate: yup.string()
-            .matches(
-                /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
-                'Invalid date format. Please use dd/mm/yyyy.'
-            )
-            .required('Date is required.'),
+        discount: yup
+                .number()
+                .required('Discount is required'),
+                
+            disctype: yup.string()
+                .required(),
+            enddate: yup.string()
+                .matches(
+                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
+                    'Invalid date format. Please use dd/mm/yyyy.'
+                )
+                .required('Date is required.'),
     });
     try {
         await validationSchema.validate(data,

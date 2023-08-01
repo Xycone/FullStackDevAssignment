@@ -12,47 +12,30 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 function AddDiscount() {
-
-    
-
     const navigate = useNavigate();
-
     const formik = useFormik({
         initialValues: {
             discount: "",
-            disctype: "$",
+            disctype: "",
             // reqtype: "",
             // minspend: "",
             // cartype: "",
             enddate: ""
-
         },
 
         validationSchema: yup.object().shape({
             discount: yup
                 .number()
                 .required('Discount is required')
-                .when('disctype', {
-                    is: '%',
-                    then: yup.number().max(100, 'Discount cannot be more than 100%'),
-                }),
-            enddate: yup.string()
-                .matches(
-                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
-                    'Invalid date format. Please use dd/mm/yyyy.'
-                )
-                .required('Date is required.'),
         }),
 
         onSubmit: (data) => {
-
             data.discount = data.discount;
             data.disctype = data.disctype;
             // data.reqtype = data.reqtype;
             // data.minspend = data.minspend;
             // data.cartype = data.cartype;
             data.enddate = data.enddate;
-
             data.discount = Number(data.discount);
             // data.minspend = Number(data.minspend);
 
@@ -79,6 +62,7 @@ function AddDiscount() {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={8}>
                         <TextField margin="normal" autoComplete="off"
+                            type="number"
                             style={{ width: '75%' }}
                             label="Discount"
                             name="discount"
@@ -91,7 +75,7 @@ function AddDiscount() {
                         <FormControl margin="normal">
                             <InputLabel>Type</InputLabel>
                             <Select
-                                name="type"
+                                name="disctype"
                                 style={{ width: '200%' }}
                                 value={formik.values.disctype}
                                 onChange={formik.handleChange}
@@ -155,7 +139,6 @@ function AddDiscount() {
                                 error={formik.touched.enddate && Boolean(formik.errors.enddate)}
                                 helperText={formik.touched.enddate && formik.errors.enddate}
                             />
-
                         </Grid>
                         <Box>
                             <Button variant="contained" type="submit">

@@ -29,24 +29,26 @@ function Discounts() {
             <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
                 Discounts view
             </Typography>
-
-
             <Grid container spacing={2}>
+            {assignmentList.map((discounts) => (
+            <Grid item xs={12} md={6} lg={4} key={discounts.id}>
                 <Card>
-                {assignmentList.map((discounts) => (
-                    // <GridItem>
+                
+                
                     <CardContent>
                         {'Discount '+ discounts.id}
                         <Typography variant="h6" sx={{ mb: 1 }}>
-                            {'$'+discounts.discount}
+                            {'$'+discounts.discount+' OFF'}
                         </Typography>
                         <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                            {'End Date '+discounts.enddate}
+                            {'End Date: '+discounts.enddate}
                         </Typography>
                     </CardContent>
-                    // </GridItem>
-                    ))}
+                  
+                    
                 </Card>
+            </Grid>
+            ))}
             </Grid>
         </Box>
     );

@@ -12,8 +12,11 @@ app.get("/", (req, res) => {
     res.send("Welcome!");
 });
 
-const assignmentRoute = require('./routes/cars');
-app.use("/cars", assignmentRoute);
+// Routes
+const listingRoute = require('./routes/listings');
+app.use("/listings", listingRoute);
+const carRoute = require('./routes/cars');
+app.use("/cars", carRoute)
 const discountroute = require('./routes/discounts');
 app.use("/discounts", discountroute);
 const fileRoute = require('./routes/file');
