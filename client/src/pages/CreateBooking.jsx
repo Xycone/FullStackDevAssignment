@@ -87,13 +87,21 @@ function CreateBooking() {
       const basePrice = matchingCar.listing.price;
       let totalAmount = basePrice * diffInDays;
 
-      // Apply the discount if a coupon is selected
       if (formik.values.selectedCoupon) {
         const selectedDiscount = discountList.find((discount) => discount.id === formik.values.selectedCoupon);
         if (selectedDiscount) {
-          totalAmount -= selectedDiscount.discount;
+          const { disctype, discount } = selectedDiscount;
+          if (disctype === '%') {
+            // If the discount type is '%', calculate the discounted amount as a percentage of the total
+            const discountAmount = (totalAmount * discount) / 100;
+            totalAmount -= discountAmount;
+          } else if (disctype === '$') {
+            // If the discount type is '$', directly deduct the fixed amount from the total
+            totalAmount -= discount;
+          }
         }
       }
+  
 
       // Prevent totalAmount from going below 0
       totalAmount = Math.max(totalAmount, 0);
@@ -190,7 +198,11 @@ function CreateBooking() {
                             key={discounts.id}
                             value={discounts.id}
                             control={<Radio />}
-                            label={discounts.disctype + discounts.discount + ' discount'}
+                            label={
+                              `${discounts.disctype === '%' ? '' : '$'}${
+                                discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
+                              } discount`
+                            }
                           />
                         ))}
                       </RadioGroup>
