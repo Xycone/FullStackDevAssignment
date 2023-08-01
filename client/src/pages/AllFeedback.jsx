@@ -85,7 +85,7 @@ function AllFeedback() {
                 Feedback
             </Typography>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
                 <Input value={search} placeholder="Search"
                     onChange={onSearchChange}
                     onKeyDown={onSearchKeyDown} />
@@ -130,7 +130,7 @@ function AllFeedback() {
                   <TableCell align="center">{feedback.description}</TableCell>
                   <TableCell align="center">{feedback.responded.toString()}</TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
+                    <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
                       <AccessTime sx={{ mr: 1 }} />
                       <Typography>

@@ -72,7 +72,7 @@ function Discounts() {
         Discounts
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
+      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 7 }}>
         <Input value={search} placeholder="Search for discount" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
         <IconButton color="primary" onClick={onClickSearch}>
           <Search />
@@ -116,7 +116,7 @@ function Discounts() {
                   <TableCell align="center"></TableCell>
                   <TableCell align="center">{discounts.enddate}</TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
+                    <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
                       <AccessTime sx={{ mr: 1 }} />
                       <Typography>

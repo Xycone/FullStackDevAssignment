@@ -90,7 +90,7 @@ function UserTable() {
         User Table
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
+      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 7 }}>
         <Input value={search} placeholder="Search for user" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
         <IconButton color="primary" onClick={onClickSearch}>
           <Search />
@@ -120,7 +120,7 @@ function UserTable() {
                   <TableCell align="center">{users.name}</TableCell>
                   <TableCell align="center">{users.email}</TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
+                    <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
                       color="text.secondary">
                       <AccessTime sx={{ mr: 1 }} />
                       <Typography>

@@ -55,7 +55,7 @@ function Register() {
             marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignProduct: 'center'
         }}>
             <Typography variant="h5" sx={{ my: 2 }}>
                 Register
