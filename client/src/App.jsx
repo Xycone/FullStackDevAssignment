@@ -28,6 +28,7 @@ import ContactUs from './pages/ContactUs';
 import Payment from './pages/ReportsDetails';
 import StripePayment from './pages/StripePayment';
 import ReportD from './pages/Reports';
+import PaymentPage from './pages/PaymentPage';
 
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -40,7 +41,7 @@ const materialTheme = materialExtendTheme({
     light: {
       palette: {
         background: {
-          default:'#FAFAFA',
+          default: '#FAFAFA',
         },
         primary: {
           main: '#1b5e20',
@@ -92,6 +93,11 @@ function App() {
                     Car Listings(User)
                   </Typography>
                 </Link>
+                <Link to="/cars" >
+                  <Typography>
+                    CarItem (Admin)
+                  </Typography>
+                </Link>
                 <Link to="/sp" >
                   <Typography>
                     Checkout
@@ -117,6 +123,7 @@ function App() {
                     Report
                   </Typography>
                 </Link>
+
                 <Box sx={{ flexGrow: 1 }}></Box>
                 {user && (
                   <>
@@ -141,6 +148,10 @@ function App() {
               <Route path={"/addlistings"} element={<AddCarListings />} />
               <Route path={"/editlistings/:id"} element={<EditCarListings />} />
               <Route path={"/viewlistings"} element={<ViewCarListings />} />
+              <Route path={"/cars"} element={<CarItem />} />
+              <Route path={"/addcars"} element={<AddCarItem />} />
+              <Route path={"/editcars/:id"} element={<EditCarItem />} />
+              <Route path={"/createbooking/:id"} element={<CreateBooking />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/feedback"} element={<AllFeedback />} />
               <Route path={"/contactus"} element={<ContactUs />} />
@@ -148,6 +159,7 @@ function App() {
               <Route path={"/report"} element={<ReportD />} />
               <Route path={"/register"} element={<Register />} />
               <Route path={"/usertable"} element={<UserTable />}></Route>
+              <Route path={"/paymentpage"} element={<PaymentPage />}></Route>
             </Routes>
           </Container>
         </Router>

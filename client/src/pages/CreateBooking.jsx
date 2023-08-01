@@ -11,6 +11,34 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
+import { loadStripe } from "@stripe/stripe-js";
+
+const makePayment = async (product) => {
+  const stripe = await loadStripe("pk_test_51NGHyVLq1Rg4FQjeLKdp1qDL1lbEx30qHo5KgKbUXjdp7jLd324xodhshAqQdIiE7b6LInbIhRJEplaifFYINmAo00EKmjq5ye");
+  const body = { product };
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(
+    "http://localhost:3001/stripepayment/api/create-checkout-session",
+    {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    }
+  );
+
+  const session = await response.json();
+
+  const result = stripe.redirectToCheckout({
+    sessionId: session.id,
+  });
+
+  if (result.error) {
+    console.log(result.error);
+  }
+};
 
 function CreateBooking() {
   const { id } = useParams();
@@ -71,11 +99,19 @@ function CreateBooking() {
         price: matchingCar.listing.price,
         currentLocation: matchingCar.listing.currentLocation,
         totalAmount: formik.values.totalAmount,
-        basePrice: matchingCar?.listing?.price || 0
       };
-
+      
+      const productName = `${formData.make} ${formData.model}`;
+      const productDescription = `Range: ${formData.range}\nPrice per day: ${formData.price}\nLocation: ${formData.price}`;
+      const product = {
+        name: productName,
+        price: formData.totalAmount,
+        description: productDescription,
+        quantity: 1,
+      };
+      makePayment(product);
       // Call navigate with the form data as state
-      navigate('/paymentpage', { state: formData });
+      // navigate('/sp', { state: formData });
     },
   });
 
@@ -102,7 +138,7 @@ function CreateBooking() {
           }
         }
       }
-  
+
 
       // Prevent totalAmount from going below 0
       totalAmount = Math.max(totalAmount, 0);
@@ -200,8 +236,7 @@ function CreateBooking() {
                             value={discounts.id}
                             control={<Radio />}
                             label={
-                              `${discounts.disctype === '%' ? '' : '$'}${
-                                discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
+                              `${discounts.disctype === '%' ? '' : '$'}${discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
                               } discount`
                             }
                           />
@@ -221,4 +256,4 @@ function CreateBooking() {
   );
 }
 
-export default CreateBooking
+export default CreateBooking
