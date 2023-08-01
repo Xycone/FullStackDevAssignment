@@ -18,21 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   User.associate = (models) => {
-    User.hasMany(models.Cars, {
-      foreignKey: "userId",
-      onDelete: "cascade",
-    });
-    User.hasMany(models.Feedback, {
-      foreignKey: "userId",
-      onDelete: "cascade",
-    });
-    User.associate = (models) => {
-      User.hasMany(models.Listings, {
+    User.hasMany(models.Listings, {
         foreignKey: "userId",
-        onDelete: "cascade",
-      });
-    };
-
-    return User;
-  };
+        onDelete: "cascade"
+    });
 };
+
+return User;
+}
