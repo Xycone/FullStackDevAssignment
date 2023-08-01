@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import http from '../http';
-import { Box, Typography, Button, Grid, Card, CardContent } from '@mui/material';
+import { Box, Typography, Button, Grid, Card, CardContent, Radio, RadioGroup, FormControlLabel } from '@mui/material';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,11 +15,16 @@ import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 function CreateBooking() {
   const { id } = useParams();
   const [carList, setCarList] = useState([]);
+  const [discountList, setDiscountList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     http.get('/cars').then((res) => {
       setCarList(res.data);
+    });
+
+    http.get('/discounts').then((res) => {
+      setDiscountList(res.data);
     });
   }, []);
 
@@ -34,7 +39,9 @@ function CreateBooking() {
     make: "",
     model: "",
     range: "",
+    currentLocation: "",
     totalAmount: 0, // Add totalAmount field to initialValues
+    selectedCoupon: "", // Add selectedCoupon field to initialValues
   };
 
   const validationSchema = yup.object().shape({
@@ -62,12 +69,13 @@ function CreateBooking() {
         model: matchingCar.listing.model,
         range: matchingCar.listing.range,
         price: matchingCar.listing.price,
+        currentLocation: matchingCar.listing.currentLocation,
+        totalAmount: formik.values.totalAmount,
+        basePrice: matchingCar?.listing?.price || 0
       };
 
-      http.post("/listings", formData).then((res) => {
-        console.log(res.data);
-        navigate("/listings");
-      });
+      // Call navigate with the form data as state
+      navigate('/paymentpage', { state: formData });
     },
   });
 
@@ -77,27 +85,49 @@ function CreateBooking() {
       const startDate = dayjs(formik.values.startDate);
       const endDate = dayjs(formik.values.endDate);
       const diffInDays = endDate.diff(startDate, 'day');
-      const totalAmount = matchingCar.listing.price * diffInDays;
+      const basePrice = matchingCar.listing.price;
+      let totalAmount = basePrice * diffInDays;
+
+      if (formik.values.selectedCoupon) {
+        const selectedDiscount = discountList.find((discount) => discount.id === formik.values.selectedCoupon);
+        if (selectedDiscount) {
+          const { disctype, discount } = selectedDiscount;
+          if (disctype === '%') {
+            // If the discount type is '%', calculate the discounted amount as a percentage of the total
+            const discountAmount = (totalAmount * discount) / 100;
+            totalAmount -= discountAmount;
+          } else if (disctype === '$') {
+            // If the discount type is '$', directly deduct the fixed amount from the total
+            totalAmount -= discount;
+          }
+        }
+      }
   
+
+      // Prevent totalAmount from going below 0
+      totalAmount = Math.max(totalAmount, 0);
+
       // Update the total amount in the formik values, checking for NaN and setting it to 0 if needed
       formik.setFieldValue('totalAmount', isNaN(totalAmount) ? 0 : totalAmount);
     }
-  }, [formik.values.startDate, formik.values.endDate, matchingCar]);
+  }, [formik.values.startDate, formik.values.endDate, formik.values.selectedCoupon, matchingCar, discountList]);
+
+
 
   return (
-    <Box>
+    <Box height="100%">
       {carList.length === 0 ? (
         <Typography>Loading...</Typography>
       ) : (
         <>
           {matchingCar ? (
             <>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Grid container spacing={2} mb={10}>
-                  <Grid item xs={12} md={6} lg={8}>
+              <Grid container spacing={2} mb={10} alignItems="flex-start">
+                <Grid item xs={12} md={6} lg={8}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Box component="form" onSubmit={formik.handleSubmit}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12} md={6} lg={8} mt={10}>
+                        <Grid item xs={12} md={10} lg={8} mt={10}>
                           <Card>
                             {matchingCar.listing.imageFile && (
                               <JoyCssVarsProvider>
@@ -111,7 +141,8 @@ function CreateBooking() {
                               <Typography variant="h6">Make: {matchingCar.listing.make}</Typography>
                               <Typography variant="h6">Model: {matchingCar.listing.model}</Typography>
                               <Typography variant="h6">Range (EPA est.): {matchingCar.listing.range}km</Typography>
-                              <Typography variant="h6">Total: S${formik.values.totalAmount}</Typography>
+                              <Typography variant="h6">Total: ${formik.values.totalAmount}</Typography>
+                              <Typography variant="h6">Pickup Location: {matchingCar.currentLocation}</Typography>
                               <DemoContainer components={['DateField', 'DateField']}>
                                 <Grid container spacing={2}>
                                   <Grid item xs={12} sm={6} mt={2}>
@@ -151,9 +182,35 @@ function CreateBooking() {
                         </Grid>
                       </Grid>
                     </Box>
-                  </Grid>
+                  </LocalizationProvider>
                 </Grid>
-              </LocalizationProvider>
+                <Grid item xs={12} md={6} lg={4} mt={10}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h6">Select Coupon:</Typography>
+                      <RadioGroup
+                        name="selectedCoupon"
+                        value={formik.values.selectedCoupon}
+                        onChange={(event) => formik.setFieldValue('selectedCoupon', parseInt(event.target.value, 10))}
+                      >
+                        <FormControlLabel value="" control={<Radio />} label="None" /> {/* Add a default option for no coupon selected */}
+                        {discountList.map((discounts) => (
+                          <FormControlLabel
+                            key={discounts.id}
+                            value={discounts.id}
+                            control={<Radio />}
+                            label={
+                              `${discounts.disctype === '%' ? '' : '$'}${
+                                discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
+                              } discount`
+                            }
+                          />
+                        ))}
+                      </RadioGroup>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
             </>
           ) : (
             <Typography>Car Not Found</Typography>
@@ -164,4 +221,4 @@ function CreateBooking() {
   );
 }
 
-export default CreateBooking;
+export default CreateBooking

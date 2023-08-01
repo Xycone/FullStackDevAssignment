@@ -130,21 +130,20 @@ function AllFeedback() {
         Feedback
       </Typography>
 
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Input
-          value={search}
-          placeholder="Search"
-          onChange={onSearchChange}
-          onKeyDown={onSearchKeyDown}
-        />
-        <IconButton color="primary" onClick={onClickSearch}>
-          <Search />
-        </IconButton>
-        <IconButton color="primary" onClick={onClickClear}>
-          <Clear />
-        </IconButton>
-        <Box sx={{ flexGrow: 1 }} />
-        {/* {
+            <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
+                <Input value={search} placeholder="Search"
+                    onChange={onSearchChange}
+                    onKeyDown={onSearchKeyDown} />
+                <IconButton color="primary"
+                    onClick={onClickSearch}>
+                    <Search />
+                </IconButton>
+                <IconButton color="primary"
+                    onClick={onClickClear}>
+                    <Clear />
+                </IconButton>
+                <Box sx={{ flexGrow: 1 }} />
+                {/* {
                     user && (
                         <Link to="/addfeedback" style={{ textDecoration: 'none' }}>
                             <Button variant='contained'>
@@ -182,15 +181,8 @@ function AllFeedback() {
                     {feedback.responded.toString()}
                   </TableCell>
                   <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mb: 1,
-                        justifyContent: "center",
-                      }}
-                      color="text.secondary"
-                    >
+                    <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
+                      color="text.secondary">
                       <AccessTime sx={{ mr: 1 }} />
                       <Typography>
                         {dayjs(feedback.createdAt).format(

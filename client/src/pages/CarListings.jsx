@@ -117,7 +117,7 @@ function CarListings() {
         Car Listings
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
+      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 7 }}>
         <Input value={search} placeholder="Search for car listing" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
         <IconButton color="primary" onClick={onClickSearch}>
           <Search />

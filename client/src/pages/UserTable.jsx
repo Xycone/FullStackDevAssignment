@@ -95,7 +95,7 @@ function UserTable() {
         User Table
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
+      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 7 }}>
         <Input value={search} placeholder="Search for user" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
         <IconButton color="primary" onClick={onClickSearch}>
           <Search />
@@ -132,7 +132,7 @@ function UserTable() {
                     <Box
                       sx={{
                         display: "flex",
-                        alignItems: "center",
+                        alignProduct: "center",
                         mb: 1,
                         justifyContent: "center",
                       }}

@@ -9,18 +9,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        // reqtype:{
-        //     type: DataTypes.STRING,
-        //     allowNull: true
-        // },
-        // cartype:{
-        //     type: DataTypes.STRING,
-        //     allowNull: true
-        // },
-        // minspend:{
-        //     type: DataTypes.DECIMAL(20,2),
-        //     allowNull: true
-        // },
+        reqtype:{
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        listingId:{
+            type: DataTypes.DECIMAL(20,0),
+            allowNull: true
+        },
+        minspend:{
+            type: DataTypes.DECIMAL(20,2),
+            allowNull: true
+        },
         enddate:{
             type: DataTypes.STRING,
             allowNull: false

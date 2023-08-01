@@ -1,42 +1,43 @@
-import "./App.css";
-import { useState, useEffect } from "react";
-import http from "./http";
-import {
-  Menu,
-  MenuItem,
-  Container,
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  Button,
-  Avatar,
-} from "@mui/material";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import UserContext from "./contexts/UserContext";
+import './App.css';
+import { useState, useEffect } from 'react';
+import http from './http';
+import { Container, AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
+import CssBaseline from "@mui/material/CssBaseline";
+import { BrowserRouter as Router, Routes, Route, Link }
+  from 'react-router-dom';
+import UserContext from './contexts/UserContext';
 
-import Discounts from "./pages/Discounts";
-import AddDiscount from "./pages/AddDiscount";
-import EditDiscount from "./pages/EditDiscount";
-import ViewDiscounts from "./pages/UserDiscounts";
-import CarListings from "./pages/CarListings";
-import AddCarListings from "./pages/AddCarListings";
-import EditCarListings from "./pages/EditCarListings";
-import ViewCarListings from "./pages/ViewCarListings";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import UserTable from "./pages/UserTable";
-import UpdateUser from "./pages/UpdateUser";
-import AllFeedback from "./pages/AllFeedback";
-import ContactUs from "./pages/ContactUs";
-import Payment from "./pages/Payment";
-import AddPayment from "./pages/MakePayment";
+import Discounts from './pages/Discounts';
+import AddDiscount from './pages/AddDiscount'
+import EditDiscount from './pages/EditDiscount'
+import ViewDiscounts from './pages/UserDiscounts'
+import CarListings from './pages/CarListings';
+import AddCarListings from './pages/AddCarListings';
+import EditCarListings from './pages/EditCarListings';
+import ViewCarListings from './pages/ViewCarListings';
+import CarItem from './pages/CarItem';
+import AddCarItem from './pages/AddCarItem';
+import EditCarItem from './pages/EditCarItem';
+import CreateBooking from './pages/CreateBooking';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import UserTable from './pages/UserTable';
+import UserUpdate from './pages/UserUpdate';
+import EnterEmail from './pages/EnterEmail';
+import Reset from './pages/Password';
+import UpdateUser from './pages/UpdateUser';
+import AllFeedback from './pages/AllFeedback';
+import ContactUs from './pages/ContactUs';
 import Payment from './pages/PaymentRecords';
-import ReportGen from "./pages/ReportGeneration";
+import AddPayment from './pages/MakePayment';
 
-// theme
+import {
+  experimental_extendTheme as materialExtendTheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  THEME_ID as MATERIAL_THEME_ID,
+} from '@mui/material/styles';
+import { Create } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { green } from "@mui/material/colors";
 const theme = createTheme({
   typography: {
     fontFamily: "Comfortaa, sans-serif",

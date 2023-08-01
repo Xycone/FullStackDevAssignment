@@ -28,19 +28,27 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
-        discount: yup
-                .number()
-                .required('Discount is required'),
-                
-            disctype: yup.string()
-                .required(),
-            enddate: yup.string()
-                .matches(
-                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
-                    'Invalid date format. Please use dd/mm/yyyy.'
-                )
-                .required('Date is required.'),
-    });
+    discount: yup.number().required('Discount is required'),
+    disctype: yup.string().required("required."),
+    reqtype: yup.string().required(), // Make reqtype required
+    listingId: yup
+        .number()
+        .test(
+          "Please select a Car Type when Requirement Type is 'Car'",
+          function (value) {
+            const { reqtype } = this.parent;
+            if (reqtype === "listingId") {
+              return value !== undefined && value !== "";
+            }
+            return true;
+          }
+        ),
+    minspend: yup.number().required(),
+    enddate: yup.string().matches(
+      /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
+      'Invalid date format. Please use dd/mm/yyyy.'
+    ).required('Date is required.'),
+  });
     try {
         await validationSchema.validate(data,
             { abortEarly: false, strict: true });
@@ -51,7 +59,7 @@ router.post("/", async (req, res) => {
         return;
     }
     data.discounts = data.Discounts;
-    // data.minspend = data.minspend.trim();
+    data.minspend = data.minspend;
     let result = await Discounts.create(data);
     res.json(result);
 });
@@ -85,8 +93,8 @@ router.put("/:id", async (req, res) => {
             .min(1, 'At least 1 character')
             .required('Required'),
         disctype: yup.string().required(),
-        // reqtype: yup.string(),
-        // minspend: yup.number().min(1),
+        reqtype: yup.string(),
+        minspend: yup.number().min(1),
         enddate: yup.string()
             .matches(
                 /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
@@ -104,7 +112,7 @@ router.put("/:id", async (req, res) => {
         return;
     }
     data.discounts = data.Discounts;
-    // data.minspend = data.minspend.trim();
+    data.minspend = data.minspend;
 
     let num = await Discounts.update(data, {
         where: { id: id }
