@@ -108,6 +108,16 @@ function App() {
                     All feedback
                   </Typography>
                 </Link>
+                <Link to="/discounts" >
+                  <Typography>
+                    Discount
+                  </Typography>
+                </Link>
+                <Link to="/adddiscount" >
+                  <Typography>
+                    Add Discount
+                  </Typography>
+                </Link>
                 <Box sx={{ flexGrow: 1 }}></Box>
                 {user && (
                   <>
