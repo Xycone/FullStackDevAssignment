@@ -12,7 +12,6 @@ import {
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import UserContext from "./contexts/UserContext";
-
 import Discounts from "./pages/Discounts";
 import AddDiscount from "./pages/AddDiscount";
 import EditDiscount from "./pages/EditDiscount";
@@ -93,31 +92,14 @@ function App() {
                 <Link to="/viewlistings">
                   <Typography>Car Listings(User)</Typography>
                 </Link>
-                <Link to="/sp">
-                  <Typography>Checkout</Typography>
-                </Link>
-                <Link to="/usertable">
-                  <Typography>User Table</Typography>
-                </Link>
-                <Link to="/feedback">
-                  <Typography>All feedback</Typography>
-                </Link>
-                <Link to="/sp" >
-                  <Typography>
-                    Checkout
-                  </Typography>
-                </Link>
-                <Link to="/report">
-                  <Typography>Report</Typography>
-                </Link>
                 <Link to="/discounts">
                   <Typography>Discount</Typography>
                 </Link>
                 <Link to="/adddiscount">
                   <Typography>Add Discount</Typography>
                 </Link>
-                <Link to="/addcars">
-                  <Typography>cars</Typography>
+                <Link to="/cars">
+                  <Typography>CarItem(User)</Typography>
                 </Link>
 
                 <Box sx={{ flexGrow: 1 }}></Box>
@@ -150,12 +132,15 @@ function App() {
               <Route path={"/addlistings"} element={<AddCarListings />} />
               <Route path={"/editlistings/:id"} element={<EditCarListings />} />
               <Route path={"/viewlistings"} element={<ViewCarListings />} />
+              <Route path={"/cars"} element={<CarItem />} />
+              <Route path={"/addcars"} element={<AddCarItem />} />
+              <Route path={"/editcars/:id"} element={<EditCarItem />} />
+              <Route path={"/createbooking/:id"} element={<CreateBooking />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/feedback"} element={<AllFeedback />} />
               <Route path={"/contactus"} element={<ContactUs />} />
-
               <Route path={"/register"} element={<Register />} />
-              <Route path={"/usertable"} element={<UserTable />}></Route>
+              <Route path={"/usertable"} element={<UserTable />} />
             </Routes>
           </Container>
         </Router>
