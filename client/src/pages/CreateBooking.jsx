@@ -70,12 +70,11 @@ function CreateBooking() {
         range: matchingCar.listing.range,
         price: matchingCar.listing.price,
         currentLocation: matchingCar.listing.currentLocation,
+        totalAmount: formik.values.totalAmount,
       };
 
-      http.post("/listings", formData).then((res) => {
-        console.log(res.data);
-        navigate("/listings");
-      });
+      // Call navigate with the form data as state
+      navigate('/paymentpage', { state: formData });
     },
   });
 
@@ -100,6 +99,8 @@ function CreateBooking() {
       formik.setFieldValue('totalAmount', isNaN(totalAmount) ? 0 : totalAmount);
     }
   }, [formik.values.startDate, formik.values.endDate, formik.values.selectedCoupon, matchingCar, discountList]);
+
+
 
   return (
     <Box height="100%">

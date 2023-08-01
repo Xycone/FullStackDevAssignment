@@ -26,6 +26,7 @@ import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
 import Payment from './pages/PaymentRecords';
 import AddPayment from './pages/MakePayment';
+import PaymentPage from './pages/PaymentPage';
 
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -158,6 +159,7 @@ function App() {
               <Route path={"/editdiscount/:id"} element={<EditDiscount />} />
               <Route path={"/adddiscount"} element={<AddDiscount />} />
               <Route path={"/viewdiscount"} element={<ViewDiscounts />} />
+              <Route path={"/paymentpage"} element={<PaymentPage />} />
 
             </Routes>
           </Container>
