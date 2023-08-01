@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
-        car_id: yup.string().trim().required(),
+        carId: yup.string().trim().required(),
         make: yup.string().trim().min(3).max(100).required(),
         model: yup.string().trim().min(1).max(150).required(),
         price: yup.number().min(0.01).required(),
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
-    data.car_id = data.car_id.trim();
+    data.carId = data.carId.trim();
     data.make = data.make.trim();
     data.model = data.model.trim();
     data.date = data.date.trim();

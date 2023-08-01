@@ -20,7 +20,7 @@ function Payment() {
     };
     const formik = useFormik({
         initialValues: {
-            car_id: "",
+            carId: "",
             make: "",
             model: "",
             price: "",
@@ -32,7 +32,7 @@ function Payment() {
 
 
         validationSchema: yup.object().shape({
-            car_id: yup.string().trim()
+            carId: yup.string().trim()
                 .required('Id is required'),
             make: yup.string().trim()
                 .min(3, 'Make of the car must be at least 3 characters')
@@ -64,7 +64,7 @@ function Payment() {
         }),
 
         onSubmit: (data) => {
-            data.car_id = data.car_id.trim();
+            data.carId = data.carId.trim();
             data.make = data.make.trim();
             data.model = data.model.trim();
             data.price = Number(data.price);
@@ -86,11 +86,11 @@ function Payment() {
                     <Grid item xs={12} md={6} lg={8}>
                         <TextField fullWidth margin="normal" autoComplete="off"
                             label="Car_id:"
-                            name="car_id"
-                            value={formik.values.car_id}
+                            name="carId"
+                            value={formik.values.carId}
                             onChange={formik.handleChange}
-                            error={formik.touched.car_id && Boolean(formik.errors.car_id)}
-                            helperText={formik.touched.car_id && formik.errors.car_id}
+                            error={formik.touched.carId && Boolean(formik.errors.carId)}
+                            helperText={formik.touched.carId && formik.errors.carId}
                         />
                         <TextField fullWidth margin="normal" autoComplete="off"
                             label="Make:"

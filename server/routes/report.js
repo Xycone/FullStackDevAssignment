@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
-        revenue: yup.number().min(0.01).required(),
+        revenue: yup.number().min(0).required(),
     });
     try {
         await validationSchema.validate(data,
@@ -24,18 +24,6 @@ router.post("/", async (req, res) => {
         return;
     }
     data.date = data.date.trim();
-
-    // Get the latest data from the payment table
-    let latestData = await Payment.findOne({
-        order: [
-            { date: -1 },
-        ],
-    });
-
-    // Update the data with the latest data from the payment table
-    data.revenue += latestData.price;
-
-    // Create the report
     let result = await Report.create(data);
     res.json(result);
 });
@@ -69,4 +57,42 @@ router.get("/:date", async (req, res) => {
     res.json(report);
 });
 
+router.put("/:date", async (req, res) => {
+    let date = req.params.date;
+    // Check date not found 
+    let report = await Report.findByPk(date);
+    if (!report) {
+        res.sendStatus(404);
+        return;
+    }
+
+    let data = req.body;
+    // Validate request body
+    let validationSchema = yup.object().shape({
+        revenue: yup.number().min(0).required(),
+    });
+    try {
+        await validationSchema.validate(data,
+            { abortEarly: false, strict: true });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(400).json({ errors: err.errors });
+        return;
+    }
+    data.revenue += data.revenue;
+    let num = await Report.update(data, {
+        where: { date: date }
+    });
+    if (num == 1) {
+        res.json({
+            message: "Report was updated successfully."
+        });
+    }
+    else {
+        res.status(400).json({
+            message: `Cannot update report with id ${date}.`
+        });
+    }
+});
 module.exports = router;

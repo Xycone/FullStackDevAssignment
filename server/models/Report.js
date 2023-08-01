@@ -2,7 +2,8 @@ module.exports = (sequelize, DataTypes) => {
     const Report = sequelize.define("Report", {
         date: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true,
         },
         revenue: {
             type: DataTypes.DECIMAL(20,2),

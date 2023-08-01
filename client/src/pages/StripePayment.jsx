@@ -3,8 +3,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { loadStripe } from "@stripe/stripe-js";
+import { useLocation } from 'react-router-dom';
 
 function StripePayment() {
+    const location = useLocation();
+    const formData = location.state;
+    const [carList, setCarList] = useState([]);
+    const idAsNumber = parseInt(formData.carId, 10);
+    const matchingCar = formData.carId;
     const makePayment = async () => {
         const stripe = await loadStripe("pk_test_51NGHyVLq1Rg4FQjeLKdp1qDL1lbEx30qHo5KgKbUXjdp7jLd324xodhshAqQdIiE7b6LInbIhRJEplaifFYINmAo00EKmjq5ye");
         const body = { product };
@@ -31,20 +37,24 @@ function StripePayment() {
             console.log(result.error);
         }
     };
+    const productName = `${formData.make} ${formData.model}`;
+    const productDescription = `Range: ${formData.range}\nPrice per day: ${formData.price}\nLocation: ${formData.price}`;
     const [product, setProduct] = useState({
-        name: "Go FullStack with KnowledgeHut",
-        price: 1000,
-        productOwner: "KnowledgeHut",
-        description:
-            "This beginner-friendly Full-Stack Web Development Course is offered online in blended learning mode, and also in an on-demand self-paced format.",
+        name: productName,
+        price: formData.totalAmount,
+        description: productDescription,
         quantity: 1,
     });
 
     return (
-        <Card style={{ width: "20rem" }}>
-            <Card.Img
-                variant="top" src="https://images.pexels.com/photos/12428359/pexels-photo-12428359.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            />
+        <Card style={{ width: "50%", height: "50%" }}>
+            {/* {matchingCar.listing.imageFile && (
+                <JoyCssVarsProvider>
+                    <AspectRatio>
+                        <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${matchingCar.listing.imageFile}`} alt="listings" />
+                    </AspectRatio>
+                </JoyCssVarsProvider>
+            )} */}
             <Card.Body>
                 <Card.Title>{product.name}</Card.Title>
                 <Card.Text>{product.description}</Card.Text>
@@ -53,6 +63,7 @@ function StripePayment() {
                 </Button>
             </Card.Body>
         </Card>
+
     );
 }
 export default StripePayment;

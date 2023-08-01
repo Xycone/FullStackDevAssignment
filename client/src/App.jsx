@@ -25,9 +25,9 @@ import UserTable from './pages/UserTable';
 import UpdateUser from './pages/UpdateUser';
 import AllFeedback from './pages/AllFeedback';
 import ContactUs from './pages/ContactUs';
-import Payment from './pages/ReportsDetails';
+import PaymentRecords from './pages/PaymentRecords';
 import StripePayment from './pages/StripePayment';
-import ReportD from './pages/Reports';
+import Success from './pages/Success';
 
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -145,9 +145,19 @@ function App() {
               <Route path={"/feedback"} element={<AllFeedback />} />
               <Route path={"/contactus"} element={<ContactUs />} />
               <Route path={"/sp"} element={<StripePayment />} />
-              <Route path={"/report"} element={<ReportD />} />
+              <Route path={"/paymentrecords"} element={<PaymentRecords />} />
               <Route path={"/register"} element={<Register />} />
-              <Route path={"/usertable"} element={<UserTable />}></Route>
+              <Route path={"/usertable"} element={<UserTable />}/>
+              <Route path={"/createbooking/:id"} element={<CreateBooking />}/>
+              <Route path={"/updateuser"} element={<UpdateUser />}/>
+              <Route path={"/caritem"} element={<CarItem />}/>
+              <Route path={"/addcars"} element={<AddCarItem />}/>
+              <Route path={"/editcars"} element={<EditCarItem />}/>
+              <Route path={"/success"} element={<Success />}/>
+              <Route path={"/discounts"} element={<Discounts />}/>
+              <Route path={"/adddiscount"} element={<AddDiscount />}/>
+              <Route path={"/editdiscount"} element={<EditDiscount />}/>
+              <Route path={"/viewdiscounts"} element={<ViewDiscounts />}/>
             </Routes>
           </Container>
         </Router>
