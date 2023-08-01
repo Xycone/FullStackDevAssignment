@@ -1,4 +1,4 @@
-import React, { useState, Dateview } from "react";
+import React, { useEffect, useState, Dateview } from "react";
 
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,13 +22,24 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function AddDiscount() {
   const navigate = useNavigate();
+  const [assignmentList, setAssignmentList] = useState([]);
+
+  const getListings = () => {
+    http.get("/listings").then((res) => {
+      setAssignmentList(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getListings();
+  }, []);
   const formik = useFormik({
     initialValues: {
       discount: "",
       disctype: "",
       reqtype: "null",
       minspend: "",
-      cartype: "",
+      listingId: "",
       enddate: "",
     },
 
@@ -36,13 +47,13 @@ function AddDiscount() {
       discount: yup.number().required("Discount is required"),
       disctype: yup.string().required("required."),
       reqtype: yup.string().required("Requirement Type is required"),
-      cartype: yup
-        .string()
+      listingId: yup
+        .number()
         .test(
           "Please select a Car Type when Requirement Type is 'Car'",
           function (value) {
             const { reqtype } = this.parent;
-            if (reqtype === "cartype") {
+            if (reqtype === "listingId") {
               return value !== undefined && value !== "";
             }
             return true;
@@ -63,7 +74,7 @@ function AddDiscount() {
       data.disctype = data.disctype;
       data.reqtype = data.reqtype;
       data.minspend = data.minspend;
-      data.cartype = data.cartype;
+      data.listingId = data.listingId;
       data.enddate = data.enddate;
       data.discount = Number(data.discount);
       data.minspend = Number(data.minspend);
@@ -82,7 +93,7 @@ function AddDiscount() {
   //     setSecondDropdownVisible(event.target.value === "cartype");
   //   };
 
-  const [selectedOption, setSelectedOption] = useState("cartype"); // Set the initial value to "cartype"
+  const [selectedOption, setSelectedOption] = useState("listingId"); // Set the initial value to "cartype"
   const [secondDropdownVisible, setSecondDropdownVisible] = useState(false);
 
   const handleOptionChange = (event) => {
@@ -91,13 +102,13 @@ function AddDiscount() {
 
     // If the selected value is "null", set cartype to an empty string
     if (selectedValue === "null") {
-      formik.setFieldValue("cartype", "");
+      formik.setFieldValue("listingId", 0);
       formik.setFieldValue("minspend", 0);
     }
 
     // Update reqtype in formik values
     formik.setFieldValue("reqtype", selectedValue);
-    setSecondDropdownVisible(selectedValue === "cartype");
+    setSecondDropdownVisible(selectedValue === "listingId");
   };
   return (
     <Box>
@@ -156,7 +167,7 @@ function AddDiscount() {
                   }
                 >
                   <MenuItem value="null">None</MenuItem>
-                  <MenuItem value="cartype">Car</MenuItem>
+                  <MenuItem value="listingId">Listing</MenuItem>
                   <MenuItem value="minspend">Min Spend</MenuItem>
                 </Select>
                 {formik.touched.reqtype &&
@@ -169,7 +180,7 @@ function AddDiscount() {
 
               {secondDropdownVisible ? (
                 <FormControl fullWidth margin="normal">
-                  <InputLabel id="second-option-label">Car Type:</InputLabel>
+                  {/* <InputLabel id="second-option-label">Car Type:</InputLabel>
                   <Select
                     labelId="second-option-label"
                     id="second-option-select"
@@ -186,7 +197,29 @@ function AddDiscount() {
                       <Typography variant="caption" color="error">
                         {formik.errors.cartype}
                       </Typography>
-                    )}
+                    )} */}
+
+                  <InputLabel id="demo-simple-select-label">
+                    Listing Id:
+                  </InputLabel>
+                  <Select
+                    labelId="second-option-label"
+                    id="second-option-select"
+                    label="Listing Id:"
+                    name="listingId"
+                    value={formik.values.listingId}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.listingId &&
+                      Boolean(formik.errors.listingId)
+                    }
+                  >
+                    {assignmentList.map((listings) => (
+                      <MenuItem key={listings.id} value={listings.id}>
+                        {listings.id}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
               ) : (
                 <TextField
