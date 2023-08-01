@@ -8,8 +8,6 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 router.post("/api/create-checkout-session", async (req, res) => {
     const { product } = req.body;
-    console.log(product);
-    console.log(product.price);
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
@@ -37,5 +35,7 @@ router.post("/api/create-checkout-session", async (req, res) => {
 router.get("/", (req, res) => {
     res.send("Hello World");
 });
+
+module.exports = router;
 
 module.exports = router;
