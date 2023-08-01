@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
 import http from '../http';
 import { AccessTime, Search, Clear, Edit, Delete, AddCircle } from '@mui/icons-material';
-import dayjs from 'dayjs';
-import global from '../global';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 
@@ -59,12 +56,6 @@ function Payment() {
   const handleClose1 = () => {
     setOpen1(false);
   };
-  const editPayment = (id, payment) => {
-    http.put(`/payment/${id}`, payment).then((res) => {
-      console.log(res.data);
-      navigate(0);
-    });
-  };
   useEffect(() => {
     http.get('/payment').then((res) => {
       console.log(res.data);
@@ -74,10 +65,10 @@ function Payment() {
   return (
     <Box>
       <Typography variant="h5" sx={{ my: 2 }}>
-        Payment
+        Reports
       </Typography>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
         <Input value={search} placeholder="Search"
           onChange={onSearchChange}
           onKeyDown={onSearchKeyDown} />
@@ -105,13 +96,12 @@ function Payment() {
           <Table aria-label='payment table'>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Car Id</TableCell>
                 <TableCell align="center">Make</TableCell>
                 <TableCell align="center">Model</TableCell>
                 <TableCell align="center">Price</TableCell>
                 <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Date Created</TableCell>
+                <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -119,28 +109,13 @@ function Payment() {
             <TableBody>
               {paymentList.map((payment) => (
                 <TableRow key={payment.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell align="center">{payment.id}</TableCell>
                   <TableCell align="center">{payment.car_id}</TableCell>
                   <TableCell align="center">{payment.make}</TableCell>
                   <TableCell align="center">{payment.model}</TableCell>
                   <TableCell align="center">{payment.price}</TableCell>
                   <TableCell align="center">{payment.date}</TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
-                      color="text.secondary">
-                      <AccessTime sx={{ mr: 1 }} />
-                      <Typography>
-                        {dayjs(payment.createdAt).format(global.datetimeFormat)}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Link to={`/editcars/${payment.date}`}>
-                      <IconButton color="primary" sx={{ padding: '4px' }}>
-                        <Edit />
-                      </IconButton>
-                    </Link>
-                  </TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                   <TableCell>
                     <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen1(payment.id)}>
                       <Delete />
