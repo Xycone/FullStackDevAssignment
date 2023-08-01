@@ -14,7 +14,6 @@ import {
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
-
 import Discounts from "./pages/Discounts";
 import AddDiscount from "./pages/AddDiscount";
 import EditDiscount from "./pages/EditDiscount";
