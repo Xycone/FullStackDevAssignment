@@ -39,6 +39,7 @@ function CreateBooking() {
     make: "",
     model: "",
     range: "",
+    currentLocation: "",
     totalAmount: 0, // Add totalAmount field to initialValues
     selectedCoupon: "", // Add selectedCoupon field to initialValues
   };
@@ -68,6 +69,7 @@ function CreateBooking() {
         model: matchingCar.listing.model,
         range: matchingCar.listing.range,
         price: matchingCar.listing.price,
+        currentLocation: matchingCar.listing.currentLocation,
       };
 
       http.post("/listings", formData).then((res) => {
@@ -126,7 +128,8 @@ function CreateBooking() {
                               <Typography variant="h6">Make: {matchingCar.listing.make}</Typography>
                               <Typography variant="h6">Model: {matchingCar.listing.model}</Typography>
                               <Typography variant="h6">Range (EPA est.): {matchingCar.listing.range}km</Typography>
-                              <Typography variant="h6">Price: ${formik.values.totalAmount}</Typography>
+                              <Typography variant="h6">Total: ${formik.values.totalAmount}</Typography>
+                              <Typography variant="h6">Pickup Location: {matchingCar.currentLocation}</Typography>
                               <DemoContainer components={['DateField', 'DateField']}>
                                 <Grid container spacing={2}>
                                   <Grid item xs={12} sm={6} mt={2}>

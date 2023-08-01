@@ -102,7 +102,7 @@ function CarItem() {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Car Id</TableCell>
-                  <TableCell align="center">Belongs To</TableCell>
+                  <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Current Location</TableCell>
                   <TableCell align="center">In Service</TableCell>
                   <TableCell align="center">Added On</TableCell>
@@ -114,7 +114,7 @@ function CarItem() {
                 {assignmentList.map((cars, i) => (
                   <TableRow key={cars.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell align="center">{cars.id}</TableCell>
-                    <TableCell align="center">Listing {cars.listingId}</TableCell>
+                    <TableCell align="center">{cars.listing.make} {cars.listing.model}</TableCell>
                     <TableCell align="center">{cars.currentLocation}</TableCell>
                     <TableCell align="center">{cars.serviceStatus.toString()}</TableCell>
                     <TableCell>
