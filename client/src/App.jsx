@@ -40,7 +40,7 @@ const materialTheme = materialExtendTheme({
     light: {
       palette: {
         background: {
-          default: '#F5F5F5',
+          default:'#FAFAFA',
         },
         primary: {
           main: '#1b5e20',

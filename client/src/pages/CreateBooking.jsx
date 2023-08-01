@@ -71,6 +71,7 @@ function CreateBooking() {
         price: matchingCar.listing.price,
         currentLocation: matchingCar.listing.currentLocation,
         totalAmount: formik.values.totalAmount,
+        basePrice: matchingCar?.listing?.price || 0
       };
 
       // Call navigate with the form data as state

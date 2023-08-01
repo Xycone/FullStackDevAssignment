@@ -13,7 +13,8 @@ function PaymentPage() {
             <p>Car model: {formData.model}</p>
             <p>Car range: {formData.range}</p>
             <p>Price: S${formData.price}/day</p>
-            <p>Total Amount: ${formData.totalAmount}</p>
+            <p>Total: ${formData.basePrice} - ${(formData.basePrice - formData.totalAmount).toFixed(2)}</p>
+            <p>Amount to be paid: ${formData.totalAmount}</p>
         </div>
     )
 }
