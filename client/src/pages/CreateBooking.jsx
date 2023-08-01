@@ -95,6 +95,9 @@ function CreateBooking() {
         }
       }
 
+      // Prevent totalAmount from going below 0
+      totalAmount = Math.max(totalAmount, 0);
+
       // Update the total amount in the formik values, checking for NaN and setting it to 0 if needed
       formik.setFieldValue('totalAmount', isNaN(totalAmount) ? 0 : totalAmount);
     }
@@ -187,7 +190,7 @@ function CreateBooking() {
                             key={discounts.id}
                             value={discounts.id}
                             control={<Radio />}
-                            label={discounts.disctype + ' $' + discounts.discount + ' off!'}
+                            label={discounts.disctype + discounts.discount + ' discount'}
                           />
                         ))}
                       </RadioGroup>
