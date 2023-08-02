@@ -13,7 +13,6 @@ import homepage_img from "../images/homepage_img.png";
 
 function Homepage() {
   return (
-    <Container>
       <Box sx={{ position: "relative", width: "100%", height: "91.5vh" }}>
         <Box
           sx={{
@@ -56,7 +55,6 @@ function Homepage() {
           />
         </Typography>
       </Box>
-    </Container>
   );
 }
 
