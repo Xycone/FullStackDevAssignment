@@ -8,6 +8,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 router.post("/api/create-checkout-session", async (req, res) => {
     const { product } = req.body;
+    console.log(product.description);
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
@@ -15,6 +16,7 @@ router.post("/api/create-checkout-session", async (req, res) => {
                     currency: "sgd",
                     product_data: {
                         name: product.name,
+                        images: [product.img]
                     },
                     unit_amount: product.price * 100,
                 },
@@ -23,7 +25,7 @@ router.post("/api/create-checkout-session", async (req, res) => {
         ],
         mode: "payment",
         success_url: "http://localhost:3000/success",
-        cancel_url: "http://localhost:3000/cancel",
+        cancel_url: "http://localhost:3000/viewlistings",
     });
     res.json({
         id: session.id,
@@ -37,5 +39,3 @@ router.get("/", (req, res) => {
 });
 
 module.exports = router;
-
-module.exports = router;

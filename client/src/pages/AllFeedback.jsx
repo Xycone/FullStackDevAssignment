@@ -165,7 +165,7 @@ function AllFeedback() {
                   <TableCell align="center">Description</TableCell>
                   <TableCell align="center">Responded</TableCell>
                   <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Author</TableCell>
+                  {/* <TableCell align="center">Author</TableCell> */}
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
@@ -193,7 +193,7 @@ function AllFeedback() {
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>{userNames[index]}</TableCell>
+                    {/* <TableCell>{userNames[index]}</TableCell> */}
                     <TableCell>
                       <IconButton
                         color="primary"

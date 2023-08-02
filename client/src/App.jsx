@@ -38,7 +38,7 @@ import Homepage from "./pages/Homepage";
 import AllFeedback from "./pages/AllFeedback";
 import ContactUs from "./pages/ContactUs";
 import Payment from "./pages/ReportsDetails";
-import AddPayment from "./pages/MakePayment";
+import Success from "./pages/Success";
 import PaymentPage from "./pages/PaymentPage";
 
 import {
@@ -221,7 +221,6 @@ function App() {
             </Container>
           </AppBar>
           <Routes>
-            <Route path={"/addcars"} element={<AddCarListings />} />
             <Route path={"/editcars/:id"} element={<EditCarListings />} />
             <Route path={"/viewcars"} element={<ViewCarListings />} />
             <Route path={"/createbooking/:id"} element={<CreateBooking />} />
@@ -249,6 +248,7 @@ function App() {
             <Route path={"/editcars/:id"} element={<EditCarItem />} />
             <Route path={"/createbooking/:id"} element={<CreateBooking />} />
             <Route path={"/paymentrecords"} element={<Payment />} />
+            <Route path={"/success"} element={<Success />} />
           </Routes>
         </Router>
       </UserContext.Provider>
