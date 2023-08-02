@@ -46,7 +46,7 @@ const materialTheme = materialExtendTheme({
     light: {
       palette: {
         background: {
-          default:  "#FAFAFA",
+          default: "#FAFAFA",
         },
         primary: {
           main: "#1b5e20",
@@ -92,14 +92,14 @@ function App() {
                 <Link to="/viewlistings">
                   <Typography>Car Listings(User)</Typography>
                 </Link>
+                <Link to="/cars">
+                  <Typography>CarItem(Admin)</Typography>
+                </Link>
                 <Link to="/discounts">
                   <Typography>Discount</Typography>
                 </Link>
                 <Link to="/adddiscount">
                   <Typography>Add Discount</Typography>
-                </Link>
-                <Link to="/cars">
-                  <Typography>CarItem(User)</Typography>
                 </Link>
 
                 <Box sx={{ flexGrow: 1 }}></Box>
@@ -141,6 +141,10 @@ function App() {
               <Route path={"/contactus"} element={<ContactUs />} />
               <Route path={"/register"} element={<Register />} />
               <Route path={"/usertable"} element={<UserTable />} />
+              <Route path={"/discounts"} element={<Discounts />} />
+              <Route path={"/editdiscount/:id"} element={<EditDiscount />} />
+              <Route path={"/adddiscount"} element={<AddDiscount />} />
+              <Route path={"/viewdiscount"} element={<ViewDiscounts />} />
             </Routes>
           </Container>
         </Router>

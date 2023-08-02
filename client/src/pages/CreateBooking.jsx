@@ -97,12 +97,16 @@ function CreateBooking() {
         model: matchingCar.listing.model,
         range: matchingCar.listing.range,
         price: matchingCar.listing.price,
-        currentLocation: matchingCar.listing.currentLocation,
+        currentLocation: matchingCar.currentLocation,
         totalAmount: formik.values.totalAmount,
       };
-      
+      if (formData.totalAmount === 0 || formData.totalAmount >= 200000) {
+        // Handle the case when the total amount is 0, e.g., show an error message or disable the button
+        console.log("Total amount is 0, cannot proceed to checkout.");
+        return;
+      }
       const productName = `${formData.make} ${formData.model}`;
-      const productDescription = `Range: ${formData.range}\nPrice per day: ${formData.price}\nLocation: ${formData.price}`;
+      const productDescription = `Range: ${formData.range}\nLocation: ${formData.currentLocation}`;
       const product = {
         name: productName,
         price: formData.totalAmount,
