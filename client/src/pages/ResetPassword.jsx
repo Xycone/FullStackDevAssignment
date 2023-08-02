@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, TextField, Button } from '@mui/material';
+import { Box, Typography, TextField, Button, Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -38,42 +38,44 @@ function ResetPassword() {
     });
 
     return (
-        <Box sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        }}>
-            <Typography variant="h5" sx={{ my: 2 }}>
-                Register
-            </Typography>
-            <Box component="form" sx={{ maxWidth: '500px' }}
-                onSubmit={formik.handleSubmit}>
-                    <TextField
-                    fullWidth margin="normal" autoComplete="off"
-                    label="Password"
-                    name="password" type="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    error={formik.touched.password && Boolean(formik.errors.password)}
-                    helperText={formik.touched.password && formik.errors.password}
-                />
-                <TextField
-                    fullWidth margin="normal" autoComplete="off"
-                    label="Confirm Password"
-                    name="confirmPassword" type="password"
-                    value={formik.values.confirmPassword}
-                    onChange={formik.handleChange}
-                    error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                    helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                />
-                <Button fullWidth variant="contained" sx={{ mt: 2 }}
-                    type="submit">
+        <Container>
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
+                <Typography variant="h5" sx={{ my: 2 }}>
                     Register
-                </Button>
+                </Typography>
+                <Box component="form" sx={{ maxWidth: '500px' }}
+                    onSubmit={formik.handleSubmit}>
+                    <TextField
+                        fullWidth margin="normal" autoComplete="off"
+                        label="Password"
+                        name="password" type="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                    />
+                    <TextField
+                        fullWidth margin="normal" autoComplete="off"
+                        label="Confirm Password"
+                        name="confirmPassword" type="password"
+                        value={formik.values.confirmPassword}
+                        onChange={formik.handleChange}
+                        error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                    />
+                    <Button fullWidth variant="contained" sx={{ mt: 2 }}
+                        type="submit">
+                        Register
+                    </Button>
+                </Box>
+                <ToastContainer />
             </Box>
-            <ToastContainer />
-        </Box>
+        </Container>
     );
 }
 

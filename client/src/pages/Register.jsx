@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import http from '../http';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Container } from "@mui/material";
 
 function Register() {
     const navigate = useNavigate();
@@ -51,61 +52,63 @@ function Register() {
     });
 
     return (
-        <Box sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignProduct: 'center'
-        }}>
-            <Typography variant="h5" sx={{ my: 2 }}>
-                Register
-            </Typography>
-            <Box component="form" sx={{ maxWidth: '500px' }}
-                onSubmit={formik.handleSubmit}>
-                <TextField
-                    fullWidth margin="normal" autoComplete="off"
-                    label="Name"
-                    name="name"
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
-                    helperText={formik.touched.name && formik.errors.name}
-                />
-                <TextField
-                    fullWidth margin="normal" autoComplete="off"
-                    label="Email"
-                    name="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                />
-                <TextField
-                    fullWidth margin="normal" autoComplete="off"
-                    label="Password"
-                    name="password" type="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    error={formik.touched.password && Boolean(formik.errors.password)}
-                    helperText={formik.touched.password && formik.errors.password}
-                />
-                <TextField
-                    fullWidth margin="normal" autoComplete="off"
-                    label="Confirm Password"
-                    name="confirmPassword" type="password"
-                    value={formik.values.confirmPassword}
-                    onChange={formik.handleChange}
-                    error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                    helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                />
-                <Button fullWidth variant="contained" sx={{ mt: 2 }}
-                    type="submit">
+        <Container>
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignProduct: 'center'
+            }}>
+                <Typography variant="h5" sx={{ my: 2 }}>
                     Register
-                </Button>
-            </Box>
+                </Typography>
+                <Box component="form" sx={{ maxWidth: '500px' }}
+                    onSubmit={formik.handleSubmit}>
+                    <TextField
+                        fullWidth margin="normal" autoComplete="off"
+                        label="Name"
+                        name="name"
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name}
+                    />
+                    <TextField
+                        fullWidth margin="normal" autoComplete="off"
+                        label="Email"
+                        name="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                    />
+                    <TextField
+                        fullWidth margin="normal" autoComplete="off"
+                        label="Password"
+                        name="password" type="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                    />
+                    <TextField
+                        fullWidth margin="normal" autoComplete="off"
+                        label="Confirm Password"
+                        name="confirmPassword" type="password"
+                        value={formik.values.confirmPassword}
+                        onChange={formik.handleChange}
+                        error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                    />
+                    <Button fullWidth variant="contained" sx={{ mt: 2 }}
+                        type="submit">
+                        Register
+                    </Button>
+                </Box>
 
-            <ToastContainer />
-        </Box>
+                <ToastContainer />
+            </Box>
+        </Container>
     );
 }
 

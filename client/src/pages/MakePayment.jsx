@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Container } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import http from '../http';
@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 function Payment() {
     const navigate = useNavigate();
     const current = new Date();
-    const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+    const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
     const [assignmentList, setAssignmentList] = useState([]);
     const getCars = () => {
         http.get('/cars').then((res) => {
@@ -77,79 +77,81 @@ function Payment() {
     });
 
     return (
-        <Box>
-            <Typography variant="h5" sx={{ my: 2 }}>
-                Checkout
-            </Typography>
-            <Box component="form" onSubmit={formik.handleSubmit}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Car_id:"
-                            name="car_id"
-                            value={formik.values.car_id}
-                            onChange={formik.handleChange}
-                            error={formik.touched.car_id && Boolean(formik.errors.car_id)}
-                            helperText={formik.touched.car_id && formik.errors.car_id}
-                        />
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Make:"
-                            name="make"
-                            value={formik.values.make}
-                            onChange={formik.handleChange}
-                            error={formik.touched.make && Boolean(formik.errors.make)}
-                            helperText={formik.touched.make && formik.errors.make}
-                        />
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Model:"
-                            name="model"
-                            value={formik.values.model}
-                            onChange={formik.handleChange}
-                            error={formik.touched.model && Boolean(formik.errors.model)}
-                            helperText={formik.touched.model && formik.errors.model}
-                        />
-                        <TextField type="number" fullWidth margin="normal" autoComplete="off"
-                            label="Price/day: S$"
-                            name="price"
-                            value={formik.values.price}
-                            onChange={formik.handleChange}
-                            error={formik.touched.price && Boolean(formik.errors.price)}
-                            helperText={formik.touched.price && formik.errors.price}
-                        />
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="CardNo:"
-                            name="cardno"
-                            value={formik.values.cardno}
-                            onChange={formik.handleChange}
-                            error={formik.touched.cardno && Boolean(formik.errors.cardno)}
-                            helperText={formik.touched.cardno && formik.errors.cardno}
-                        />
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="CVC:"
-                            name="cvc"
-                            value={formik.values.cvc}
-                            onChange={formik.handleChange}
-                            error={formik.touched.cvc && Boolean(formik.errors.cvc)}
-                            helperText={formik.touched.cvc && formik.errors.cvc}
-                        />
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Expirydate:"
-                            name="expirydate"
-                            value={formik.values.expirydate}
-                            onChange={formik.handleChange}
-                            error={formik.touched.expirydate && Boolean(formik.errors.expirydate)}
-                            helperText={formik.touched.expirydate && formik.errors.expirydate}
-                        />
-                        <Box sx={{ mt: 2 }}>
-                            <Button variant="contained" type="submit">
-                                Checkout
-                            </Button>
-                        </Box>
+        <Container>
+            <Box>
+                <Typography variant="h5" sx={{ my: 2 }}>
+                    Checkout
+                </Typography>
+                <Box component="form" onSubmit={formik.handleSubmit}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6} lg={8}>
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="Car_id:"
+                                name="car_id"
+                                value={formik.values.car_id}
+                                onChange={formik.handleChange}
+                                error={formik.touched.car_id && Boolean(formik.errors.car_id)}
+                                helperText={formik.touched.car_id && formik.errors.car_id}
+                            />
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="Make:"
+                                name="make"
+                                value={formik.values.make}
+                                onChange={formik.handleChange}
+                                error={formik.touched.make && Boolean(formik.errors.make)}
+                                helperText={formik.touched.make && formik.errors.make}
+                            />
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="Model:"
+                                name="model"
+                                value={formik.values.model}
+                                onChange={formik.handleChange}
+                                error={formik.touched.model && Boolean(formik.errors.model)}
+                                helperText={formik.touched.model && formik.errors.model}
+                            />
+                            <TextField type="number" fullWidth margin="normal" autoComplete="off"
+                                label="Price/day: S$"
+                                name="price"
+                                value={formik.values.price}
+                                onChange={formik.handleChange}
+                                error={formik.touched.price && Boolean(formik.errors.price)}
+                                helperText={formik.touched.price && formik.errors.price}
+                            />
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="CardNo:"
+                                name="cardno"
+                                value={formik.values.cardno}
+                                onChange={formik.handleChange}
+                                error={formik.touched.cardno && Boolean(formik.errors.cardno)}
+                                helperText={formik.touched.cardno && formik.errors.cardno}
+                            />
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="CVC:"
+                                name="cvc"
+                                value={formik.values.cvc}
+                                onChange={formik.handleChange}
+                                error={formik.touched.cvc && Boolean(formik.errors.cvc)}
+                                helperText={formik.touched.cvc && formik.errors.cvc}
+                            />
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="Expirydate:"
+                                name="expirydate"
+                                value={formik.values.expirydate}
+                                onChange={formik.handleChange}
+                                error={formik.touched.expirydate && Boolean(formik.errors.expirydate)}
+                                helperText={formik.touched.expirydate && formik.errors.expirydate}
+                            />
+                            <Box sx={{ mt: 2 }}>
+                                <Button variant="contained" type="submit">
+                                    Checkout
+                                </Button>
+                            </Box>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Box>
+                <ToastContainer />
             </Box>
-            <ToastContainer />
-        </Box>
+        </Container>
     )
 }
 export default Payment

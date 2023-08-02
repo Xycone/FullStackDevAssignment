@@ -124,7 +124,7 @@ function UserProfile() {
                 backgroundColor: "black",
                 width: "8rem",
                 height: "7vh",
-                marginLeft: "16vw",
+                marginLeft: "15vw",
                 marginTop: "3vh",
                 borderRadius: "1rem",
               }}

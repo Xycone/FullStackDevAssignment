@@ -67,40 +67,42 @@ function EnterEmail() {
     }
   };
   return (
-    <Box
-      sx={{
-        marginTop: 8,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <Typography variant="h5" sx={{ my: 2 }}>
-        Login
-      </Typography>
+    <Container>
       <Box
-        component="form"
-        sx={{ maxWidth: "500px" }}
-        onSubmit={formik.handleSubmit}
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        <TextField
-          fullWidth
-          margin="normal"
-          autoComplete="off"
-          label="Email"
-          name="email"
-          value={formik.values.email}
-          onChange={handleEmailChange} // Use custom email change handler
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email} // Display the validation error message
-        />
-        {emailError && <Typography color="error">{emailError}</Typography>}
-        <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
-          Submit
-        </Button>
+        <Typography variant="h5" sx={{ my: 2 }}>
+          Login
+        </Typography>
+        <Box
+          component="form"
+          sx={{ maxWidth: "500px" }}
+          onSubmit={formik.handleSubmit}
+        >
+          <TextField
+            fullWidth
+            margin="normal"
+            autoComplete="off"
+            label="Email"
+            name="email"
+            value={formik.values.email}
+            onChange={handleEmailChange} // Use custom email change handler
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email} // Display the validation error message
+          />
+          {emailError && <Typography color="error">{emailError}</Typography>}
+          <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
+            Submit
+          </Button>
+        </Box>
+        <ToastContainer />
       </Box>
-      <ToastContainer />
-    </Box>
+    </Container>
   );
 }
 

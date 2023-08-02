@@ -67,64 +67,66 @@ function UpdateUser() {
     setOpen(false);
   };
   return (
-    <Box>
-      <Typography variant="h5" sx={{ my: 2 }}>
-        Update User
-      </Typography>
-      <Box component="form" onSubmit={formik.handleSubmit}>
-        <TextField
-          fullWidth
-          margin="normal"
-          autoComplete="off"
-          label="Name"
-          name="name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          error={formik.touched.name && Boolean(formik.errors.name)}
-          helperText={formik.touched.name && formik.errors.name}
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          autoComplete="off"
-          label="Email"
-          name="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-        <Box sx={{ mt: 2 }}>
-          <Button variant="contained" type="submit">
-            Update
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ ml: 2 }}
-            color="error"
-            onClick={handleOpen}
-          >
-            Delete
-          </Button>
+    <Container>
+      <Box>
+        <Typography variant="h5" sx={{ my: 2 }}>
+          Update User
+        </Typography>
+        <Box component="form" onSubmit={formik.handleSubmit}>
+          <TextField
+            fullWidth
+            margin="normal"
+            autoComplete="off"
+            label="Name"
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            autoComplete="off"
+            label="Email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+          <Box sx={{ mt: 2 }}>
+            <Button variant="contained" type="submit">
+              Update
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ ml: 2 }}
+              color="error"
+              onClick={handleOpen}
+            >
+              Delete
+            </Button>
+          </Box>
         </Box>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Delete Tutorial</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete your account?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="inherit" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="error" onClick={deleteUser}>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Delete Tutorial</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete your account?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="inherit" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="error" onClick={deleteUser}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+    </Container>
   );
 }
 export default UpdateUser;

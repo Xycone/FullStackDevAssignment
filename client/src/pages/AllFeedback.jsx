@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Container } from "@mui/material";
 import {
   Box,
   Typography,
@@ -125,25 +126,26 @@ function AllFeedback() {
     });
   }, []);
   return (
-    <Box>
-      <Typography variant="h5" sx={{ my: 2 }}>
-        Feedback
-      </Typography>
+    <Container>
+      <Box>
+        <Typography variant="h5" sx={{ my: 2 }}>
+          Feedback
+        </Typography>
 
-            <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
-                <Input value={search} placeholder="Search"
-                    onChange={onSearchChange}
-                    onKeyDown={onSearchKeyDown} />
-                <IconButton color="primary"
-                    onClick={onClickSearch}>
-                    <Search />
-                </IconButton>
-                <IconButton color="primary"
-                    onClick={onClickClear}>
-                    <Clear />
-                </IconButton>
-                <Box sx={{ flexGrow: 1 }} />
-                {/* {
+        <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
+          <Input value={search} placeholder="Search"
+            onChange={onSearchChange}
+            onKeyDown={onSearchKeyDown} />
+          <IconButton color="primary"
+            onClick={onClickSearch}>
+            <Search />
+          </IconButton>
+          <IconButton color="primary"
+            onClick={onClickClear}>
+            <Clear />
+          </IconButton>
+          <Box sx={{ flexGrow: 1 }} />
+          {/* {
                     user && (
                         <Link to="/addfeedback" style={{ textDecoration: 'none' }}>
                             <Button variant='contained'>
@@ -152,125 +154,126 @@ function AllFeedback() {
                         </Link>
                     )
                 } */}
-      </Box>
-      <Grid container spacing={2}>
-        <TableContainer component={Paper}>
-          <Table aria-label="feedback table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Id</TableCell>
-                <TableCell align="center">Rating</TableCell>
-                <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Responded</TableCell>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Author</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            {feedbackList.map((feedback) => (
-              <TableBody key={feedback.userId}>
-                <TableRow
-                  key={feedback.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="center">{feedback.id}</TableCell>
-                  <TableCell align="center">{feedback.rating}</TableCell>
-                  <TableCell align="center">{feedback.description}</TableCell>
-                  <TableCell align="center">
-                    {feedback.responded.toString()}
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
-                      color="text.secondary">
-                      <AccessTime sx={{ mr: 1 }} />
-                      <Typography>
-                        {dayjs(feedback.createdAt).format(
-                          global.datetimeFormat
-                        )}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{userNames[index]}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="primary"
-                      sx={{ padding: "4px" }}
-                      onClick={() => handleOpen(feedback.id)}
-                    >
-                      <Edit />
-                    </IconButton>
-                    <Dialog open={open} onClose={handleClose}>
-                      <DialogTitle>Send an email response</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Are you sure you want to send an email response?
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          variant="contained"
-                          color="inherit"
-                          onClick={handleClose}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() =>
-                            editFeedback(listing_id, {
-                              rating: listing_id.rating,
-                              description: listing_id.description,
-                              responded: true,
-                            })
-                          }
-                        >
-                          Send
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="primary"
-                      sx={{ padding: "4px" }}
-                      onClick={() => handleOpen1(feedback.id)}
-                    >
-                      <Delete />
-                    </IconButton>
-                    <Dialog open={open1} onClose={handleClose1}>
-                      <DialogTitle>Delete Listing</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Are you sure you want to delete the feedback?
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          variant="contained"
-                          color="inherit"
-                          onClick={handleClose1}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() => deleteFeedback(listing_id)}
-                        >
-                          Delete
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </TableCell>
+        </Box>
+        <Grid container spacing={2}>
+          <TableContainer component={Paper}>
+            <Table aria-label="feedback table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Id</TableCell>
+                  <TableCell align="center">Rating</TableCell>
+                  <TableCell align="center">Description</TableCell>
+                  <TableCell align="center">Responded</TableCell>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Author</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
-              </TableBody>
-            ))}
-          </Table>
-        </TableContainer>
-      </Grid>
-    </Box>
+              </TableHead>
+              {feedbackList.map((feedback) => (
+                <TableBody key={feedback.userId}>
+                  <TableRow
+                    key={feedback.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="center">{feedback.id}</TableCell>
+                    <TableCell align="center">{feedback.rating}</TableCell>
+                    <TableCell align="center">{feedback.description}</TableCell>
+                    <TableCell align="center">
+                      {feedback.responded.toString()}
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
+                        color="text.secondary">
+                        <AccessTime sx={{ mr: 1 }} />
+                        <Typography>
+                          {dayjs(feedback.createdAt).format(
+                            global.datetimeFormat
+                          )}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{userNames[index]}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="primary"
+                        sx={{ padding: "4px" }}
+                        onClick={() => handleOpen(feedback.id)}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <Dialog open={open} onClose={handleClose}>
+                        <DialogTitle>Send an email response</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Are you sure you want to send an email response?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            variant="contained"
+                            color="inherit"
+                            onClick={handleClose}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() =>
+                              editFeedback(listing_id, {
+                                rating: listing_id.rating,
+                                description: listing_id.description,
+                                responded: true,
+                              })
+                            }
+                          >
+                            Send
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="primary"
+                        sx={{ padding: "4px" }}
+                        onClick={() => handleOpen1(feedback.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                      <Dialog open={open1} onClose={handleClose1}>
+                        <DialogTitle>Delete Listing</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Are you sure you want to delete the feedback?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            variant="contained"
+                            color="inherit"
+                            onClick={handleClose1}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => deleteFeedback(listing_id)}
+                          >
+                            Delete
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ))}
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Box>
+    </Container>
   );
 }
 
