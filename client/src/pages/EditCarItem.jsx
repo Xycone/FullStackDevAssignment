@@ -53,7 +53,6 @@ function EditCarItem() {
             data.listingId = Number(data.listingId);
             data.currentLocation = data.currentLocation.trim()
             http.put(`/cars/${id}`, data).then((res) => {
-                console.log(res.data);
                 navigate("/cars");
             });
         }

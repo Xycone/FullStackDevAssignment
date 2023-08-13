@@ -20,6 +20,20 @@ function Success() {
     useEffect(() => {
         if (!carId || !productPrice || !productName || !startDate || !endDate) {
             navigate('/home');
+        } else {
+            const formData = {
+                carId,
+                productPrice,
+                productName,
+                startDate: startDate.format('YYYY-MM-DD'),
+                endDate: endDate.format('YYYY-MM-DD'),
+            };
+
+            // create transaction record here
+            http.post("/", formData).then((res) => {
+                console.log(res.formData);
+            });
+            
         }
     }, [carId, productPrice, productName, startDate, endDate, navigate]);
 

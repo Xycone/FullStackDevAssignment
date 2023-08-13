@@ -57,7 +57,7 @@ function CreateBooking() {
   }, []);
 
   const idAsNumber = parseInt(id, 10);
-  const matchingCar = carList.find((car) => car.listingId === idAsNumber);
+  const matchingCar = carList.find((car) => car.listingId === idAsNumber && car.serviceStatus === false); // Adds first car found that is currently not in service
   const tomorrow = dayjs().add(1, 'day');
 
   const initialValues = {
