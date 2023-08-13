@@ -13,9 +13,9 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 import { loadStripe } from "@stripe/stripe-js";
 
-const makePayment = async (product) => {
+const makePayment = async (product, carId) => {
   const stripe = await loadStripe("pk_test_51NGHyVLq1Rg4FQjeLKdp1qDL1lbEx30qHo5KgKbUXjdp7jLd324xodhshAqQdIiE7b6LInbIhRJEplaifFYINmAo00EKmjq5ye");
-  const body = { product };
+  const body = { product, carId };
   const headers = {
     "Content-Type": "application/json",
   };
@@ -113,7 +113,8 @@ function CreateBooking() {
         description: productDescription,
         quantity: 1,
       };
-      makePayment(product);
+
+      makePayment(product, matchingCar.id)
       // Call navigate with the form data as state
       // navigate('/sp', { state: formData });
     },
@@ -235,7 +236,7 @@ function CreateBooking() {
                           onChange={(event) => formik.setFieldValue('selectedCoupon', parseInt(event.target.value, 10))}
                         >
                           <FormControlLabel value="" control={<Radio />} label="None" /> {/* Add a default option for no coupon selected */}
-                          {discountList.map((discounts) => (
+                          {discountList.filter((discount) => (discount.reqtype === null) || (discount.reqtype === "listingId") && (parseInt(discount.listingId, 10) === parseInt(matchingCar.listingId, 10))).map((discounts) => (
                             <FormControlLabel
                               key={discounts.id}
                               value={discounts.id}

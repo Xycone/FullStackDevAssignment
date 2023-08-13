@@ -1,0 +1,40 @@
+.centered-card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .centered-card {
+    background-color: #fff7df; 
+    padding: 50px;
+    border-radius: 10px; 
+    border: 1px solid #d0d0d0; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    width: 500px; 
+  }
+  
+  /* Styling for the ticket heading */
+  .centered-card .MuiTypography-h5 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  /* Styling for the ticket content */
+  .centered-card .MuiTypography-body2 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #666;
+  }
+  
+  /* Styling for the ticket link */
+  .centered-card .MuiTypography-body2 a {
+    color: #007bff; /* Link color */
+    text-decoration: none;
+  }
+  

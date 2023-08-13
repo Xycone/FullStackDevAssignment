@@ -1,33 +1,36 @@
-import React from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from 'react-router-dom';
+import { Card, CardContent, Typography, Container } from '@mui/material';
+import http from '../http'; // Make sure to import your http module here
+import '../css/Success.css';
 
 function Success() {
-//     const location = useLocation();
-//     const formData = location.state;
-//     const savePayment = (data) => {
-//         data.carId = data.carId.trim();
-//         data.make = data.make.trim();
-//         data.model = data.model.trim();
-//         data.price = Number(data.price);
-//         data.date = data.date.trim();
-//         http.post("/payment", data).then((res) => {
-//             console.log(res.data);
-//         });
-//     };
-//     savePayment(formData);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const carId = queryParams.get('carId');
+    const productPrice = queryParams.get('productPrice');
+    const productName = queryParams.get('productName');
+
     return (
-        <>
-            <h2>Thanks for your order!</h2>
-            <h4>Your payment is successful.</h4>
-            <p>
-                We appreciate your business! If you have any questions, please email us
-                at
-                <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a>.
-            </p>
-            <div>
-            </div>
-        </>
+        <div className="centered-card-wrapper">
+            <Card className="centered-card">
+                <CardContent>
+                    <Typography variant="h5" componenet="h2">
+                        Car ID: {carId}
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Thanks for your order!
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Your rental of the {productName} is successful.
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        We appreciate your business! If you have any questions, please email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a>.
+                    </Typography>
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 
-export default Success;
+export default Success;
