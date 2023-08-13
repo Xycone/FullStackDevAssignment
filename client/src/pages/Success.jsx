@@ -46,16 +46,16 @@ function Success() {
                         Car ID: {carId}
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Thanks for using Rental electric car booking services!
+                        Rental of the {productName} from {startDate.format('DD/MM/YYYY')} to {endDate.format('DD/MM/YYYY')} is successful.
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Your rental of {productName} from {startDate.format('DD/MM/YYYY')} to {endDate.format('DD/MM/YYYY')} is successful.
+                        Thank you for using Rental electric car booking services!
                     </Typography>
                     <Typography variant="body2" component="p">
                         Show us the receipt sent to your email at our {currentLocation} branch to pick up the car. 
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Do email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a>  if you have any questions.
+                        Do email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a> if you have any questions.
                     </Typography>
                 </CardContent>
             </Card>
