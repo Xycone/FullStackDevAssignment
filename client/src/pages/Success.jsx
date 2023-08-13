@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Container } from '@mui/material';
 import http from '../http'; // Make sure to import your http module here
 import '../css/Success.css';
-import dayjs from 'dayjs'; 
+import dayjs from 'dayjs';
 
 function Success() {
     const location = useLocation();
@@ -13,12 +13,13 @@ function Success() {
     const productName = queryParams.get('productName');
     const startDate = dayjs(queryParams.get('startDate'));
     const endDate = dayjs(queryParams.get('endDate'));
+    const currentLocation = queryParams.get('currentLocation')
 
     const navigate = useNavigate();
 
     // Check if necessary parameters are missing and redirect to home
     useEffect(() => {
-        if (!carId || !productPrice || !productName || !startDate || !endDate) {
+        if (!carId || !productPrice || !productName || !startDate || !endDate || !currentLocation) {
             navigate('/home');
         } else {
             const formData = {
@@ -33,7 +34,7 @@ function Success() {
             http.post("/", formData).then((res) => {
                 console.log(res.formData);
             });
-            
+
         }
     }, [carId, productPrice, productName, startDate, endDate, navigate]);
 
@@ -45,13 +46,16 @@ function Success() {
                         Car ID: {carId}
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Thanks for your order!
+                        Thanks for using Rental electric car booking services!
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Your rental of the {productName} on {startDate.format('DD/MM/YYYY')} to {endDate.format('DD/MM/YYYY')} is successful.
+                        Your rental of {productName} from {startDate.format('DD/MM/YYYY')} to {endDate.format('DD/MM/YYYY')} is successful.
                     </Typography>
                     <Typography variant="body2" component="p">
-                        We appreciate your business! If you have any questions, please email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a>.
+                        Show us the receipt sent to your email at our {currentLocation} branch to pick up the car. 
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Do email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a>  if you have any questions.
                     </Typography>
                 </CardContent>
             </Card>
