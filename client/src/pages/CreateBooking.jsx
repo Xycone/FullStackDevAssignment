@@ -13,9 +13,9 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 import { loadStripe } from "@stripe/stripe-js";
 
-const makePayment = async (product, carId) => {
+const makePayment = async (product, carId, startDate, endDate) => {
   const stripe = await loadStripe("pk_test_51NGHyVLq1Rg4FQjeLKdp1qDL1lbEx30qHo5KgKbUXjdp7jLd324xodhshAqQdIiE7b6LInbIhRJEplaifFYINmAo00EKmjq5ye");
-  const body = { product, carId };
+  const body = { product, carId, startDate, endDate };
   const headers = {
     "Content-Type": "application/json",
   };
@@ -114,7 +114,7 @@ function CreateBooking() {
         quantity: 1,
       };
 
-      makePayment(product, matchingCar.id)
+      makePayment(product, matchingCar.id, formik.values.startDate, formik.values.endDate)
       // Call navigate with the form data as state
       // navigate('/sp', { state: formData });
     },

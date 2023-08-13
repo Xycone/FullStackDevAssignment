@@ -7,7 +7,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
 router.post("/api/create-checkout-session", async (req, res) => {
-  const { product, carId } = req.body;
+  const { product, carId, startDate, endDate } = req.body;
   console.log("Received carId:", carId);
   const priceData = {
     currency: "sgd",
@@ -24,6 +24,9 @@ router.post("/api/create-checkout-session", async (req, res) => {
     productPrice: priceData.unit_amount / 100,
     quantity: product.quantity,
     carId: carId, // Include carId in queryParams
+    startDate: startDate, //Include startDate in queryParams
+    endDate: endDate, //Include endDate in queryParams
+
   });
   const session = await stripe.checkout.sessions.create({
     line_items: [
