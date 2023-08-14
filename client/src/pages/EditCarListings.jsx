@@ -58,7 +58,6 @@ function EditCarListings() {
             data.range = Number(data.range);
             data.price = Number(data.price);
             http.put(`/listings/${id}`, data).then((res) => {
-                console.log(res.data);
                 navigate("/listings");
             });
         }

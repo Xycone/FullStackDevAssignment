@@ -1,32 +1,65 @@
-import React from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Card, CardContent, Typography, Container } from '@mui/material';
+import http from '../http'; // Make sure to import your http module here
+import '../css/Success.css';
+import dayjs from 'dayjs';
 
 function Success() {
     const location = useLocation();
-    const formData = location.state;
-    console.log(formData);
-    // const savePayment = (data) => {
-    //     data.carId = data.carId.trim();
-    //     data.make = data.make.trim();
-    //     data.model = data.model.trim();
-    //     data.price = Number(data.price);
-    //     data.date = data.date.trim();
-    //     http.post("/payment", data).then((res) => {
-    //         console.log(res.data);
-    //     });
-    // };
-    // savePayment(formData);
+    const queryParams = new URLSearchParams(location.search);
+    const carId = queryParams.get('carId');
+    const productPrice = queryParams.get('productPrice');
+    const productName = queryParams.get('productName');
+    const startDate = dayjs(queryParams.get('startDate'));
+    const endDate = dayjs(queryParams.get('endDate'));
+    const currentLocation = queryParams.get('currentLocation')
+
+    const navigate = useNavigate();
+
+    // Check if necessary parameters are missing and redirect to home
+    useEffect(() => {
+        if (!carId || !productPrice || !productName || !startDate || !endDate || !currentLocation) {
+            navigate('/home');
+        } else {
+            const formData = {
+                carId,
+                productPrice,
+                productName,
+                startDate: startDate.format('YYYY-MM-DD'),
+                endDate: endDate.format('YYYY-MM-DD'),
+            };
+
+            // create transaction record here
+            http.post("/", formData).then((res) => {
+                console.log(res.formData);
+            });
+
+        }
+    }, [carId, productPrice, productName, startDate, endDate, navigate]);
+
     return (
-        <>
-            <h2>Thanks for your order!</h2>
-            <h4>Your payment is successful.</h4>
-            <p>
-                We appreciate your business! If you have any questions, please email us
-                at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a>.
-            </p>
-            <div>
-            </div>
-        </>
+        <div className="centered-card-wrapper">
+            <Card className="centered-card">
+                <CardContent>
+                    <Typography variant="h5" componenet="h2">
+                        Car ID: {carId}
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Rental of the {productName} from {startDate.format('DD/MM/YYYY')} to {endDate.format('DD/MM/YYYY')} is successful.
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Thank you for using Rental electric car booking services!
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Show us the receipt sent to your email at our {currentLocation} branch to pick up the car. 
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        Do email us at <a href="mailto:totallyrealrental@gmail.com">rental@gmail.com</a> if you have any questions.
+                    </Typography>
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 

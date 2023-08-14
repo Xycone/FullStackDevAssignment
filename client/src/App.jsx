@@ -104,7 +104,7 @@ function App() {
           <AppBar position="static" className="AppBar">
             <Container>
               <Toolbar>
-                <Link to="/">
+                <Link to="/home">
                   <Typography variant="h6" component="div">
                     Rental
                   </Typography>
@@ -238,7 +238,7 @@ function App() {
             <Route path={"/editdiscount/:id"} element={<EditDiscounts />} />
             <Route path={"/adddiscount"} element={<AddDiscount />} />
             <Route path={"/viewdiscounts"} element={<ViewDiscounts />} />
-            <Route path="/" element={<Homepage />} />
+            <Route path="/home" element={<Homepage />} />
             <Route path={"/listings"} element={<CarListings />} />
             <Route path={"/addlistings"} element={<AddCarListings />} />
             <Route path={"/editlistings/:id"} element={<EditCarListings />} />
@@ -257,4 +257,6 @@ function App() {
 }
 
 export default App;
+
+
 

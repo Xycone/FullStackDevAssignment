@@ -45,18 +45,14 @@ function AllFeedback() {
   const [feedbackList, setFeedbackList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [search, setSearch] = useState("");
-  const [responded, setResponse] = useState(0);
+  const [responded, setResponded] = useState(0);
   const [feedback_id, setId] = useState(0);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [buttonstate, setbutton] = useState(0);
   // const { user } = useContext(UserContext);
   const onSearchChange = (e) => {
     setSearch(e.target.value);
-  };
-  const getFeedback = () => {
-    http.get("/feedback").then((res) => {
-      setFeedbackList(res.data);
-    });
   };
   const searchFeedback = () => {
     http.get(`/feedback?search=${search}&responded=${responded}`).then((res) => {
@@ -64,10 +60,9 @@ function AllFeedback() {
     });
   };
   useEffect(() => {
-    searchFeedback(responded);
-    const newResponded = responded === 0 ? 1 : 0;
-    setResponse(newResponded);
-    searchFeedback(newResponded);
+    searchFeedback(); // Trigger search with the updated responded value
+  }, [buttonstate]);
+  useEffect(() => {
     const fetchUserId = async () => {
       try {
         const requests = (userId || []).map((user) => http.get("/user"));
@@ -84,12 +79,8 @@ function AllFeedback() {
         console.error(error);
       }
     };
-
     fetchUserId();
   }, [userId]);
-  useEffect(() => {
-    searchFeedback(responded);
-  }, []);
   const onSearchKeyDown = (e) => {
     if (e.key === "Enter") {
       searchFeedback();
@@ -100,7 +91,7 @@ function AllFeedback() {
   };
   const onClickClear = () => {
     setSearch("");
-    getFeedback();
+    searchFeedback();
   };
   const deleteFeedback = (id) => {
     http.delete(`/feedback/${id}`).then((res) => {
@@ -129,13 +120,14 @@ function AllFeedback() {
     });
   };
   const respondedEdit = () => {
+    const buttonchange = buttonstate === 0 ? 1 :0;
+    setbutton(buttonchange);
     const newResponded = responded === 0 ? 1 : 0;
-    setResponse(newResponded);
-    searchFeedback(newResponded); // Trigger search with the updated responded value
+    setResponded(newResponded);
   };
   function Item({ fid, isrespond }) {
     if (isrespond == 1) {
-      return <p>Responded</p>;
+      return ;
     }
     return <IconButton
       color="primary"
@@ -145,13 +137,7 @@ function AllFeedback() {
       <Edit />
 
     </IconButton>;
-  }
-  useEffect(() => {
-    http.get("/feedback").then((res) => {
-      console.log(res.data);
-      setFeedbackList(res.data);
-    });
-  }, []);
+  };
   return (
     <Container>
       <Box>
@@ -172,7 +158,7 @@ function AllFeedback() {
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <Button onClick={respondedEdit}>
-            {responded === 0 ? 'Responded' : 'Pending'}
+            {buttonstate === 0 ? 'Pending' : 'Responded' }
           </Button>
         </Box>
         <Grid container spacing={2}>
@@ -220,7 +206,7 @@ function AllFeedback() {
                         <DialogTitle>Send an email response</DialogTitle>
                         <DialogContent>
                           <DialogContentText>
-                            Are you sure you want to send an email response to?
+                            Are you sure you want to send an email response?
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>

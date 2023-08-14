@@ -46,7 +46,6 @@ function AddCarItem() {
             data.listingId = Number(data.listingId);
             data.currentLocation = data.currentLocation.trim()
             http.post("/cars", data).then((res) => {
-                console.log(res.data);
                 navigate("/cars");
             });
         }
