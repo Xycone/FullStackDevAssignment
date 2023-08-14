@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
 
     let list = await TransactionRecord.findAll({
         where: condition,
-        order: [['createdAt', 'ASC']],
+        order: [['createdAt', 'DESC']],
     });
     res.json(list);
 });
