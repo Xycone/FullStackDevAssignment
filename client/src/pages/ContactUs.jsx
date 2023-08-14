@@ -49,7 +49,7 @@ function ContactUs() {
       data.description = data.description.trim();
       http.post("/feedback", data).then((res) => {
         console.log(res.data);
-        navigate("/feedback");
+        navigate("/");
       });
     },
   });

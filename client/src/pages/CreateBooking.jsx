@@ -99,6 +99,8 @@ function CreateBooking() {
         price: matchingCar.listing.price,
         currentLocation: matchingCar.currentLocation,
         totalAmount: formik.values.totalAmount,
+        startingdate: formik.values.startDate,
+        endingdate: formik.values.endDate,
         imagelink: matchingCar.listing.imageFile,
       };
       if (formData.totalAmount === 0 || formData.totalAmount >= 200000) {
@@ -108,10 +110,12 @@ function CreateBooking() {
       }
       const productName = `${formData.make} ${formData.model}`;
       const productimg = `${import.meta.env.VITE_FILE_BASE_URL}${formData.imagelink}`;
+      const productdesc = `${formData.startingdate} to ${formData.endingdate}`
       const product = {
         name: productName,
         price: formData.totalAmount,
         img: productimg,
+        desc: productdesc,
         quantity: 1,
       };
       makePayment(product);

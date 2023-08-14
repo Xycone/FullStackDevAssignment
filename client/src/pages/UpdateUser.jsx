@@ -125,24 +125,24 @@ function UpdateUser() {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Delete Tutorial</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this User?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="inherit" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="error" onClick={deleteUser}>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Delete Tutorial</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this User?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="inherit" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="error" onClick={deleteUser}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+    </Container>
   );
 }
 export default UpdateUser;
