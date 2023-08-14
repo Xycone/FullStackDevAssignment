@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Chart from 'chart.js/auto';
 import { CategoryScale } from "chart.js";
+import FeedbackChart from './FeedbackChart';
 import {
   Box,
   Typography,
@@ -37,7 +38,6 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
-
 Chart.register(CategoryScale);
 
 function AllFeedback() {
@@ -120,14 +120,14 @@ function AllFeedback() {
     });
   };
   const respondedEdit = () => {
-    const buttonchange = buttonstate === 0 ? 1 :0;
+    const buttonchange = buttonstate === 0 ? 1 : 0;
     setbutton(buttonchange);
     const newResponded = responded === 0 ? 1 : 0;
     setResponded(newResponded);
   };
   function Item({ fid, isrespond }) {
     if (isrespond == 1) {
-      return ;
+      return;
     }
     return <IconButton
       color="primary"
@@ -137,6 +137,19 @@ function AllFeedback() {
       <Edit />
 
     </IconButton>;
+  };
+  const ratingCounts = [0, 0, 0, 0, 0]; // Initialize with zeros for each rating value
+  feedbackList.forEach((feedback) => {
+    const ratingValue = parseInt(feedback.rating); // Convert rating to integer
+    if (ratingValue >= 1 && ratingValue <= 5) {
+      ratingCounts[ratingValue - 1]++; // Increment count for the corresponding rating value
+    }
+  });
+
+  // Prepare the data for the FeedbackChart component
+  const ratingsData = {
+    labels: ['1', '2', '3', '4', '5'], // Rating values
+    values: ratingCounts, // Number of ratings for each value
   };
   return (
     <Container>
@@ -158,7 +171,7 @@ function AllFeedback() {
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <Button onClick={respondedEdit}>
-            {buttonstate === 0 ? 'Pending' : 'Responded' }
+            {buttonstate === 0 ? 'Pending' : 'Responded'}
           </Button>
         </Box>
         <Grid container spacing={2}>
@@ -273,6 +286,7 @@ function AllFeedback() {
           </TableContainer>
         </Grid>
       </Box>
+      <FeedbackChart data={ratingsData} />
     </Container>
   );
 }

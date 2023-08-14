@@ -34,17 +34,6 @@ router.post("/", async (req, res) => {
     res.json(result);
 });
 
-
-// View Car Listing
-//router.get("/", async (req, res) => {
-//    let list = await Payment.findAll({
-//        order: [['createdAt', 'ASC']]
-//    });
-//    res.json(list);
-//});
-
-
-// View & Search for Car Listing
 router.get("/", async (req, res) => {
     let condition = {};
     let search = req.query.search;
