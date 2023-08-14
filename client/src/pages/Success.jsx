@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Card, CardContent, Typography, Container } from '@mui/material';
+import { Card, CardContent, Typography, Container, Button } from '@mui/material';
 import http from '../http'; // Make sure to import your http module here
 import '../css/Success.css';
 import dayjs from 'dayjs';
@@ -16,12 +16,18 @@ function Success() {
     const currentLocation = queryParams.get('currentLocation')
 
     const navigate = useNavigate();
+    const [postCompleted, setPostCompleted] = useState(false);
 
     // Check if necessary parameters are missing and redirect to home
     useEffect(() => {
         if (!carId || !productPrice || !productName || !startDate || !endDate || !currentLocation) {
             navigate('/home');
-        } else {
+        }
+    }, [carId, productPrice, productName, startDate, endDate, currentLocation, navigate]);
+
+    // Function to handle the post request
+    const handleReturnToHomepage = () => {
+        if (!postCompleted) {
             const formData = {
                 carId,
                 productPrice,
@@ -30,13 +36,21 @@ function Success() {
                 endDate: endDate.format('YYYY-MM-DD'),
             };
 
-            // create transaction record here
-            http.post("/", formData).then((res) => {
-                console.log(res.formData);
-            });
-
+            // Make the post request
+            http.post("/transactionrecord", formData)
+                .then((response) => {
+                    console.log("Transaction record created:", response.data);
+                    // Set the postCompleted state to true
+                    setPostCompleted(true);
+                    // Modify the browser history to remove the current page
+                    window.history.replaceState(null, null, '/home');
+                    navigate('/home');
+                })
+                .catch((error) => {
+                    console.error("Error creating transaction record:", error);
+                });
         }
-    }, [carId, productPrice, productName, startDate, endDate, navigate]);
+    };
 
     return (
         <div className="centered-card-wrapper">
@@ -55,8 +69,11 @@ function Success() {
                         Show us the receipt sent to your email at our {currentLocation} branch to pick up the car. 
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Do email us at <a href="mailto:totallyrealrental@gmail.com">rental@gmail.com</a> if you have any questions.
+                        Do email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a> if you have any questions.
                     </Typography>
+                    <Button variant="contained" color="primary" onClick={handleReturnToHomepage}>
+                        Return to Homepage
+                    </Button>
                 </CardContent>
             </Card>
         </div>

@@ -12,34 +12,29 @@ import {
   Button,
 } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import UserContext from "./contexts/UserContext";
-import Discounts from "./pages/Discounts";
-import AddDiscount from "./pages/AddDiscount";
-import EditDiscount from "./pages/EditDiscount";
-import ViewDiscounts from "./pages/UserDiscounts";
-import CarListings from "./pages/CarListings";
-import AddCarListings from "./pages/AddCarListings";
-import EditCarListings from "./pages/EditCarListings";
-import ViewCarListings from "./pages/ViewCarListings";
-import CarItem from "./pages/CarItem";
-import AddCarItem from "./pages/AddCarItem";
-import EditCarItem from "./pages/EditCarItem";
-import CreateBooking from "./pages/CreateBooking";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import UserTable from "./pages/UserTable";
-import UserUpdate from "./pages/UserUpdate";
-import UserProfile from "./pages/UserProfile";
-import EnterEmail from "./pages/EnterEmail";
-import ResetPassword from "./pages/ResetPassword";
-import UpdateUser from "./pages/UpdateUser";
-import Homepage from "./pages/Homepage";
-import AllFeedback from "./pages/AllFeedback";
-import ContactUs from "./pages/ContactUs";
-import Payment from "./pages/ReportsDetails";
-import Success from "./pages/Success";
-import PaymentPage from "./pages/PaymentPage";
+import UserContext from './contexts/UserContext';
+
+import Discounts from './pages/Discounts';
+import AddDiscount from './pages/AddDiscount'
+import EditDiscount from './pages/EditDiscount'
+import ViewDiscounts from './pages/UserDiscounts'
+import CarListings from './pages/CarListings';
+import AddCarListings from './pages/AddCarListings';
+import EditCarListings from './pages/EditCarListings';
+import ViewCarListings from './pages/ViewCarListings';
+import CarItem from './pages/CarItem';
+import AddCarItem from './pages/AddCarItem';
+import EditCarItem from './pages/EditCarItem';
+import CreateBooking from './pages/CreateBooking';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import UserTable from './pages/UserTable';
+import UpdateUser from './pages/UpdateUser';
+import AllFeedback from './pages/AllFeedback';
+import ContactUs from './pages/ContactUs';
+import Payment from './pages/ReportsDetails';
+import StripePayment from './pages/StripePayment';
+import ReportD from './pages/Reports';
 
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -174,6 +169,14 @@ function App() {
                           <Typography>Payment Records</Typography>
                         </MenuItem>
                       </Link>
+                      <Link
+                        to="/transactionrecords"
+                        style={{ textDecoration: "none", color: "grey" }}
+                      >
+                        <MenuItem onClick={handleMenuClose}>
+                          <Typography>Transaction Records</Typography>
+                        </MenuItem>
+                      </Link>
 
                     </Menu>
                   </div>
@@ -220,36 +223,21 @@ function App() {
               </Toolbar>
             </Container>
           </AppBar>
-          <Routes>
-            <Route path={"/editcars/:id"} element={<EditCarListings />} />
-            <Route path={"/viewcars"} element={<ViewCarListings />} />
-            <Route path={"/createbooking/:id"} element={<CreateBooking />} />
-            <Route path={"/login"} element={<Login />} />
-            <Route path={"/feedback"} element={<AllFeedback />} />
-            <Route path={"/contactus"} element={<ContactUs />} />
-            <Route path={"/usertable"} element={<UserTable />} />
-            <Route path={"/register"} element={<Register />} />
-            <Route path={"/userprofile"} element={<UserProfile />} />
-            <Route path={"/updateuser/:id"} element={<UpdateUser />} />
-            <Route path={"/userupdate/:id"} element={<UserUpdate />} />
-            <Route path={"/enteremail"} element={<EnterEmail />} />
-            <Route path={"/resetpassword/:token"} element={<ResetPassword />} />
-            <Route path={"/discounts"} element={<Discounts />} />
-            <Route path={"/editdiscount/:id"} element={<EditDiscounts />} />
-            <Route path={"/adddiscount"} element={<AddDiscount />} />
-            <Route path={"/viewdiscounts"} element={<ViewDiscounts />} />
-            <Route path="/home" element={<Homepage />} />
-            <Route path={"/listings"} element={<CarListings />} />
-            <Route path={"/addlistings"} element={<AddCarListings />} />
-            <Route path={"/editlistings/:id"} element={<EditCarListings />} />
-            <Route path={"/viewlistings"} element={<ViewCarListings />} />
-            <Route path={"/cars"} element={<CarItem />} />
-            <Route path={"/addcars"} element={<AddCarItem />} />
-            <Route path={"/editcars/:id"} element={<EditCarItem />} />
-            <Route path={"/createbooking/:id"} element={<CreateBooking />} />
-            <Route path={"/paymentrecords"} element={<Payment />} />
-            <Route path={"/success"} element={<Success />} />
-          </Routes>
+          <Container>
+            <Routes>
+              <Route path={"/listings"} element={<CarListings />} />
+              <Route path={"/addlistings"} element={<AddCarListings />} />
+              <Route path={"/editlistings/:id"} element={<EditCarListings />} />
+              <Route path={"/viewlistings"} element={<ViewCarListings />} />
+              <Route path={"/login"} element={<Login />} />
+              <Route path={"/feedback"} element={<AllFeedback />} />
+              <Route path={"/contactus"} element={<ContactUs />} />
+              <Route path={"/sp"} element={<StripePayment />} />
+              <Route path={"/report"} element={<ReportD />} />
+              <Route path={"/register"} element={<Register />} />
+              <Route path={"/usertable"} element={<UserTable />}></Route>
+            </Routes>
+          </Container>
         </Router>
       </UserContext.Provider>
     </MaterialCssVarsProvider >

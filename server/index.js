@@ -31,6 +31,8 @@ const userRoute = require('./routes/user');
 app.use("/user", userRoute);
 const spRoute = require('./routes/stripepayment');
 app.use("/stripepayment", spRoute);
+const transactionrecord = require('./routes/transactionrecord');
+app.use("/transactionrecord", transactionrecord)
 
 require('dotenv').config();
 const db = require('./models');

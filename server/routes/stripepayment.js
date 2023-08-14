@@ -4,8 +4,6 @@ require("dotenv").config();
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-
-
 router.post("/api/create-checkout-session", async (req, res) => {
   const { product, carId, startDate, endDate, currentLocation } = req.body;
   console.log("Received carId:", carId);
@@ -54,32 +52,4 @@ router.post("/api/create-checkout-session", async (req, res) => {
   });
 });
 
-// Route to handle incoming webhook events
-router.post('/webhook', async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-
-  try {
-    const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-
-    // Handle different webhook event types
-    if (event.type === 'checkout.session.completed') {
-      // Payment successful event
-      const session = event.data.object;
-      console.log('Payment successful for session:', session.id);
-      // Here you can update your database or take any other actions
-    } else if (event.type === 'payment_intent.succeeded') {
-      // Payment intent succeeded event
-      const paymentIntent = event.data.object;
-      console.log('Payment intent succeeded:', paymentIntent.id);
-      // Here you can update your database or take any other actions
-    }
-
-    res.status(200).json({ received: true });
-  } catch (error) {
-    console.error('Webhook error:', error.message);
-    res.status(400).json({ error: 'Webhook Error' });
-  }
-});
-
-
-module.exports = router;
+module.exports = router;
