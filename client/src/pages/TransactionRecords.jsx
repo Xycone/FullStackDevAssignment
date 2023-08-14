@@ -75,7 +75,8 @@ function TransactionRecords() {
                                     <TableCell align="center">Item</TableCell>
                                     <TableCell align="center">Booking Date (start)</TableCell>
                                     <TableCell align="center">Booking Date (end)</TableCell>
-                                    <TableCell align="center">Payment Made</TableCell>
+                                    <TableCell align="center">Payment By</TableCell>
+                                    <TableCell align="center">Payment Date</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -86,6 +87,7 @@ function TransactionRecords() {
                                         <TableCell align="center">{transaction.productName}</TableCell>
                                         <TableCell align="center">{dayjs(transaction.startDate).format('DD/MM/YYYY')}</TableCell>
                                         <TableCell align="center">{dayjs(transaction.endDate).format('DD/MM/YYYY')}</TableCell>
+                                        <TableCell align="center">{transaction.userId}</TableCell>
                                         <TableCell>
                                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, justifyContent: 'center' }}
                                                 color="text.secondary">
