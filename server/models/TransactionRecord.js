@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
             as: 'car',
             onDelete: "cascade"
         });
+        TransactionRecord.belongsTo(models.User, {
+            foreignKey: "userId",
+            as: 'user',
+            onDelete: "cascade"
+        });
     };
     return TransactionRecord;
 }

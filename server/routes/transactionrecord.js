@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { TransactionRecord, Cars, Sequelize } = require('../models');
+const { TransactionRecord, User, Cars, Sequelize } = require('../models');
 const yup = require("yup");
 const { validateToken } = require('../middlewares/auth');
 
@@ -35,6 +35,7 @@ router.post("/", validateToken, async (req, res) => {
     }
 
     data.productName = data.productName.trim();
+    data.userId = req.user.id;
     let result = await TransactionRecord.create(data);
     res.json(result);
 });
