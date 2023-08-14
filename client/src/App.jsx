@@ -40,6 +40,7 @@ import ContactUs from "./pages/ContactUs";
 import Payment from "./pages/ReportsDetails";
 import Success from "./pages/Success";
 import PaymentPage from "./pages/PaymentPage";
+import TransactionRecords from "./pages/TransactionRecords";
 
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -174,6 +175,14 @@ function App() {
                           <Typography>Payment Records</Typography>
                         </MenuItem>
                       </Link>
+                      <Link
+                        to="/transactionrecords"
+                        style={{ textDecoration: "none", color: "grey" }}
+                      >
+                        <MenuItem onClick={handleMenuClose}>
+                          <Typography>Transaction Records</Typography>
+                        </MenuItem>
+                      </Link>
 
                     </Menu>
                   </div>
@@ -249,6 +258,7 @@ function App() {
             <Route path={"/createbooking/:id"} element={<CreateBooking />} />
             <Route path={"/paymentrecords"} element={<Payment />} />
             <Route path={"/success"} element={<Success />} />
+            <Route path={"/transactionrecords"} element={<TransactionRecords />} />
           </Routes>
         </Router>
       </UserContext.Provider>
