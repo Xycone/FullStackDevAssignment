@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Feedback, Sequelize } = require('../models');
+const { Feedback, FeedbackUser, Sequelize } = require('../models');
 const yup = require("yup");
 router.put("/:id",  async (req, res) => {
     let id = req.params.id;
@@ -48,7 +48,15 @@ router.put("/:id",  async (req, res) => {
     }
 });
 router.post("/",  async (req, res) => {
+    if (!req.user || !req.user.id) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
     let data = req.body;
+    if (!data.userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
     let validationSchema = yup.object().shape({
         rating: yup.string().trim().required(),
         description: yup.string().trim().min(3).max(500).required(),
@@ -62,6 +70,9 @@ router.post("/",  async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
+    const feedbackUser = await FeedbackUser.create({
+        userId: data.userId
+      });
     data.rating = data.rating.trim();
     data.description = data.description.trim();
     data.responded = false;
@@ -93,7 +104,7 @@ router.get("/", async (req, res) => {
     let list = await Feedback.findAll({
         where: condition,
         order: [['createdAt', 'DESC']],
-        // include: { model: User, as: "user", attributes: ['name'] }
+        // include: { model: User, as: "user", attributes: ['userId'] }
     });
     res.json(list);
 });

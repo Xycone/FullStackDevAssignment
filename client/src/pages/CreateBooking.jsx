@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import http from '../http';
-import { Box, Typography, Button, Grid, Card, CardContent, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { Box, Typography, Button, Grid, Card, CardContent, Radio, RadioGroup, FormControlLabel, Container } from '@mui/material';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -99,23 +99,22 @@ function CreateBooking() {
         price: matchingCar.listing.price,
         currentLocation: matchingCar.currentLocation,
         totalAmount: formik.values.totalAmount,
+        imagelink: matchingCar.listing.imageFile,
       };
-      if (formData.totalAmount === 0) {
+      if (formData.totalAmount === 0 || formData.totalAmount >= 200000) {
         // Handle the case when the total amount is 0, e.g., show an error message or disable the button
         console.log("Total amount is 0, cannot proceed to checkout.");
         return;
       }
       const productName = `${formData.make} ${formData.model}`;
-      const productDescription = `Range: ${formData.range}\nLocation: ${formData.currentLocation}`;
+      const productimg = `${import.meta.env.VITE_FILE_BASE_URL}${formData.imagelink}`;
       const product = {
         name: productName,
         price: formData.totalAmount,
-        description: productDescription,
+        img: productimg,
         quantity: 1,
       };
       makePayment(product);
-      // Call navigate with the form data as state
-      // navigate('/sp', { state: formData });
     },
   });
 
@@ -155,109 +154,111 @@ function CreateBooking() {
 
 
   return (
-    <Box height="100%">
-      {carList.length === 0 ? (
-        <Typography>Loading...</Typography>
-      ) : (
-        <>
-          {matchingCar ? (
-            <>
-              <Grid container spacing={2} mb={10} alignItems="flex-start">
-                <Grid item xs={12} md={6} lg={8}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box component="form" onSubmit={formik.handleSubmit}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} md={10} lg={8} mt={10}>
-                          <Card>
-                            {matchingCar.listing.imageFile && (
-                              <JoyCssVarsProvider>
-                                <AspectRatio>
-                                  <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${matchingCar.listing.imageFile}`} alt="listings" />
-                                </AspectRatio>
-                              </JoyCssVarsProvider>
-                            )}
-                            <CardContent sx={{ whiteSpace: 'pre-wrap' }}>
-                              <Typography variant="h6">Car ID: {matchingCar.id}</Typography>
-                              <Typography variant="h6">Make: {matchingCar.listing.make}</Typography>
-                              <Typography variant="h6">Model: {matchingCar.listing.model}</Typography>
-                              <Typography variant="h6">Range (EPA est.): {matchingCar.listing.range}km</Typography>
-                              <Typography variant="h6">Total: ${formik.values.totalAmount}</Typography>
-                              <Typography variant="h6">Pickup Location: {matchingCar.currentLocation}</Typography>
-                              <DemoContainer components={['DateField', 'DateField']}>
-                                <Grid container spacing={2}>
-                                  <Grid item xs={12} sm={6} mt={2}>
-                                    <input type="hidden" name="carId" value={matchingCar.id} />
-                                    <input type="hidden" name="make" value={matchingCar.listing.make} />
-                                    <input type="hidden" name="model" value={matchingCar.listing.model} />
-                                    <input type="hidden" name="range" value={matchingCar.listing.range} />
-                                    <input type="hidden" name="price" value={matchingCar.listing.price} />
-                                    <DateField
-                                      label="Start Date"
-                                      value={dayjs(formik.values.startDate)}
-                                      onChange={(newValue) => formik.setFieldValue('startDate', newValue)}
-                                      format="DD/MM/YYYY"
-                                      error={formik.touched.startDate && Boolean(formik.errors.startDate)}
-                                      helperText={formik.touched.startDate && formik.errors.startDate}
-                                    />
+    <Container>
+      <Box height="100%">
+        {carList.length === 0 ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <>
+            {matchingCar ? (
+              <>
+                <Grid container spacing={2} mb={10} alignItems="flex-start">
+                  <Grid item xs={12} md={6} lg={8}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <Box component="form" onSubmit={formik.handleSubmit}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} md={10} lg={8} mt={10}>
+                            <Card>
+                              {matchingCar.listing.imageFile && (
+                                <JoyCssVarsProvider>
+                                  <AspectRatio>
+                                    <Box component="img" src={`${import.meta.env.VITE_FILE_BASE_URL}${matchingCar.listing.imageFile}`} alt="listings" />
+                                  </AspectRatio>
+                                </JoyCssVarsProvider>
+                              )}
+                              <CardContent sx={{ whiteSpace: 'pre-wrap' }}>
+                                <Typography variant="h6">Car ID: {matchingCar.id}</Typography>
+                                <Typography variant="h6">Make: {matchingCar.listing.make}</Typography>
+                                <Typography variant="h6">Model: {matchingCar.listing.model}</Typography>
+                                <Typography variant="h6">Range (EPA est.): {matchingCar.listing.range}km</Typography>
+                                <Typography variant="h6">Total: ${formik.values.totalAmount}</Typography>
+                                <Typography variant="h6">Pickup Location: {matchingCar.currentLocation}</Typography>
+                                <DemoContainer components={['DateField', 'DateField']}>
+                                  <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6} mt={2}>
+                                      <input type="hidden" name="carId" value={matchingCar.id} />
+                                      <input type="hidden" name="make" value={matchingCar.listing.make} />
+                                      <input type="hidden" name="model" value={matchingCar.listing.model} />
+                                      <input type="hidden" name="range" value={matchingCar.listing.range} />
+                                      <input type="hidden" name="price" value={matchingCar.listing.price} />
+                                      <DateField
+                                        label="Start Date"
+                                        value={dayjs(formik.values.startDate)}
+                                        onChange={(newValue) => formik.setFieldValue('startDate', newValue)}
+                                        format="DD/MM/YYYY"
+                                        error={formik.touched.startDate && Boolean(formik.errors.startDate)}
+                                        helperText={formik.touched.startDate && formik.errors.startDate}
+                                      />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} mt={2}>
+                                      <DateField
+                                        label="End Date"
+                                        value={dayjs(formik.values.endDate)}
+                                        onChange={(newValue) => formik.setFieldValue('endDate', newValue)}
+                                        format="DD/MM/YYYY"
+                                        error={formik.touched.endDate && Boolean(formik.errors.endDate)}
+                                        helperText={formik.touched.endDate && formik.errors.endDate}
+                                      />
+                                    </Grid>
                                   </Grid>
-                                  <Grid item xs={12} sm={6} mt={2}>
-                                    <DateField
-                                      label="End Date"
-                                      value={dayjs(formik.values.endDate)}
-                                      onChange={(newValue) => formik.setFieldValue('endDate', newValue)}
-                                      format="DD/MM/YYYY"
-                                      error={formik.touched.endDate && Boolean(formik.errors.endDate)}
-                                      helperText={formik.touched.endDate && formik.errors.endDate}
-                                    />
-                                  </Grid>
-                                </Grid>
-                              </DemoContainer>
-                              <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                                <Button variant="contained" type="submit" sx={{ flexGrow: 1, height: '150%' }}>
-                                  Proceed To Checkout
-                                </Button>
-                              </Box>
-                            </CardContent>
-                          </Card>
+                                </DemoContainer>
+                                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                                  <Button variant="contained" type="submit" sx={{ flexGrow: 1, height: '150%' }}>
+                                    Proceed To Checkout
+                                  </Button>
+                                </Box>
+                              </CardContent>
+                            </Card>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Box>
-                  </LocalizationProvider>
+                      </Box>
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={4} mt={10}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6">Select Coupon:</Typography>
+                        <RadioGroup
+                          name="selectedCoupon"
+                          value={formik.values.selectedCoupon}
+                          onChange={(event) => formik.setFieldValue('selectedCoupon', parseInt(event.target.value, 10))}
+                        >
+                          <FormControlLabel value="" control={<Radio />} label="None" /> {/* Add a default option for no coupon selected */}
+                          {discountList.map((discounts) => (
+                            <FormControlLabel
+                              key={discounts.id}
+                              value={discounts.id}
+                              control={<Radio />}
+                              label={
+                                `${discounts.disctype === '%' ? '' : '$'}${discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
+                                } discount`
+                              }
+                            />
+                          ))}
+                        </RadioGroup>
+                      </CardContent>
+                    </Card>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={6} lg={4} mt={10}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6">Select Coupon:</Typography>
-                      <RadioGroup
-                        name="selectedCoupon"
-                        value={formik.values.selectedCoupon}
-                        onChange={(event) => formik.setFieldValue('selectedCoupon', parseInt(event.target.value, 10))}
-                      >
-                        <FormControlLabel value="" control={<Radio />} label="None" /> {/* Add a default option for no coupon selected */}
-                        {discountList.map((discounts) => (
-                          <FormControlLabel
-                            key={discounts.id}
-                            value={discounts.id}
-                            control={<Radio />}
-                            label={
-                              `${discounts.disctype === '%' ? '' : '$'}${discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
-                              } discount`
-                            }
-                          />
-                        ))}
-                      </RadioGroup>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </>
-          ) : (
-            <Typography>Car Not Found</Typography>
-          )}
-        </>
-      )}
-    </Box>
+              </>
+            ) : (
+              <Typography>Car Not Found</Typography>
+            )}
+          </>
+        )}
+      </Box>
+    </Container>
   );
 }
 
-export default CreateBooking
+export default CreateBooking

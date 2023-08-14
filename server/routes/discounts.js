@@ -28,20 +28,21 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
-        discount: yup.number().required('Discount is required'),
+    discount: yup.number().required('Discount is required'),
     disctype: yup.string().required("required."),
     reqtype: yup.string().required(), // Make reqtype required
-    cartype: yup.string().test(
-     
-      "Car Type is required when Requirement Type is 'cartype'",
-      function (value) {
-        const { reqtype } = this.parent;
-        if (reqtype === "cartype") {
-          return value !== undefined && value !== "";
-        }
-        return true;
-      }
-    ),
+    listingId: yup
+        .number()
+        .test(
+          "Please select a Car Type when Requirement Type is 'Car'",
+          function (value) {
+            const { reqtype } = this.parent;
+            if (reqtype === "listingId") {
+              return value !== undefined && value !== "";
+            }
+            return true;
+          }
+        ),
     minspend: yup.number().required(),
     enddate: yup.string().matches(
       /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,

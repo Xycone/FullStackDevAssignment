@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, Container } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link }
-from 'react-router-dom';
+  from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -55,56 +55,65 @@ function Login() {
   });
 
   return (
-    <Box
-      sx={{
-        marginTop: 8,
-        display: "flex",
-        flexDirection: "column",
-        alignProduct: "center",
-      }}
-    >
-      <Typography variant="h5" sx={{ my: 2 }}>
-        Login
-      </Typography>
+    <Container>
       <Box
-        component="form"
-        sx={{ maxWidth: "500px" }}
-        onSubmit={formik.handleSubmit}
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignProduct: "center",
+        }}
       >
-        <TextField
-          fullWidth
-          margin="normal"
-          autoComplete="off"
-          label="Email"
-          name="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          autoComplete="off"
-          label="Password"
-          name="password"
-          type="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
-        <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
+        <Typography variant="h5" sx={{ my: 2 }}>
           Login
-        </Button>
-        <Link to="/register">
-          <Typography variant="h6">
-            Don't have an account? Sign up now!
-          </Typography>
-        </Link>
+        </Typography>
+        <Box
+          component="form"
+          sx={{ maxWidth: "500px" }}
+          onSubmit={formik.handleSubmit}
+        >
+          <TextField
+            fullWidth
+            margin="normal"
+            autoComplete="off"
+            label="Email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            autoComplete="off"
+            label="Password"
+            name="password"
+            type="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+          />
+          <Link to="/enteremail">
+            <Typography sx={{ fontSize: 20 }}>
+              Forgot password?
+            </Typography>
+          </Link>
+          <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
+            Login
+          </Button>
+        </Box>
+        <ToastContainer />
+        <Box sx={{ marginTop: "30vh" }}>
+          <Link to="/register">
+            <Typography sx={{ fontSize: 20 }}>
+              Don't have an account? Sign up now!
+            </Typography>
+          </Link>
+        </Box>
       </Box>
-      <ToastContainer />
-    </Box>
+    </Container>
   );
 }
 

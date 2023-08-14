@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, TextField, Button, Grid, Select, FormControl, InputLabel, MenuItem } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Select, FormControl, InputLabel, MenuItem, Container } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import http from '../http';
@@ -20,7 +20,7 @@ function AddCarItem() {
     useEffect(() => {
         getListings();
     }, []);
-    
+
 
     const formik = useFormik({
         initialValues: {
@@ -53,46 +53,48 @@ function AddCarItem() {
     });
 
     return (
-        <Box>
-            <Typography variant="h5" sx={{ my: 2 }}>
-                Add Car
-            </Typography>
-            <Box component="form" onSubmit={formik.handleSubmit}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Listing Id:</InputLabel>
-                            <Select
-                                label="Listing Id:"
-                                name="listingId"
-                                value={formik.values.listingId}
-                                onChange={formik.handleChange}
-                                error={formik.touched.listingId && Boolean(formik.errors.listingId)}
-                            >
-                                {assignmentList.map((listings) => (
-                                <MenuItem key={listings.id} value={listings.id}>{listings.id}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+        <Container>
+            <Box>
+                <Typography variant="h5" sx={{ my: 2 }}>
+                    Add Car
+                </Typography>
+                <Box component="form" onSubmit={formik.handleSubmit}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6} lg={8}>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Listing Id:</InputLabel>
+                                <Select
+                                    label="Listing Id:"
+                                    name="listingId"
+                                    value={formik.values.listingId}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.listingId && Boolean(formik.errors.listingId)}
+                                >
+                                    {assignmentList.map((listings) => (
+                                        <MenuItem key={listings.id} value={listings.id}>{listings.id}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
 
-                        <TextField fullWidth margin="normal" autoComplete="off"
-                            label="Current Location:"
-                            name="currentLocation"
-                            value={formik.values.currentLocation}
-                            onChange={formik.handleChange}
-                            error={formik.touched.currentLocation && Boolean(formik.errors.currentLocation)}
-                            helperText={formik.touched.currentLocation && formik.errors.currentLocation}
-                        />
-                        <Box sx={{ mt: 2 }}>
-                            <Button variant="contained" type="submit">
-                                Create Car Item
-                            </Button>
-                        </Box>
+                            <TextField fullWidth margin="normal" autoComplete="off"
+                                label="Current Location:"
+                                name="currentLocation"
+                                value={formik.values.currentLocation}
+                                onChange={formik.handleChange}
+                                error={formik.touched.currentLocation && Boolean(formik.errors.currentLocation)}
+                                helperText={formik.touched.currentLocation && formik.errors.currentLocation}
+                            />
+                            <Box sx={{ mt: 2 }}>
+                                <Button variant="contained" type="submit">
+                                    Create Car Item
+                                </Button>
+                            </Box>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Box>
+                <ToastContainer />
             </Box>
-            <ToastContainer />
-        </Box>
+        </Container>
     )
 }
 

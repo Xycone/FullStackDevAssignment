@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
+import { Card, CardContent, Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button, Container } from '@mui/material';
 import http from '../http';
 import { AccessTime, Search, Clear, Edit, Delete, Preview } from '@mui/icons-material';
 import dayjs from 'dayjs';
@@ -25,32 +25,34 @@ function Discounts() {
     }, []);
 
     return (
-        <Box>
-            <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-                Discounts view
-            </Typography>
-            <Grid container spacing={2}>
-            {assignmentList.map((discounts) => (
-            <Grid item xs={12} md={6} lg={4} key={discounts.id}>
-                <Card>
-                
-                
-                    <CardContent>
-                        {'Discount '+ discounts.id}
-                        <Typography variant="h6" sx={{ mb: 1 }}>
-                            {'$'+discounts.discount+' OFF'}
-                        </Typography>
-                        <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-                            {'End Date: '+discounts.enddate}
-                        </Typography>
-                    </CardContent>
-                  
-                    
-                </Card>
-            </Grid>
-            ))}
-            </Grid>
-        </Box>
+        <Container>
+            <Box>
+                <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+                    Discounts view
+                </Typography>
+                <Grid container spacing={2}>
+                    {assignmentList.map((discounts) => (
+                        <Grid item xs={12} md={6} lg={4} key={discounts.id}>
+                            <Card>
+
+
+                                <CardContent>
+                                    {'Discount ' + discounts.id}
+                                    <Typography variant="h6" sx={{ mb: 1 }}>
+                                        {'$' + discounts.discount + ' OFF'}
+                                    </Typography>
+                                    <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+                                        {'End Date: ' + discounts.enddate}
+                                    </Typography>
+                                </CardContent>
+
+
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+        </Container>
     );
 }
 
