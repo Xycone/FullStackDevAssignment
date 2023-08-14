@@ -62,7 +62,7 @@ function CreateBooking() {
 
   const initialValues = {
     startDate: tomorrow,
-    numDays: 2,
+    numDays: 1,
     carId: "",
     make: "",
     model: "",
@@ -73,10 +73,6 @@ function CreateBooking() {
   };
 
   const validationSchema = yup.object().shape({
-    startDate: yup
-      .date()
-      .min(tomorrow.toDate(), "Car has to be booked in advance")
-      .required("Start date is required"),
     numDays: yup
       .number()
       .min(1, "Number of days must be at least 1")
