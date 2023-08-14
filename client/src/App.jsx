@@ -96,6 +96,41 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    fetchTransactionsToUpdate();
+  }, []);
+
+  const fetchTransactionsToUpdate = async () => {
+    try {
+      const response = await http.get("/transactionrecord"); 
+      const allTransactions = response.data;
+
+      const today = new Date();
+      const filteredTransactions = allTransactions.filter(
+        (transaction) => new Date(transaction.enddate) >= today
+      );
+
+      if (filteredTransactions.length === 0) {
+        console.log("No transactions found to update.");
+        return; // Exit the function if there are no transactions to update
+      }
+
+      for (const transaction of filteredTransactions) {
+        const carId = Number(transaction.carId);
+        console.log(carId);
+        const carResponse = await http.get(`/cars/${carId}`); // Update with your API endpoint to get car details
+        const carToUpdate = carResponse.data;
+
+        // Update the serviceStatus of the car
+        carToUpdate.serviceStatus = false; // Change service status of car to true
+        await http.put(`/cars/${carId}`, carToUpdate);
+      }
+
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
   const admin = user && user.admin == true;
 
   return (
