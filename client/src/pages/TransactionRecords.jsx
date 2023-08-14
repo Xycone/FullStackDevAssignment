@@ -75,7 +75,7 @@ function TransactionRecords() {
                                     <TableCell align="center">Name</TableCell>
                                     <TableCell align="center">Booking Date (start)</TableCell>
                                     <TableCell align="center">Booking Date (end)</TableCell>
-                                    <TableCell align="center">Created On</TableCell>
+                                    <TableCell align="center">Payment Made</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
