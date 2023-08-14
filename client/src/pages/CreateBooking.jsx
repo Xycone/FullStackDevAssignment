@@ -61,8 +61,8 @@ function CreateBooking() {
   const tomorrow = dayjs().add(1, 'day');
 
   const initialValues = {
-    startDate: tomorrow.add(1, 'day'),
-    endDate: tomorrow.add(2, 'day'),
+    startDate: tomorrow,
+    numDays: 2,
     carId: "",
     make: "",
     model: "",
@@ -77,13 +77,10 @@ function CreateBooking() {
       .date()
       .min(tomorrow.toDate(), "Car has to be booked in advance")
       .required("Start date is required"),
-    endDate: yup
-      .date()
-      .min(tomorrow.add(1, 'day').toDate(), ({ min }) => `End date has to be at least one day after ${dayjs(min).format('DD/MM/YYYY')}`)
-      .when('startDate', (startDate, schema) => { // Use 'when' to add a dependent validation
-        return schema.min(dayjs(startDate).add(1, 'day').toDate(), 'End date has to be at least one day after the start date');
-      })
-      .required("End date is required"),
+    numDays: yup
+      .number()
+      .min(1, "Number of days must be at least 1")
+      .required('Number of days is required'),
   });
 
   const formik = useFormik({
@@ -105,6 +102,7 @@ function CreateBooking() {
         console.log("Total amount is 0, cannot proceed to checkout.");
         return;
       }
+      const endDate = formik.values.startDate.add(data.numDays, 'day');
       const productName = `${formData.make} ${formData.model}`;
       const productDescription = `Range: ${formData.range}\nLocation: ${formData.currentLocation}`;
       const product = {
@@ -114,7 +112,7 @@ function CreateBooking() {
         quantity: 1,
       };
 
-      makePayment(product, matchingCar.id, formik.values.startDate, formik.values.endDate, matchingCar.currentLocation)
+      makePayment(product, matchingCar.id, formik.values.startDate, endDate, matchingCar.currentLocation)
       // Call navigate with the form data as state
       // navigate('/sp', { state: formData });
     },
@@ -127,7 +125,7 @@ function CreateBooking() {
       const endDate = dayjs(formik.values.endDate);
       const diffInDays = endDate.diff(startDate, 'day');
       const basePrice = matchingCar.listing.price;
-      let totalAmount = basePrice * diffInDays;
+      let totalAmount = basePrice * formik.values.numDays;
 
       if (formik.values.selectedCoupon) {
         const selectedDiscount = discountList.find((discount) => discount.id === formik.values.selectedCoupon);
@@ -151,7 +149,7 @@ function CreateBooking() {
       // Update the total amount in the formik values, checking for NaN and setting it to 0 if needed
       formik.setFieldValue('totalAmount', isNaN(totalAmount) ? 0 : totalAmount);
     }
-  }, [formik.values.startDate, formik.values.endDate, formik.values.selectedCoupon, matchingCar, discountList]);
+  }, [formik.values.numDays, formik.values.selectedCoupon, matchingCar, discountList]);
 
 
 
@@ -185,6 +183,7 @@ function CreateBooking() {
                                 <Typography variant="h6">Range (EPA est.): {matchingCar.listing.range}km</Typography>
                                 <Typography variant="h6">Total: ${formik.values.totalAmount}</Typography>
                                 <Typography variant="h6">Pickup Location: {matchingCar.currentLocation}</Typography>
+                                <Typography variant="h6">Pickup Date: {formik.values.startDate.format('DD/MM/YYYY')}</Typography>
                                 <DemoContainer components={['DateField', 'DateField']}>
                                   <Grid container spacing={2}>
                                     <Grid item xs={12} sm={6} mt={2}>
@@ -193,24 +192,23 @@ function CreateBooking() {
                                       <input type="hidden" name="model" value={matchingCar.listing.model} />
                                       <input type="hidden" name="range" value={matchingCar.listing.range} />
                                       <input type="hidden" name="price" value={matchingCar.listing.price} />
-                                      <DateField
-                                        label="Start Date"
-                                        value={dayjs(formik.values.startDate)}
-                                        onChange={(newValue) => formik.setFieldValue('startDate', newValue)}
-                                        format="DD/MM/YYYY"
-                                        error={formik.touched.startDate && Boolean(formik.errors.startDate)}
-                                        helperText={formik.touched.startDate && formik.errors.startDate}
-                                      />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} mt={2}>
-                                      <DateField
-                                        label="End Date"
-                                        value={dayjs(formik.values.endDate)}
-                                        onChange={(newValue) => formik.setFieldValue('endDate', newValue)}
-                                        format="DD/MM/YYYY"
-                                        error={formik.touched.endDate && Boolean(formik.errors.endDate)}
-                                        helperText={formik.touched.endDate && formik.errors.endDate}
-                                      />
+                                      <Box>
+                                        <Typography variant="subtitle1">Number of Days:</Typography>
+                                        <input
+                                          type="number"
+                                          name="numDays"
+                                          value={formik.values.numDays}
+                                          onChange={formik.handleChange}
+                                          onBlur={formik.handleBlur}
+                                          min={1}
+                                          style={{ width: '100%', padding: '6px 12px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                        />
+                                        {formik.touched.numDays && formik.errors.numDays && (
+                                          <Typography variant="body2" color="error">
+                                            {formik.errors.numDays}
+                                          </Typography>
+                                        )}
+                                      </Box>
                                     </Grid>
                                   </Grid>
                                 </DemoContainer>
