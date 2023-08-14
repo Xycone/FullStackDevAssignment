@@ -45,6 +45,10 @@ function CreateBooking() {
   const [carList, setCarList] = useState([]);
   const [discountList, setDiscountList] = useState([]);
   const navigate = useNavigate();
+  const validDiscounts = discountList.filter(
+  (discount) =>
+    !dayjs(discount.enddate, "DD/MM/YYYY").isBefore(dayjs(), "day")
+);
 
   useEffect(() => {
     http.get('/cars').then((res) => {
@@ -77,6 +81,7 @@ function CreateBooking() {
       .number()
       .min(1, "Number of days must be at least 1")
       .required('Number of days is required'),
+    
   });
 
   const formik = useFormik({
@@ -107,6 +112,17 @@ function CreateBooking() {
         description: productDescription,
         quantity: 1,
       };
+      if (data.selectedCoupon) {
+    const selectedDiscount = discountList.find(
+      (discount) => discount.id === data.selectedCoupon
+    );
+    if (
+      selectedDiscount &&
+      dayjs(selectedDiscount.enddate, "DD/MM/YYYY").isBefore(dayjs(), "day")
+    ) {
+      data.selectedCoupon = "";
+    }
+  }
 
       makePayment(product, matchingCar.id, formik.values.startDate, endDate, matchingCar.currentLocation)
       // Call navigate with the form data as state
@@ -122,9 +138,14 @@ function CreateBooking() {
       const diffInDays = endDate.diff(startDate, 'day');
       const basePrice = matchingCar.listing.price;
       let totalAmount = basePrice * formik.values.numDays;
-
       if (formik.values.selectedCoupon) {
         const selectedDiscount = discountList.find((discount) => discount.id === formik.values.selectedCoupon);
+        if (
+        selectedDiscount &&
+        dayjs(selectedDiscount.enddate, "DD/MM/YYYY").isBefore(dayjs(), 'day')
+      ) {
+        formik.setFieldValue("selectedCoupon", "");
+      }
         if (selectedDiscount) {
           const { disctype, discount } = selectedDiscount;
           if (disctype === '%') {
@@ -230,7 +251,7 @@ function CreateBooking() {
                           onChange={(event) => formik.setFieldValue('selectedCoupon', parseInt(event.target.value, 10))}
                         >
                           <FormControlLabel value="" control={<Radio />} label="None" /> {/* Add a default option for no coupon selected */}
-                          {discountList.filter((discount) => (discount.reqtype === null) || (discount.reqtype === "listingId") && (parseInt(discount.listingId, 10) === parseInt(matchingCar.listingId, 10))).map((discounts) => (
+                          {validDiscounts.filter((discount) => (discount.reqtype === 'null') || (discount.reqtype === "listingId") && (parseInt(discount.listingId, 10) === parseInt(matchingCar.listingId, 10))).map((discounts) => (
                             <FormControlLabel
                               key={discounts.id}
                               value={discounts.id}
