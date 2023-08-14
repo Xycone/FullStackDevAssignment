@@ -4,11 +4,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        make: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        model: {
+        carname: {
             type: DataTypes.STRING,
             allowNull: false
         },

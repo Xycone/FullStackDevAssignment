@@ -96,6 +96,63 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    fetchTransactionsToUpdate();
+  }, []);
+
+  const fetchTransactionsToUpdate = async () => {
+    try {
+      const response = await http.get("/transactionrecord");
+      const allTransactions = response.data;
+      console.log("allTransactions:", allTransactions);
+
+      if (allTransactions.length === 0) {
+        console.log("No transactions data available.");
+
+        // Get all cars
+        const carsResponse = await http.get("/cars");
+        const allCars = carsResponse.data;
+  
+        if (allCars.length === 0) {
+          console.log("No cars data available.");
+          return; // Exit the function since there are no transactions or cars
+        }
+
+        // Reset serviceStatus of all cars
+        for (const car of allCars) {
+          car.serviceStatus = false;
+          await http.put(`/cars/${car.id}`, car);
+        }
+
+        return; // Exit the function since there are no transactions
+      }
+
+        const today = new Date();
+        const filteredTransactions = allTransactions.filter(
+          (transaction) => new Date(transaction.enddate) >= today
+        );
+        console.log("filteredTransactions:",filteredTransactions)
+
+        if (filteredTransactions.length === 0) {
+          console.log("No transactions found to update.");
+          return; // Exit the function if there are no transactions to update
+        }
+
+        for (const transaction of filteredTransactions) {
+          const carId = Number(transaction.carId);
+          console.log(carId);
+          const carResponse = await http.get(`/cars/${carId}`);
+          const carToUpdate = carResponse.data;
+
+          // Update the serviceStatus of the car
+          carToUpdate.serviceStatus = false;
+          await http.put(`/cars/${carId}`, carToUpdate);
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
   const admin = user && user.admin == true;
 
   return (
@@ -267,3 +324,4 @@ function App() {
 }
 
 export default App;
+

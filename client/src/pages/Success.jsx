@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Container, Button } from '@mui/material';
 import http from '../http'; // Make sure to import your http module here
@@ -40,11 +40,37 @@ function Success() {
             http.post("/transactionrecord", formData)
                 .then((response) => {
                     console.log("Transaction record created:", response.data);
-                    // Set the postCompleted state to true
-                    setPostCompleted(true);
-                    // Modify the browser history to remove the current page
-                    window.history.replaceState(null, null, '/home');
-                    navigate('/home');
+
+                    // Fetch car information by ID
+                    http.get(`/cars/${carId}`)
+                        .then((carResponse) => {
+                            const carData = carResponse.data;
+
+                            // Update the service status
+                            const updatedCar = {
+                                ...carData,
+                                serviceStatus: true // Update the service status as needed
+                            };
+
+                            // Make a PUT request to update the service status
+                            http.put(`/cars/${carId}`, updatedCar)
+                                .then((updateResponse) => {
+                                    console.log("Car service status updated:", updateResponse.data);
+
+                                    // Set the postCompleted state to true
+                                    setPostCompleted(true);
+
+                                    // Modify the browser history to remove the current page
+                                    window.history.replaceState(null, null, '/home');
+                                    navigate('/home');
+                                })
+                                .catch((error) => {
+                                    console.error("Error updating car service status:", error);
+                                });
+                        })
+                        .catch((error) => {
+                            console.error("Error retrieving car information:", error);
+                        });
                 })
                 .catch((error) => {
                     console.error("Error creating transaction record:", error);
@@ -66,7 +92,7 @@ function Success() {
                         Thank you for using Rental electric car booking services!
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Show us the receipt sent to your email at our {currentLocation} branch to pick up the car. 
+                        Show us the receipt sent to your email at our {currentLocation} branch to pick up the car.
                     </Typography>
                     <Typography variant="body2" component="p">
                         Do email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a> if you have any questions.
