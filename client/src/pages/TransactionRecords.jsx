@@ -72,7 +72,7 @@ function TransactionRecords() {
                                 <TableRow>
                                     <TableCell align="center">Car ID</TableCell>
                                     <TableCell align="center">Transaction Amt</TableCell>
-                                    <TableCell align="center">Name</TableCell>
+                                    <TableCell align="center">Item</TableCell>
                                     <TableCell align="center">Booking Date (start)</TableCell>
                                     <TableCell align="center">Booking Date (end)</TableCell>
                                     <TableCell align="center">Payment Made</TableCell>

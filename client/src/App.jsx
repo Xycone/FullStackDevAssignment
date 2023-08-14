@@ -102,30 +102,52 @@ function App() {
 
   const fetchTransactionsToUpdate = async () => {
     try {
-      const response = await http.get("/transactionrecord"); 
+      const response = await http.get("/transactionrecord");
       const allTransactions = response.data;
+      console.log("allTransactions:", allTransactions);
 
-      const today = new Date();
-      const filteredTransactions = allTransactions.filter(
-        (transaction) => new Date(transaction.enddate) >= today
-      );
+      if (allTransactions.length === 0) {
+        console.log("No transactions data available.");
 
-      if (filteredTransactions.length === 0) {
-        console.log("No transactions found to update.");
-        return; // Exit the function if there are no transactions to update
+        // Get all cars
+        const carsResponse = await http.get("/cars");
+        const allCars = carsResponse.data;
+  
+        if (allCars.length === 0) {
+          console.log("No cars data available.");
+          return; // Exit the function since there are no transactions or cars
+        }
+
+        // Reset serviceStatus of all cars
+        for (const car of allCars) {
+          car.serviceStatus = false;
+          await http.put(`/cars/${car.id}`, car);
+        }
+
+        return; // Exit the function since there are no transactions
       }
 
-      for (const transaction of filteredTransactions) {
-        const carId = Number(transaction.carId);
-        console.log(carId);
-        const carResponse = await http.get(`/cars/${carId}`); // Update with your API endpoint to get car details
-        const carToUpdate = carResponse.data;
+        const today = new Date();
+        const filteredTransactions = allTransactions.filter(
+          (transaction) => new Date(transaction.enddate) >= today
+        );
+        console.log("filteredTransactions:",filteredTransactions)
 
-        // Update the serviceStatus of the car
-        carToUpdate.serviceStatus = false; // Change service status of car to true
-        await http.put(`/cars/${carId}`, carToUpdate);
+        if (filteredTransactions.length === 0) {
+          console.log("No transactions found to update.");
+          return; // Exit the function if there are no transactions to update
+        }
+
+        for (const transaction of filteredTransactions) {
+          const carId = Number(transaction.carId);
+          console.log(carId);
+          const carResponse = await http.get(`/cars/${carId}`);
+          const carToUpdate = carResponse.data;
+
+          // Update the serviceStatus of the car
+          carToUpdate.serviceStatus = false;
+          await http.put(`/cars/${carId}`, carToUpdate);
       }
-
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
