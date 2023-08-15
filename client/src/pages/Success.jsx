@@ -6,6 +6,7 @@ import '../css/Success.css';
 import dayjs from 'dayjs';
 
 function Success() {
+    const [useremail, setUseremail] = useState(null);
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const carId = queryParams.get('carId');
@@ -14,14 +15,25 @@ function Success() {
     const startDate = dayjs(queryParams.get('startDate'));
     const endDate = dayjs(queryParams.get('endDate'));
     const currentLocation = queryParams.get('currentLocation')
+    const currentDate = dayjs().format('DD/MM/YYYY');
+
 
     const navigate = useNavigate();
     const [postCompleted, setPostCompleted] = useState(false);
 
+    useEffect(() => {
+        // Fetch user email
+        http.get('/user/auth').then((res) => {
+          setUseremail(res.data.user.email);
+          console.log(res.data.user.email);
+        });
+      }, []);
+      
+
     // Check if necessary parameters are missing and redirect to home
     useEffect(() => {
         if (!carId || !productPrice || !productName || !startDate || !endDate || !currentLocation) {
-            navigate('/home');
+            // navigate('/home');
         }
     }, [carId, productPrice, productName, startDate, endDate, currentLocation, navigate]);
 
@@ -35,6 +47,20 @@ function Success() {
                 startDate: startDate.format('YYYY-MM-DD'),
                 endDate: endDate.format('YYYY-MM-DD'),
             };
+
+            const savePayment = {
+                carId : `${carId}`,
+                carname : `${productName}`,
+                total : Number(productPrice),
+                date : `${currentDate}`,
+                email : `${useremail}`,
+                startDate: `${startDate.format('DD/MM/YYYY')}`,
+                endDate: `${endDate.format('DD/MM/YYYY')}`,
+            };
+            console.log(savePayment);
+            http.post("/payment", savePayment).then((res) => {
+                console.log(res.data);
+            });
 
             // Make the post request
             http.post("/transactionrecord", formData)
@@ -62,7 +88,7 @@ function Success() {
 
                                     // Modify the browser history to remove the current page
                                     window.history.replaceState(null, null, '/home');
-                                    navigate('/home');
+                                    // navigate('/home');
                                 })
                                 .catch((error) => {
                                     console.error("Error updating car service status:", error);
@@ -95,7 +121,7 @@ function Success() {
                         Show us the receipt sent to your email at our {currentLocation} branch to pick up the car.
                     </Typography>
                     <Typography variant="body2" component="p">
-                        Do email us at <a href="mailto:221658b@mymail.nyp.edu.sg">rental@gmail.com</a> if you have any questions.
+                        Do email us at <a href="mailto:totallyrealrental@gmail.com">rental@gmail.com</a> if you have any questions.
                     </Typography>
                     <Button variant="contained" color="primary" onClick={handleReturnToHomepage}>
                         Return to Homepage

@@ -157,6 +157,7 @@ function AllFeedback() {
         <Typography variant="h5" sx={{ my: 2 }}>
           Feedback
         </Typography>
+        <FeedbackChart data={ratingsData} />
         <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
           <Input value={search} placeholder="Search for rating"
             onChange={onSearchChange}
@@ -175,7 +176,7 @@ function AllFeedback() {
           </Button>
         </Box>
         <Grid container spacing={2}>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{mb: 2}}>
             <Table aria-label="feedback table">
               <TableHead>
                 <TableRow>
@@ -286,7 +287,6 @@ function AllFeedback() {
           </TableContainer>
         </Grid>
       </Box>
-      <FeedbackChart data={ratingsData} />
     </Container>
   );
 }
