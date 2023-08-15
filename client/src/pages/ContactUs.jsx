@@ -31,12 +31,12 @@ function ContactUs() {
     }, []);
   const formik = useFormik({
     initialValues: {
-      rating: "5",
+      rating: "",
       description: "",
       status: false,
     },
     validationSchema: yup.object().shape({
-      rating: yup.string().trim().required("Rating is required"),
+      rating: yup.string().trim().min(1).required("Rating is required"),
       description: yup
         .string()
         .trim()
@@ -50,7 +50,7 @@ function ContactUs() {
       data.userId = user.id;
       http.post("/feedback", data).then((res) => {
         console.log(res.data);
-        navigate("/feedback");
+        navigate("/home");
       });
     },
   });
@@ -68,7 +68,6 @@ function ContactUs() {
             label="Rating"
             value={formik.values.rating}
             onChange={formik.handleChange}
-            helpertext={formik.touched.rating && formik.errors.rating}
           >
             <FormControlLabel value="1" control={<Radio />} label="1" />
             <FormControlLabel value="2" control={<Radio />} label="2" />
@@ -76,8 +75,10 @@ function ContactUs() {
             <FormControlLabel value="4" control={<Radio />} label="4" />
             <FormControlLabel value="5" control={<Radio />} label="5" />
           </RadioGroup>
-          {formik.touched.radioGroup && formik.errors.radioGroup && (
-            <InputFeedback error={formik.errors.radioGroup} />
+          {formik.touched.rating && formik.errors.rating && (
+            <Typography variant="body2" color="error">
+              {formik.errors.rating}
+            </Typography>
           )}
           <TextField
             fullWidth
@@ -104,4 +105,4 @@ function ContactUs() {
     </Container>
   );
 }
-export default ContactUs;
+export default ContactUs;

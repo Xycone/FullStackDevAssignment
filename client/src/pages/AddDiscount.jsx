@@ -19,10 +19,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from 'dayjs';
 
 function AddDiscount() {
+
   const navigate = useNavigate();
   const [assignmentList, setAssignmentList] = useState([]);
+  const minEndDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
 
   const getListings = () => {
     http.get("/listings").then((res) => {
@@ -62,11 +65,11 @@ function AddDiscount() {
       minspend: yup.number(),
       enddate: yup
         .string()
-        .matches(
-          /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
-          "Invalid date format. Please use dd/mm/yyyy."
-        )
-        .required("Date is required."),
+    .test('future-date', 'End date must be in the future', (value) => {
+      if (!value) return false; // Return false if value is empty
+      return dayjs(value, 'DD/MM/YYYY').isAfter(dayjs(), 'day');
+    })
+    .required('Date is required.'),
     }),
 
     onSubmit: (data) => {
@@ -82,6 +85,14 @@ function AddDiscount() {
       http.post("/discounts", data).then((res) => {
         console.log(res.data);
         navigate("/discounts");
+
+      http.get("/discounts").then((res) => {
+        res.data.forEach((discount) => {
+          if (dayjs(discount.enddate, "DD/MM/YYYY").isBefore(dayjs(), 'day')) {
+            http.delete(`/discounts/${discount.id}`);
+          }
+        });
+      });
       });
     },
   });
@@ -128,7 +139,9 @@ function AddDiscount() {
                 name="discount"
                 value={formik.values.discount}
                 onChange={formik.handleChange}
-                error={formik.touched.discount && Boolean(formik.errors.discount)}
+                error={
+                  formik.touched.discount && Boolean(formik.errors.discount)
+                }
                 helperText={formik.touched.discount && formik.errors.discount}
               />
 
@@ -235,7 +248,9 @@ function AddDiscount() {
                     error={
                       formik.touched.minspend && Boolean(formik.errors.minspend)
                     }
-                    helperText={formik.touched.minspend && formik.errors.minspend}
+                    helperText={
+                      formik.touched.minspend && formik.errors.minspend
+                    }
                   />
                 )}
               </Box>
@@ -249,7 +264,9 @@ function AddDiscount() {
                   name="enddate"
                   value={formik.values.enddate}
                   onChange={formik.handleChange}
-                  error={formik.touched.enddate && Boolean(formik.errors.enddate)}
+                  error={
+                    formik.touched.enddate && Boolean(formik.errors.enddate)
+                  }
                   helperText={formik.touched.enddate && formik.errors.enddate}
                 />
               </Grid>

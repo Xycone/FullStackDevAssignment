@@ -2,7 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { Payment, Sequelize } = require('../models');
 const yup = require("yup");
-
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'totallyrealrental@gmail.com',
+        pass: 'tnozgoqkkzfnfier'
+    }
+});
 
 
 // Joseph's part
@@ -12,10 +19,9 @@ router.post("/", async (req, res) => {
 
     // Validate request body
     let validationSchema = yup.object().shape({
-        car_id: yup.string().trim().required(),
-        make: yup.string().trim().min(3).max(100).required(),
-        model: yup.string().trim().min(1).max(150).required(),
-        price: yup.number().min(0.01).required(),
+        carId: yup.string().trim().required(),
+        carname: yup.string().trim().min(1).max(150).required(),
+        total: yup.number().min(0.01).required(),
     });
     try {
         await validationSchema.validate(data,
@@ -26,33 +32,33 @@ router.post("/", async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
-    data.car_id = data.car_id.trim();
-    data.make = data.make.trim();
-    data.model = data.model.trim();
+    data.carId = data.carId.trim();
+    data.carname = data.carname.trim();
+    data.total = data.total;
     data.date = data.date.trim();
     let result = await Payment.create(data);
     res.json(result);
+    const mailOptions = {
+        from: 'totallyrealrental@gmail.com',
+        to: `${data.email}`,
+        subject: `Rental Invoice #${data.carId}${data.date}`,
+        text: `Hi valued customer, \n\nThank you for renting ${data.carname} for $${data.total} from us!\nYour rental is from ${data.startDate} to ${data.endDate}\n\n\nCheers,\nThe Rental Team.`
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
 });
 
-
-// View Car Listing
-//router.get("/", async (req, res) => {
-//    let list = await Payment.findAll({
-//        order: [['createdAt', 'ASC']]
-//    });
-//    res.json(list);
-//});
-
-
-// View & Search for Car Listing
 router.get("/", async (req, res) => {
     let condition = {};
     let search = req.query.search;
     if (search) {
         condition[Sequelize.Op.or] = [
-            { make: { [Sequelize.Op.like]: `%${search}%` } },
-            { model: { [Sequelize.Op.like]: `%${search}%` } },
-            { date: { [Sequelize.Op.like]: `%${search}%` } }
+            { date: { [Sequelize.Op.like]: `%${search}%` } },
         ];
     }
 
@@ -64,7 +70,6 @@ router.get("/", async (req, res) => {
 });
 
 
-// View Car Listing By ID
 router.get("/:id", async (req, res) => {
     let id = req.params.id;
     let payment = await Payment.findByPk(id);
@@ -76,4 +81,27 @@ router.get("/:id", async (req, res) => {
     res.json(payment);
 });
 
-module.exports = router;
+router.delete("/:id", async (req, res) => {
+    let id = req.params.id;
+    // Check id not found
+    let payment = await Payment.findByPk(id);
+    if (!payment) {
+        res.sendStatus(404);
+        return;
+    }
+    
+    let num = await Payment.destroy({
+        where: { id: id }
+    })
+    if (num == 1) {
+        res.json({
+            message: "Payment record was deleted successfully."
+        });
+    }
+    else {
+        res.status(400).json({
+            message: `Cannot delete Payment record with id ${id}.`
+        });
+    }
+});
+module.exports = router;

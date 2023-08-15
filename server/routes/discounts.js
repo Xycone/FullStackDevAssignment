@@ -2,10 +2,48 @@ const express = require('express');
 const router = express.Router();
 const { Discounts, Sequelize } = require('../models');
 const yup = require("yup");
+const dayjs = require('dayjs');
+const cron = require('node-cron');
+const axios = require('axios'); // Assuming you have Axios installed for making HTTP requests
 
+// Schedule the task to run daily at midnight
+cron.schedule('*/10 * * * * *', async () => {
+  try {
+    const response = await axios.delete('http://localhost:3001/discounts/delete-expired-discounts');
+    console.log(response.data.message);
+  } catch (error) {
+    console.error('Error deleting expired discounts:', error);
+  }
+});
 
+router.delete('/delete-expired-discounts', async (req, res) => {
+  try {
+    const currentDate = dayjs(); // Get the current date and time
+
+    // Retrieve all discounts
+    const allDiscounts = await Discounts.findAll();
+
+    // Filter out expired discounts
+    const expiredDiscounts = allDiscounts.filter((discount) => {
+      const discountEndDate = dayjs(discount.enddate, 'DD/MM/YYYY'); // Convert to dayjs object
+      return discountEndDate.isBefore(currentDate, 'day'); // Compare dates
+    });
+
+    // Delete expired discounts
+    await Discounts.destroy({
+      where: {
+        id: expiredDiscounts.map((discount) => discount.id),
+      },
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
 
 router.get("/", async (req, res) => {
+    
     let condition = {};
     let search = req.query.search;
     if (search) {
@@ -22,6 +60,7 @@ router.get("/", async (req, res) => {
     });
     res.json(list);
 });
+
 
 router.post("/", async (req, res) => {
     let data = req.body;
@@ -65,6 +104,14 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+    await Discounts.destroy({
+    where: {
+      enddate: {
+        [Sequelize.Op.lt]: dayjs().format("DD/MM/YYYY"),
+      },
+    },
+  });
+    
     let id = req.params.id;
     let discounts = await Discounts.findByPk(id);
     // Check id not found
@@ -132,6 +179,7 @@ router.put("/:id", async (req, res) => {
 
 // Delete Car Listing
 router.delete("/:id", async (req, res) => {
+    
     let id = req.params.id;
     // Check id not found
     let discounts = await Discounts.findByPk(id);
@@ -154,6 +202,7 @@ router.delete("/:id", async (req, res) => {
         });
     }
 });
+
 
 module.exports = router;
 // View & Search for Car Listing
