@@ -70,6 +70,16 @@ router.get("/:id", async (req, res) => {
     res.json(transactionrecord);
 });
 
+router.get("/user/:id", async (req, res) => {
+    let id = req.params.id;
+    let transactionrecord = await TransactionRecord.findByPk(id);
+    // Check id not found
+    if (!transactionrecord) {
+        res.sendStatus(404);
+        return;
+    }
+    res.json(transactionrecord);
+});
 
 // Update TransactionRecord By ID
 router.put("/:id", async (req, res) => {
