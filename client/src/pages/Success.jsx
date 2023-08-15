@@ -7,13 +7,15 @@ import dayjs from 'dayjs';
 
 function Success() {
     const location = useLocation();
+    const [useremail, setUseremail] = useState(null);
     const queryParams = new URLSearchParams(location.search);
     const carId = queryParams.get('carId');
     const productPrice = queryParams.get('productPrice');
     const productName = queryParams.get('productName');
     const startDate = dayjs(queryParams.get('startDate'));
     const endDate = dayjs(queryParams.get('endDate'));
-    const currentLocation = queryParams.get('currentLocation')
+    const currentLocation = queryParams.get('currentLocation');
+    const currentDate = dayjs().format('DD/MM/YYYY');
 
     const navigate = useNavigate();
     const [postCompleted, setPostCompleted] = useState(false);
@@ -25,6 +27,14 @@ function Success() {
         }
     }, [carId, productPrice, productName, startDate, endDate, currentLocation, navigate]);
 
+    useEffect(() => {
+        // Fetch user email
+        http.get('/user/auth').then((res) => {
+            setUseremail(res.data.user.email);
+            console.log(res.data.user.email);
+        });
+    }, []);
+
     // Function to handle the post request
     const handleReturnToHomepage = () => {
         if (!postCompleted) {
@@ -35,6 +45,21 @@ function Success() {
                 startDate: startDate.format('YYYY-MM-DD'),
                 endDate: endDate.format('YYYY-MM-DD'),
             };
+
+            const savePayment = {
+                carId: `${carId}`,
+                carname: `${productName}`,
+                total: Number(productPrice),
+                date: `${currentDate}`,
+                email: `${useremail}`,
+                startDate: `${startDate.format('DD/MM/YYYY')}`,
+                endDate: `${endDate.format('DD/MM/YYYY')}`,
+            };
+            console.log(savePayment);
+            http.post("/payment", savePayment).then((res) => {
+                console.log(res.data);
+            });
+
 
             // Make the post request
             http.post("/transactionrecord", formData)
