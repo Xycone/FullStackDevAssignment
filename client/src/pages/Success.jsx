@@ -23,7 +23,7 @@ function Success() {
     // Check if necessary parameters are missing and redirect to home
     useEffect(() => {
         if (!carId || !productPrice || !productName || !startDate || !endDate || !currentLocation) {
-            navigate('/home');
+            navigate('/');
         }
     }, [carId, productPrice, productName, startDate, endDate, currentLocation, navigate]);
 
@@ -86,8 +86,8 @@ function Success() {
                                     setPostCompleted(true);
 
                                     // Modify the browser history to remove the current page
-                                    window.history.replaceState(null, null, '/home');
-                                    navigate('/home');
+                                    window.history.replaceState(null, null, '/');
+                                    navigate('/');
                                 })
                                 .catch((error) => {
                                     console.error("Error updating car service status:", error);
