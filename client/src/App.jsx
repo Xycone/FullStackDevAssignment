@@ -310,7 +310,7 @@ function App() {
             <Route path={"/editdiscount/:id"} element={<EditDiscounts />} />
             <Route path={"/adddiscount"} element={<AddDiscount />} />
             <Route path={"/viewdiscounts"} element={<ViewDiscounts />} />
-            <Route path="/home" element={<Homepage />} />
+            <Route path="/" element={<Homepage />} />
             <Route path={"/listings"} element={<CarListings />} />
             <Route path={"/addlistings"} element={<AddCarListings />} />
             <Route path={"/editlistings/:id"} element={<EditCarListings />} />

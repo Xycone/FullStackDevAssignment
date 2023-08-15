@@ -41,7 +41,7 @@ function EnterEmail() {
     onSubmit: async (data) => {
       try {
         data.email = data.email.trim();
-        const response = await http.post("/user/forgotpassword", data);
+        const response = await http.post(`/user/forgotpassword/${data.email}`);
         console.log(response.data);
         navigate("/");
       } catch (error) {
