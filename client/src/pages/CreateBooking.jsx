@@ -45,12 +45,10 @@ function CreateBooking() {
   const [carList, setCarList] = useState([]);
   const [discountList, setDiscountList] = useState([]);
   const navigate = useNavigate();
-  const validDiscounts = discountList.filter(
-  (discount) =>
-    !dayjs(discount.enddate, "DD/MM/YYYY").isBefore(dayjs(), "day")
-);
-
+  const [selectedNumDays, setSelectedNumDays] = useState(1);
   useEffect(() => {
+
+
     http.get('/cars').then((res) => {
       setCarList(res.data);
     });
@@ -60,6 +58,9 @@ function CreateBooking() {
     });
   }, []);
 
+
+
+  const [beforeDiscountTotal, setBeforeDiscountTotal] = useState(0);
   const idAsNumber = parseInt(id, 10);
   const matchingCar = carList.find((car) => car.listingId === idAsNumber && car.serviceStatus === false); // Adds first car found that is currently not in service
   const tomorrow = dayjs().add(1, 'day');
@@ -81,7 +82,7 @@ function CreateBooking() {
       .number()
       .min(1, "Number of days must be at least 1")
       .required('Number of days is required'),
-    
+
   });
 
   const formik = useFormik({
@@ -112,53 +113,70 @@ function CreateBooking() {
         description: productDescription,
         quantity: 1,
       };
-      if (data.selectedCoupon) {
-    const selectedDiscount = discountList.find(
-      (discount) => discount.id === data.selectedCoupon
-    );
-    if (
-      selectedDiscount &&
-      dayjs(selectedDiscount.enddate, "DD/MM/YYYY").isBefore(dayjs(), "day")
-    ) {
-      data.selectedCoupon = "";
-    }
-  }
+
 
       makePayment(product, matchingCar.id, formik.values.startDate, endDate, matchingCar.currentLocation)
       // Call navigate with the form data as state
       // navigate('/sp', { state: formData });
-    },
+    }
   });
 
+  useEffect(() => {
+    // Update the selected number of days when formik values change
+    setSelectedNumDays(formik.values.numDays);
+  }, [formik.values.numDays]);
+
+  // Add a state to track the filtered discount list
+  const [filteredDiscountList, setFilteredDiscountList] = useState([]);
   // Calculate the total amount whenever the form values for startDate or endDate change
   useEffect(() => {
+
     if (matchingCar) {
       const startDate = dayjs(formik.values.startDate);
       const endDate = dayjs(formik.values.endDate);
       const diffInDays = endDate.diff(startDate, 'day');
       const basePrice = matchingCar.listing.price;
-      let totalAmount = basePrice * formik.values.numDays;
+      let totalAmountBeforeDiscount = basePrice * formik.values.numDays;
+
+      setBeforeDiscountTotal(totalAmountBeforeDiscount);
+
+      let totalAmount = totalAmountBeforeDiscount;
+
       if (formik.values.selectedCoupon) {
-        const selectedDiscount = discountList.find((discount) => discount.id === formik.values.selectedCoupon);
-        if (
-        selectedDiscount &&
-        dayjs(selectedDiscount.enddate, "DD/MM/YYYY").isBefore(dayjs(), 'day')
-      ) {
-        formik.setFieldValue("selectedCoupon", "");
-      }
+        const selectedDiscount = discountList.find(
+          (discount) => discount.id === formik.values.selectedCoupon
+        );
+
+        // Check if selected discount is valid and apply it
+
         if (selectedDiscount) {
           const { disctype, discount } = selectedDiscount;
           if (disctype === '%') {
             // If the discount type is '%', calculate the discounted amount as a percentage of the total
-            const discountAmount = (totalAmount * discount) / 100;
-            totalAmount -= discountAmount;
+            const discountAmount = (totalAmountBeforeDiscount * discount) / 100;
+            totalAmount = totalAmountBeforeDiscount - discountAmount;
           } else if (disctype === '$') {
             // If the discount type is '$', directly deduct the fixed amount from the total
-            totalAmount -= discount;
+            totalAmount = totalAmountBeforeDiscount - discount;
+
+
           }
         }
       }
+      const filteredDiscounts = discountList
+        .filter((discount) =>
+        (discount.reqtype === 'null' ||
+          (discount.reqtype === 'listingId' && parseInt(discount.listingId, 10) === parseInt(matchingCar.listingId, 10)) ||
+          (discount.reqtype === 'minspend' && beforeDiscountTotal >= discount.minspend))
+        );
 
+      // Update the formik values if the currently selected discount is not valid for the new selectedNumDays
+      if (!filteredDiscounts.find(discount => discount.id === formik.values.selectedCoupon)) {
+        formik.setFieldValue('selectedCoupon', '');
+      }
+
+      // Set the filtered discount list
+      setFilteredDiscountList(filteredDiscounts);
 
       // Prevent totalAmount from going below 0
       totalAmount = Math.max(totalAmount, 0);
@@ -167,7 +185,6 @@ function CreateBooking() {
       formik.setFieldValue('totalAmount', isNaN(totalAmount) ? 0 : totalAmount);
     }
   }, [formik.values.numDays, formik.values.selectedCoupon, matchingCar, discountList]);
-
 
 
   return (
@@ -251,17 +268,23 @@ function CreateBooking() {
                           onChange={(event) => formik.setFieldValue('selectedCoupon', parseInt(event.target.value, 10))}
                         >
                           <FormControlLabel value="" control={<Radio />} label="None" /> {/* Add a default option for no coupon selected */}
-                          {validDiscounts.filter((discount) => (discount.reqtype === 'null') || (discount.reqtype === "listingId") && (parseInt(discount.listingId, 10) === parseInt(matchingCar.listingId, 10))).map((discounts) => (
-                            <FormControlLabel
-                              key={discounts.id}
-                              value={discounts.id}
-                              control={<Radio />}
-                              label={
-                                `${discounts.disctype === '%' ? '' : '$'}${discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
-                                } discount`
-                              }
-                            />
-                          ))}
+                          {discountList
+                            .filter((discount) =>
+                            (discount.reqtype === 'null' ||
+                              (discount.reqtype === 'listingId' && parseInt(discount.listingId, 10) === parseInt(matchingCar.listingId, 10)) ||
+                              (discount.reqtype === 'minspend' && beforeDiscountTotal >= discount.minspend))
+                            )
+                            .map((discounts) => (
+                              <FormControlLabel
+                                key={discounts.id}
+                                value={discounts.id}
+                                control={<Radio />}
+                                label={
+                                  `${discounts.disctype === '%' ? '' : '$'}${discounts.disctype === '%' ? parseFloat(discounts.discount).toFixed(0) + '%' : discounts.discount
+                                  } discount`
+                                }
+                              />
+                            ))}
                         </RadioGroup>
                       </CardContent>
                     </Card>
