@@ -39,7 +39,6 @@ import AllFeedback from "./pages/AllFeedback";
 import ContactUs from "./pages/ContactUs";
 import Payment from "./pages/PaymentRecords";
 import Success from "./pages/Success";
-import PaymentPage from "./pages/PaymentPage";
 import TransactionRecords from "./pages/TransactionRecords";
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import AspectRatio from "@mui/joy/AspectRatio";
