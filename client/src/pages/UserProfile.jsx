@@ -84,11 +84,11 @@ function UserProfile() {
       http.get("/user/auth").then((res) => {
         const user = res.data.user;
         if (user) {
-          // Chain the second request after the first one
+          setUser(user);
           http.get(`/user/${user.id}`).then((res) => {
             if (res.data.imageFile) {
-              setUser(user);
               setUserProfile(res.data.imageFile);
+              console.log(user)
             }
           });
         }
