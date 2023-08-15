@@ -41,7 +41,8 @@ import Payment from "./pages/ReportsDetails";
 import Success from "./pages/Success";
 import PaymentPage from "./pages/PaymentPage";
 import TransactionRecords from "./pages/TransactionRecords";
-
+import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
+import AspectRatio from "@mui/joy/AspectRatio";
 import {
   experimental_extendTheme as materialExtendTheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
@@ -72,8 +73,9 @@ const materialTheme = materialExtendTheme({
 
 function App() {
   const [user, setUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const logout = () => {
-    s
+    s;
     localStorage.clear();
     window.location = "/";
   };
@@ -91,11 +93,20 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       http.get("/user/auth").then((res) => {
-        setUser(res.data.user);
+        const user = res.data.user;
+        if (user) {
+          setUser(user);
+
+          // Chain the second request after the first one
+          http.get(`/user/${user.id}`).then((res) => {
+            if (res.data.imageFile) {
+              setUserProfile(res.data.imageFile);
+            }
+          });
+        }
       });
     }
   }, []);
-
   const admin = user && user.admin == true;
 
   return (
@@ -104,7 +115,7 @@ function App() {
         <Router>
           <AppBar position="static" className="AppBar">
             <Container>
-              <Toolbar>
+              <Toolbar sx={{ display: "flex", alignItems: "center" }}>
                 <Link to="/home">
                   <Typography variant="h6" component="div">
                     Rental
@@ -183,7 +194,6 @@ function App() {
                           <Typography>Transaction Records</Typography>
                         </MenuItem>
                       </Link>
-
                     </Menu>
                   </div>
                 )}
@@ -258,13 +268,15 @@ function App() {
             <Route path={"/createbooking/:id"} element={<CreateBooking />} />
             <Route path={"/paymentrecords"} element={<Payment />} />
             <Route path={"/success"} element={<Success />} />
-            <Route path={"/transactionrecords"} element={<TransactionRecords />} />
+            <Route
+              path={"/transactionrecords"}
+              element={<TransactionRecords />}
+            />
           </Routes>
         </Router>
       </UserContext.Provider>
-    </MaterialCssVarsProvider >
+    </MaterialCssVarsProvider>
   );
 }
 
 export default App;
-

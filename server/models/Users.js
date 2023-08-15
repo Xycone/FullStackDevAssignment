@@ -16,13 +16,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    imageFile: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   });
   User.associate = (models) => {
     User.hasMany(models.Listings, {
-        foreignKey: "userId",
-        onDelete: "cascade"
+      foreignKey: "userId",
+      onDelete: "cascade",
     });
-};
+    User.hasMany(models.FeedbackUser, {
+      foreignKey: "userId",
+      onDelete: "cascade",
+    });
+  };
 
-return User;
-}
+  return User;
+};

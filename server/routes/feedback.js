@@ -47,12 +47,20 @@ router.put("/:id",  async (req, res) => {
         });
     }
 });
-router.post("/",  async (req, res) => {
-    if (!req.user || !req.user.id) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
+router.post("/", async (req, res) => {
     let data = req.body;
+    if (!data.userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+    console.log(data.userId);
+    
+    const user = await User.findByPk(data.userId);
+    if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+    }
+
     let validationSchema = yup.object().shape({
         rating: yup.string().trim().required(),
         description: yup.string().trim().min(3).max(500).required(),
@@ -66,10 +74,13 @@ router.post("/",  async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
+    const feedbackUser = await FeedbackUser.create({
+        userId: user.id
+    });
     data.rating = data.rating.trim();
     data.description = data.description.trim();
     data.responded = false;
-    data.userId = req.user.id;
+    data.feedbackUserId = feedbackUser.id;
     let result = await Feedback.create(data);
     res.json(result);
 });

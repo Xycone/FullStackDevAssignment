@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 function EnterEmail() {
@@ -50,11 +51,11 @@ function EnterEmail() {
           error.response.data &&
           error.response.data.error
         ) {
-          // Display the error message returned from the server to the user
           setEmailError(error.response.data.error);
+          toast.error(error.response.data.error);
         } else {
-          // If there's no specific error message from the server, display a generic error message
           setEmailError("An error occurred while processing your request.");
+          toast.error("An error occurred while processing your request.");
         }
       }
     },
@@ -95,7 +96,6 @@ function EnterEmail() {
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email} // Display the validation error message
           />
-          {emailError && <Typography color="error">{emailError}</Typography>}
           <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
             Submit
           </Button>

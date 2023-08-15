@@ -129,16 +129,24 @@ router.put("/update/:id", async (req, res) => {
     res.sendStatus(404);
     return;
   }
-  let num = await User.update(data, {
-    where: { id: id },
-  });
-  if (num == 1) {
+  
+  // Update user data
+  if (data.filename) {
+    // Update imageFile if data.filename is provided
+    user.imageFile = data.filename;
+  }
+  user.name = data.name;
+  user.email = data.email;
+  
+  try {
+    await user.save();
     res.json({
       message: "User was updated successfully.",
     });
-  } else {
-    res.status(400).json({
-      message: `Cannot update user with id ${id}.`,
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: `An error occurred while updating user with id ${id}.`,
     });
   }
 });

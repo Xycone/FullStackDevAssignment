@@ -11,7 +11,6 @@ const validateToken = (req, res, next) => {
         const payload = verify(accessToken, process.env.APP_SECRET);
         req.user = payload;
 
-        console.log("User Data:", req.user);
         return next();
     }
     catch (err) {

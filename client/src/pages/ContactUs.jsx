@@ -12,23 +12,23 @@ import { useState, useEffect } from 'react';
 
 function ContactUs() {
   const navigate = useNavigate();
-  //   const [user, setUser] = useState(null);
-  //   const [authorized, setAuthorized] = useState(true);
+    const [user, setUser] = useState(null);
+    const [authorized, setAuthorized] = useState(true);
 
-  //   useEffect(() => {
-  //     try {
-  //         if (localStorage.getItem('accessToken')) {
-  //             http.get('/user/auth').then((res) => {
-  //                 setUser(res.data.user);
-  //                 });
-  //         } else {
-  //           setAuthorized(false);
-  //         }
-  //       } catch (error) {
-  //         console.error(error);
-  //         setAuthorized(false);
-  //       }
-  //   }, []);
+    useEffect(() => {
+      try {
+          if (localStorage.getItem('accessToken')) {
+              http.get('/user/auth').then((res) => {
+                  setUser(res.data.user);
+                  });
+          } else {
+            setAuthorized(false);
+          }
+        } catch (error) {
+          console.error(error);
+          setAuthorized(false);
+        }
+    }, []);
   const formik = useFormik({
     initialValues: {
       rating: "5",
@@ -47,6 +47,7 @@ function ContactUs() {
     onSubmit: (data) => {
       data.rating = data.rating.trim();
       data.description = data.description.trim();
+      data.userId = user.id;
       http.post("/feedback", data).then((res) => {
         console.log(res.data);
         navigate("/feedback");

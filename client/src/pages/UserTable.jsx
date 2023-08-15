@@ -37,6 +37,7 @@ function UserTable() {
   const searchUser = () => {
     http.get(`/user?search=${search}`).then((res) => {
       setUserList(res.data);
+      console.log(userList)
     });
   };
 
@@ -59,6 +60,7 @@ function UserTable() {
   };
 
   const onClickSearch = () => {
+    console.log("button clicked")
     searchUser();
   }
 
