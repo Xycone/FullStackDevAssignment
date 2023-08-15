@@ -25,8 +25,6 @@ const feedbackRoute = require('./routes/feedback');
 app.use("/feedback", feedbackRoute);
 const paymentRoute = require('./routes/payment');
 app.use("/payment", paymentRoute);
-const reportRoute = require('./routes/report');
-app.use("/report", reportRoute);
 const userRoute = require('./routes/user');
 app.use("/user", userRoute);
 const spRoute = require('./routes/stripepayment');
