@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, Dateview } from "react";
 import { Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -65,11 +66,11 @@ function AddDiscount() {
       minspend: yup.number(),
       enddate: yup
         .string()
-    .test('future-date', 'End date must be in the future', (value) => {
-      if (!value) return false; // Return false if value is empty
-      return dayjs(value, 'DD/MM/YYYY').isAfter(dayjs(), 'day');
-    })
-    .required('Date is required.'),
+        .test('future-date', 'End date must be in the future', (value) => {
+          if (!value) return false; // Return false if value is empty
+          return dayjs(value, 'DD/MM/YYYY').isAfter(dayjs(), 'day');
+        })
+        .required('Date is required.'),
     }),
 
     onSubmit: (data) => {
@@ -86,13 +87,13 @@ function AddDiscount() {
         console.log(res.data);
         navigate("/discounts");
 
-      http.get("/discounts").then((res) => {
-        res.data.forEach((discount) => {
-          if (dayjs(discount.enddate, "DD/MM/YYYY").isBefore(dayjs(), 'day')) {
-            http.delete(`/discounts/${discount.id}`);
-          }
+        http.get("/discounts").then((res) => {
+          res.data.forEach((discount) => {
+            if (dayjs(discount.enddate, "DD/MM/YYYY").isBefore(dayjs(), 'day')) {
+              http.delete(`/discounts/${discount.id}`);
+            }
+          });
         });
-      });
       });
     },
   });

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -20,11 +21,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from 'dayjs';
 
 function EditDiscounts() {
-    const navigate = useNavigate();
     const { id } = useParams();
+    const navigate = useNavigate();
     const [assignmentList, setAssignmentList] = useState([]);
+    const minEndDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
 
     const getListings = () => {
         http.get("/listings").then((res) => {
@@ -41,7 +44,7 @@ function EditDiscounts() {
         disctype: "",
         reqtype: "null",
         minspend: 0,
-        listingId: "",
+        listingId: 0,
         enddate: "",
     });
     const [selectedOption, setSelectedOption] = useState(discounts.reqtype);
@@ -53,6 +56,7 @@ function EditDiscounts() {
             setDiscounts(res.data);
             setSelectedOption(res.data.reqtype);
             setSecondDropdownVisible(res.data.reqtype === "listingId");
+            formik.setValues(res.data);
         });
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -63,17 +67,32 @@ function EditDiscounts() {
 
         validationSchema: yup.object().shape({
             discount: yup.number().required("Discount is required"),
-
+            disctype: yup.string().required("required."),
+            reqtype: yup.string().required("Requirement Type is required"),
+            listingId: yup
+                .number()
+                .test(
+                    "Please select a Car Type when Requirement Type is 'Car'",
+                    function (value) {
+                        const { reqtype } = this.parent;
+                        if (reqtype === "listingId") {
+                            return value !== undefined && value !== "";
+                        }
+                        return true;
+                    }
+                ),
+            minspend: yup.number(),
             enddate: yup
                 .string()
-                .matches(
-                    /^(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/,
-                    "Invalid date format. Please use dd/mm/yyyy."
-                )
-                .required("Date is required."),
+                .test('future-date', 'End date must be in the future', (value) => {
+                    if (!value) return false; // Return false if value is empty
+                    return dayjs(value, 'DD/MM/YYYY').isAfter(dayjs(), 'day');
+                })
+                .required('Date is required.'),
         }),
 
         onSubmit: (data) => {
+
             data.discount = data.discount;
             data.disctype = data.disctype;
             data.reqtype = data.reqtype;
@@ -97,13 +116,15 @@ function EditDiscounts() {
     //     setSecondDropdownVisible(event.target.value === 'cartype');
     // };
 
+
     const handleOptionChange = (event) => {
         const selectedValue = event.target.value;
         setSelectedOption(selectedValue);
 
         // If the selected value is "null", set cartype to an empty string
         if (selectedValue === "null") {
-            formik.setFieldValue("listingId", 0);
+            formik.setFieldValue("listingId", 0); // Assigning a number directly
+
             formik.setFieldValue("minspend", 0);
         }
 
@@ -116,7 +137,7 @@ function EditDiscounts() {
         <Container>
             <Box>
                 <Typography variant="h5" sx={{ my: 2 }}>
-                    Add Discount
+                    Edit iscount
                 </Typography>
                 <Box component="form" onSubmit={formik.handleSubmit}>
                     <Grid container spacing={2}>
@@ -265,7 +286,7 @@ function EditDiscounts() {
                 </Box>
                 <ToastContainer />
             </Box>
-        </Container>
+        </Container >
     );
 }
 
