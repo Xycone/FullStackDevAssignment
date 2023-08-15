@@ -104,7 +104,6 @@ function App() {
     try {
       const response = await http.get("/transactionrecord");
       const allTransactions = response.data;
-      console.log("allTransactions:", allTransactions);
 
       if (allTransactions.length === 0) {
         console.log("No transactions data available.");
