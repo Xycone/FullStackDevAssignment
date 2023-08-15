@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "@mui/material";
+import Chart from 'chart.js/auto';
+import { CategoryScale } from "chart.js";
+import FeedbackChart from './FeedbackChart';
 import {
   Box,
   Typography,
@@ -14,6 +16,7 @@ import {
   Input,
   IconButton,
   Button,
+  Container,
 } from "@mui/material";
 import http from "../http";
 import {
@@ -35,49 +38,49 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+Chart.register(CategoryScale);
 
 function AllFeedback() {
   const navigate = useNavigate();
-  const [feedbackList, setFeedbackList, userNames, setUserNames] = useState([]);
+  const [feedbackList, setFeedbackList] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [search, setSearch] = useState("");
+  const [responded, setResponded] = useState(0);
+  const [feedback_id, setId] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [buttonstate, setbutton] = useState(0);
   // const { user } = useContext(UserContext);
   const onSearchChange = (e) => {
     setSearch(e.target.value);
   };
-  const getFeedback = () => {
-    http.get("/feedback").then((res) => {
-      setFeedbackList(res.data);
-    });
-  };
   const searchFeedback = () => {
-    http.get(`/feedback?search=${search}`).then((res) => {
+    http.get(`/feedback?search=${search}&responded=${responded}`).then((res) => {
       setFeedbackList(res.data);
     });
   };
-  // useEffect(() => {
-  //   getFeedback();
-  //   const fetchUserNames = async () => {
-  //     try {
-  //       const requests = userIds.map((userId) => http.get("/user"));
-
-  //       const responses = await Promise.all(requests);
-
-  //       const userNames = responses.map((response) => {
-  //         const userData = response.data;
-  //         return userData.name;
-  //       });
-
-  //       setUserNames(userNames);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchUserNames();
-  // }, [userIds]);
   useEffect(() => {
-    getFeedback();
-  }, []);
+    searchFeedback(); // Trigger search with the updated responded value
+  }, [buttonstate]);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const requests = (userId || []).map((user) => http.get("/user"));
+
+        const responses = await Promise.all(requests);
+
+        const user = responses.map((response) => {
+          const userData = response.data;
+          return userData.id;
+        });
+
+        setUserId(userId);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserId();
+  }, [userId]);
   const onSearchKeyDown = (e) => {
     if (e.key === "Enter") {
       searchFeedback();
@@ -88,7 +91,7 @@ function AllFeedback() {
   };
   const onClickClear = () => {
     setSearch("");
-    getFeedback();
+    searchFeedback();
   };
   const deleteFeedback = (id) => {
     http.delete(`/feedback/${id}`).then((res) => {
@@ -96,9 +99,6 @@ function AllFeedback() {
       navigate(0);
     });
   };
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
-  const [listing_id, setId] = useState(0);
   const handleOpen = (id) => {
     setId(id);
     setOpen(true);
@@ -119,21 +119,47 @@ function AllFeedback() {
       navigate(0);
     });
   };
-  useEffect(() => {
-    http.get("/feedback").then((res) => {
-      console.log(res.data);
-      setFeedbackList(res.data);
-    });
-  }, []);
+  const respondedEdit = () => {
+    const buttonchange = buttonstate === 0 ? 1 : 0;
+    setbutton(buttonchange);
+    const newResponded = responded === 0 ? 1 : 0;
+    setResponded(newResponded);
+  };
+  function Item({ fid, isrespond }) {
+    if (isrespond == 1) {
+      return;
+    }
+    return <IconButton
+      color="primary"
+      sx={{ padding: "4px" }}
+      onClick={() => handleOpen(fid)}
+    >
+      <Edit />
+
+    </IconButton>;
+  };
+  const ratingCounts = [0, 0, 0, 0, 0]; // Initialize with zeros for each rating value
+  feedbackList.forEach((feedback) => {
+    const ratingValue = parseInt(feedback.rating); // Convert rating to integer
+    if (ratingValue >= 1 && ratingValue <= 5) {
+      ratingCounts[ratingValue - 1]++; // Increment count for the corresponding rating value
+    }
+  });
+
+  // Prepare the data for the FeedbackChart component
+  const ratingsData = {
+    labels: ['1', '2', '3', '4', '5'], // Rating values
+    values: ratingCounts, // Number of ratings for each value
+  };
   return (
     <Container>
       <Box>
         <Typography variant="h5" sx={{ my: 2 }}>
           Feedback
         </Typography>
-
+        <FeedbackChart data={ratingsData} />
         <Box sx={{ display: 'flex', alignProduct: 'center', mb: 2 }}>
-          <Input value={search} placeholder="Search"
+          <Input value={search} placeholder="Search for rating"
             onChange={onSearchChange}
             onKeyDown={onSearchKeyDown} />
           <IconButton color="primary"
@@ -145,18 +171,12 @@ function AllFeedback() {
             <Clear />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
-          {/* {
-                    user && (
-                        <Link to="/addfeedback" style={{ textDecoration: 'none' }}>
-                            <Button variant='contained'>
-                                Add
-                            </Button>
-                        </Link>
-                    )
-                } */}
+          <Button onClick={respondedEdit}>
+            {buttonstate === 0 ? 'Pending' : 'Responded'}
+          </Button>
         </Box>
         <Grid container spacing={2}>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{mb: 2}}>
             <Table aria-label="feedback table">
               <TableHead>
                 <TableRow>
@@ -165,13 +185,13 @@ function AllFeedback() {
                   <TableCell align="center">Description</TableCell>
                   <TableCell align="center">Responded</TableCell>
                   <TableCell align="center">Date</TableCell>
-                  {/* <TableCell align="center">Author</TableCell> */}
+                  <TableCell align="center">Author</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               {feedbackList.map((feedback) => (
-                <TableBody key={feedback.userId}>
+                <TableBody key={feedback.id}>
                   <TableRow
                     key={feedback.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -185,23 +205,17 @@ function AllFeedback() {
                     <TableCell>
                       <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
                         color="text.secondary">
-                        <AccessTime sx={{ mr: 1 }} />
                         <Typography>
                           {dayjs(feedback.createdAt).format(
-                            global.datetimeFormat
+                            'DD/MM/YYYY'
                           )}
                         </Typography>
                       </Box>
                     </TableCell>
-                    {/* <TableCell>{userNames[index]}</TableCell> */}
+                    {/* <TableCell>{userId[index]}</TableCell> */}
                     <TableCell>
-                      <IconButton
-                        color="primary"
-                        sx={{ padding: "4px" }}
-                        onClick={() => handleOpen(feedback.id)}
-                      >
-                        <Edit />
-                      </IconButton>
+                      <Item isrespond={feedback.responded}
+                        fid={feedback.id} />
                       <Dialog open={open} onClose={handleClose}>
                         <DialogTitle>Send an email response</DialogTitle>
                         <DialogContent>
@@ -221,9 +235,9 @@ function AllFeedback() {
                             variant="contained"
                             color="error"
                             onClick={() =>
-                              editFeedback(listing_id, {
-                                rating: listing_id.rating,
-                                description: listing_id.description,
+                              editFeedback(feedback_id, {
+                                rating: feedback_id.rating,
+                                description: feedback_id.description,
                                 responded: true,
                               })
                             }
@@ -259,7 +273,7 @@ function AllFeedback() {
                           <Button
                             variant="contained"
                             color="error"
-                            onClick={() => deleteFeedback(listing_id)}
+                            onClick={() => deleteFeedback(feedback_id)}
                           >
                             Delete
                           </Button>
@@ -277,4 +291,4 @@ function AllFeedback() {
   );
 }
 
-export default AllFeedback;
+export default AllFeedback;

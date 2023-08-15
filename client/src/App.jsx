@@ -37,7 +37,7 @@ import UpdateUser from "./pages/UpdateUser";
 import Homepage from "./pages/Homepage";
 import AllFeedback from "./pages/AllFeedback";
 import ContactUs from "./pages/ContactUs";
-import Payment from "./pages/ReportsDetails";
+import Payment from "./pages/PaymentRecords";
 import Success from "./pages/Success";
 import PaymentPage from "./pages/PaymentPage";
 import TransactionRecords from "./pages/TransactionRecords";

@@ -36,7 +36,6 @@ router.delete('/delete-expired-discounts', async (req, res) => {
       },
     });
 
-    res.json({ message: 'Expired discounts deleted successfully.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error.' });

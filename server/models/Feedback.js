@@ -13,6 +13,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     });
-
+    
+    Feedback.associate = (models) => {
+        Feedback.belongsTo(models.FeedbackUser, {
+            foreignKey: "feedbackUserId",
+            as: 'user',
+            onDelete: "cascade"
+        });
+    };
     return Feedback;
 }
