@@ -66,10 +66,9 @@ function UserProfile() {
       return;
     }
 
-    const { email } = user;
-
+    console.log(email);
     http
-      .post("/user/forgotpassword", { email })
+      .post(`/user/forgotpassword/${email}`)
       .then((response) => {
         setMessage(response.data.message);
       })
@@ -85,6 +84,7 @@ function UserProfile() {
         const user = res.data.user;
         if (user) {
           setUser(user);
+          setEmail(user.email);
           http.get(`/user/${user.id}`).then((res) => {
             if (res.data.imageFile) {
               setUserProfile(res.data.imageFile);

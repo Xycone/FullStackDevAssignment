@@ -129,7 +129,7 @@ router.put("/update/:id", async (req, res) => {
     res.sendStatus(404);
     return;
   }
-  
+
   // Update user data
   if (data.filename) {
     // Update imageFile if data.filename is provided
@@ -137,7 +137,7 @@ router.put("/update/:id", async (req, res) => {
   }
   user.name = data.name;
   user.email = data.email;
-  
+
   try {
     await user.save();
     res.json({
@@ -215,17 +215,17 @@ router.get("/:id", async (req, res) => {
 });
 
 const transporter = nodemailer.createTransport({
-  service: "outlook",
+  service: "gmail",
   auth: {
-    user: "samfromrental@outlook.com",
-    pass: "lskhfvdhsybrhayd",
+    user: 'totallyrealrental@gmail.com',
+    pass: 'tnozgoqkkzfnfier'
   },
 });
 
 const generateToken = () => crypto.randomBytes(20).toString("hex");
 
-router.post("/forgotpassword", async (req, res) => {
-  const { email } = req.body;
+router.post("/forgotpassword/:email", async (req, res) => {
+  const email = req.params.email;
   try {
     // Find the user based on the email
     const user = await User.findOne({ where: { email } });
@@ -246,7 +246,7 @@ router.post("/forgotpassword", async (req, res) => {
     });
     // Send password reset email
     transporter.sendMail({
-      from: "samfromrental@outlook.com",
+      from: 'totallyrealrental@gmail.com',
       to: email,
       subject: "Password Reset",
       text: `Click the link to reset your password: http://localhost:3000/resetpassword/${token}`,
@@ -264,7 +264,7 @@ router.put("/resetpassword/:token", async (req, res) => {
   try {
     // Retrieve the token data from the database
     const tokenData = await Token.findOne({
-      where: { token: token},
+      where: { token: token },
     });
 
     if (!tokenData || new Date() > tokenData.expiresAt) {
@@ -274,7 +274,7 @@ router.put("/resetpassword/:token", async (req, res) => {
 
     const { email } = tokenData;
     const user = await User.findOne({ where: { email } });
-    
+
     if (!user) {
       return res.status(404).json({ error: "Invalid or expired token" });
     }

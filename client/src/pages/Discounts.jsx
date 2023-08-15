@@ -1,217 +1,176 @@
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button, Container } from '@mui/material';
+import http from '../http';
+import { AccessTime, Search, Clear, Edit, Delete, Preview } from '@mui/icons-material';
+import dayjs from 'dayjs';
+import global from '../global';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 
-const express = require('express');
-const router = express.Router();
-const { Discounts, Sequelize } = require('../models');
-const yup = require("yup");
-const dayjs = require('dayjs');
-const cron = require('node-cron');
-const axios = require('axios'); // Assuming you have Axios installed for making HTTP requests
 
-// Schedule the task to run daily at midnight
-cron.schedule('0 0  * * *', async () => {
-  try {
-    const response = await axios.delete('http://localhost:3001/discounts/delete-expired-discounts');
-    console.log(response.data.message);
-  } catch (error) {
-    console.error('Error deleting expired discounts:', error);
+function Discounts() {
+  const navigate = useNavigate();
+  const [assignmentList, setAssignmentList] = useState([]);
+  const [search, setSearch] = useState('');
+
+  const onSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const getDiscounts = () => {
+    http.get('/discounts').then((res) => {
+      setAssignmentList(res.data);
+    });
+  };
+
+  const searchDiscounts = () => {
+    http.get(`/discounts?search=${search}`).then((res) => {
+      setAssignmentList(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getDiscounts();
+  }, []);
+
+  const onSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchDiscounts();
+    }
+  };
+
+  const onClickSearch = () => {
+    searchDiscounts();
   }
-});
 
-router.delete('/delete-expired-discounts', async (req, res) => {
-  try {
-    const currentDate = dayjs(); // Get the current date and time
+  const onClickClear = () => {
+    setSearch('');
+    getDiscounts();
+  };
 
-    // Retrieve all discounts
-    const allDiscounts = await Discounts.findAll();
-
-    // Filter out expired discounts
-    const expiredDiscounts = allDiscounts.filter((discount) => {
-      const discountEndDate = dayjs(discount.enddate, 'DD/MM/YYYY'); // Convert to dayjs object
-      return discountEndDate.isBefore(currentDate, 'day'); // Compare dates
+  const deleteDiscounts = (id) => {
+    http.delete(`/discounts/${id}`).then((res) => {
+      console.log(res.data);
+      navigate(0);
     });
-
-    // Delete expired discounts
-    await Discounts.destroy({
-      where: {
-        id: expiredDiscounts.map((discount) => discount.id),
-      },
-    });
-
-    
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error.' });
   }
-});
 
-router.get("/", async (req, res) => {
-    
-    let condition = {};
-    let search = req.query.search;
-    if (search) {
-        condition[Sequelize.Op.or] = [
-            { discount: { [Sequelize.Op.like]: `%${search}%` } },
-            { id: { [Sequelize.Op.like]: `%${search}%` } },
-            { disctype: { [Sequelize.Op.like]: `%${search}%` } }
-        ];
-    }
+  const [open, setOpen] = useState(false);
+  const [listing_id, setId] = useState(0);
+  const handleOpen = (id) => {
+    setId(id)
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    let list = await Discounts.findAll({
-        where: condition,
-        order: [['createdAt', 'ASC']]
-    });
-    res.json(list);
-});
+  return (
+    <Container>
+      <Box>
+        <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+          Discounts
+        </Typography>
 
+        <Box sx={{ display: 'flex', alignProduct: 'center', mb: 7 }}>
+          <Input value={search} placeholder="Search for discount" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
+          <IconButton color="primary" onClick={onClickSearch}>
+            <Search />
+          </IconButton>
+          <IconButton color="primary" onClick={onClickClear}>
+            <Clear />
+          </IconButton>
 
-router.post("/", async (req, res) => {
-    let data = req.body;
+          <Box sx={{ flexGrow: 1 }} />
+          <Link to="/adddiscount" style={{ textDecoration: 'none' }}>
+            <Button variant='contained'>
+              Add Discount
+            </Button>
+          </Link>
+        </Box>
 
-    // Validate request body
-    let validationSchema = yup.object().shape({
-    discount: yup.number().required("Discount is required"),
-      disctype: yup.string().required("required."),
-      reqtype: yup.string().required("Requirement Type is required"),
-      listingId: yup
-        .number()
-        .test(
-          "Please select a Car Type when Requirement Type is 'Car'",
-          function (value) {
-            const { reqtype } = this.parent;
-            if (reqtype === "listingId") {
-              return value !== undefined && value !== "";
-            }
-            return true;
-          }
-        ),
-      minspend: yup.number(),
-      enddate: yup
-        .string()
-    .test('future-date', 'End date must be in the future', (value) => {
-      if (!value) return false; // Return false if value is empty
-      return dayjs(value, 'DD/MM/YYYY').isAfter(dayjs(), 'day');
-    })
-    .required('Date is required.'),
-  });
-    try {
-        await validationSchema.validate(data,
-            { abortEarly: false, strict: true });
-    }
-    catch (err) {
-        console.error(err);
-        res.status(400).json({ errors: err.errors });
-        return;
-    }
-    data.discounts = data.Discounts;
-    data.minspend = data.minspend;
-    let result = await Discounts.create(data);
-    res.json(result);
-});
+        <Grid container spacing={2}>
+          <TableContainer component={Paper}>
+            <Table aria-label='car table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Id</TableCell>
+                  <TableCell align="center">Discount</TableCell>
+                  <TableCell align="center">Discount Type</TableCell>
+                  <TableCell align="center">Requirement Type</TableCell>
+                  <TableCell align="center">ListingId</TableCell>
+                  <TableCell align="center">MinSpend</TableCell>
+                  <TableCell align="center">End Date</TableCell>
+                  <TableCell align="center">Added On</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {assignmentList.map((discounts) => (
+                  <TableRow
+                    key={discounts.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="center">{discounts.id}</TableCell>
+                    <TableCell align="center">{discounts.discount}</TableCell>
+                    <TableCell align="center">{discounts.disctype}</TableCell>
+                    <TableCell align="center">{discounts.reqtype}</TableCell>
+                    <TableCell align="center">{discounts.listingId}</TableCell>
+                    <TableCell align="center">${discounts.minspend}</TableCell>
+                    <TableCell align="center">{discounts.enddate}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignProduct: 'center', mb: 1, justifyContent: 'center' }}
+                        color="text.secondary">
+                        <AccessTime sx={{ mr: 1 }} />
+                        <Typography>
+                          {dayjs(discounts.createdAt).format(global.datetimeFormat)}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/editdiscount/${discounts.id}`}>
+                        <IconButton color="primary" sx={{ padding: '4px' }}>
+                          <Edit />
+                        </IconButton>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton color="primary" sx={{ padding: '4px' }} onClick={() => handleOpen(discounts.id)}>
+                        <Delete />
+                      </IconButton>
+                      <Dialog open={open} onClose={handleClose}>
+                        <DialogTitle>
+                          Delete Discount
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Are you sure you want to delete discount?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button variant="contained" color="inherit"
+                            onClick={handleClose}>
+                            Cancel
+                          </Button>
+                          <Button variant="contained" color="error"
+                            onClick={() => deleteDiscounts(listing_id)}>
+                            Delete
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Box>
+    </Container>
+  );
+}
 
-router.get("/:id", async (req, res) => {
-
-    let id = req.params.id;
-    let discounts = await Discounts.findByPk(id);
-    // Check id not found
-    if (!discounts) {
-        res.sendStatus(404);
-        return;
-    }
-    res.json(discounts);
-});
-
-
-// Update Car Listing By ID
-router.put("/:id", async (req, res) => {
-    let id = req.params.id;
-    // Check id not found 
-    let discounts = await Discounts.findByPk(id);
-    if (!discounts) {
-        res.sendStatus(404);
-        return;
-    }
-
-    let data = req.body;
-    // Validate request body
-    let validationSchema = yup.object().shape({
-        discount: yup.number().required("Discount is required"),
-      disctype: yup.string().required("required."),
-      reqtype: yup.string().required("Requirement Type is required"),
-      listingId: yup
-        .number()
-        .test(
-          "Please select a Car Type when Requirement Type is 'Car'",
-          function (value) {
-            const { reqtype } = this.parent;
-            if (reqtype === "listingId") {
-              return value !== undefined && value !== "";
-            }
-            return true;
-          }
-        ),
-      minspend: yup.number(),
-      enddate: yup
-        .string()
-    .test('future-date', 'End date must be in the future', (value) => {
-      if (!value) return false; // Return false if value is empty
-      return dayjs(value, 'DD/MM/YYYY').isAfter(dayjs(), 'day');
-    })
-    .required('Date is required.'),
-    });
-    try {
-        await validationSchema.validate(data,
-            { abortEarly: false, strict: true });
-    }
-    catch (err) {
-        console.error(err);
-        res.status(400).json({ errors: err.errors });
-        return;
-    }
-    data.discounts = data.Discounts;
-    data.minspend = data.minspend;
-
-    let num = await Discounts.update(data, {
-        where: { id: id }
-    });
-    if (num == 1) {
-        res.json({
-            message: "Discount was updated successfully."
-        });
-    }
-    else {
-        res.status(400).json({
-            message: `Cannot update Discount with id ${id}.`
-        });
-    }
-});
-
-
-// Delete Car Listing
-router.delete("/:id", async (req, res) => {
-    
-    let id = req.params.id;
-    // Check id not found
-    let discounts = await Discounts.findByPk(id);
-    if (!discounts) {
-        res.sendStatus(404);
-        return;
-    }
-
-    let num = await Discounts.destroy({
-        where: { id: id }
-    })
-    if (num == 1) {
-        res.json({
-            message: "Discount was deleted successfully."
-        });
-    }
-    else {
-        res.status(400).json({
-            message: `Cannot delete discount with id ${id}.`
-        });
-    }
-});
-
-
-module.exports = router;
-// View & Search for Car Listing
+export default Discounts;
