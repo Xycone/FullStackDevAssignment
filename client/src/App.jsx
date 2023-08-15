@@ -265,9 +265,6 @@ function App() {
                     <Link to="/viewdiscounts">
                       <Typography>User Discounts</Typography>
                     </Link>
-                    <Link to="/feedback">
-                      <Typography>Feedback</Typography>
-                    </Link>
                   </>
                 )}
                 <Box sx={{ flexGrow: 1 }}></Box>
