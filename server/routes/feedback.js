@@ -29,7 +29,8 @@ router.put("/:id", async (req, res) => {
     let validationSchema = yup.object().shape({
         rating: yup.string().trim(),
         description: yup.string().trim().min(3).max(500),
-        responded: yup.boolean()
+        responded: yup.boolean(),
+        useremail: yup.string().trim(),
     });
     try {
         await validationSchema.validate(data, { abortEarly: false });
@@ -56,9 +57,9 @@ router.put("/:id", async (req, res) => {
     }
     const mailOptions = {
         from: 'totallyrealrental@gmail.com',
-        to: 'josephongyz302@gmail.com',
+        to: `${data.useremail}`,
         subject: 'Response for the provided feedback',
-        text: 'Hi valued customer, \n\nThank you for your feedback! We will react accordingly based off the feedback you have provided us\n\nCheers,\nThe Rental Team.'
+        text: 'Hi valued customer, \n\nThank you for your feedback! We will react accordingly based off the feedback you have provided us!\n\nCheers,\nThe Rental Team.'
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -70,22 +71,15 @@ router.put("/:id", async (req, res) => {
 });
 router.post("/", async (req, res) => {
     let data = req.body;
-    if (!data.userId) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-      }
-    console.log(data.userId);
-    
-    const user = await User.findByPk(data.userId);
-    if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
-    }
-
+    // if (!data.userId) {
+    //     res.status(401).json({ message: "Unauthorized" });
+    //     return;
+    //   }
     let validationSchema = yup.object().shape({
         rating: yup.string().trim().required(),
         description: yup.string().trim().min(3).max(500).required(),
-        responded: yup.boolean()
+        responded: yup.boolean(),
+        useremail: yup.string().trim().required()
     });
     try {
         await validationSchema.validate(data, { abortEarly: false });
@@ -95,13 +89,10 @@ router.post("/", async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
-    const feedbackUser = await FeedbackUser.create({
-        userId: user.id
-    });
     data.rating = data.rating.trim();
     data.description = data.description.trim();
     data.responded = false;
-    data.feedbackUserId = feedbackUser.id;
+    data.useremail = data.useremail.trim();
     let result = await Feedback.create(data);
     res.json(result);
 });

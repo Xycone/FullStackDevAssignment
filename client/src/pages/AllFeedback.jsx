@@ -180,7 +180,6 @@ function AllFeedback() {
             <Table aria-label="feedback table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Id</TableCell>
                   <TableCell align="center">Rating</TableCell>
                   <TableCell align="center">Description</TableCell>
                   <TableCell align="center">Responded</TableCell>
@@ -196,7 +195,6 @@ function AllFeedback() {
                     key={feedback.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">{feedback.id}</TableCell>
                     <TableCell align="center">{feedback.rating}</TableCell>
                     <TableCell align="center">{feedback.description}</TableCell>
                     <TableCell align="center">
@@ -212,7 +210,7 @@ function AllFeedback() {
                         </Typography>
                       </Box>
                     </TableCell>
-                    {/* <TableCell>{userId[index]}</TableCell> */}
+                    <TableCell align="center">{feedback.useremail}</TableCell>
                     <TableCell>
                       <Item isrespond={feedback.responded}
                         fid={feedback.id} />
@@ -239,6 +237,7 @@ function AllFeedback() {
                                 rating: feedback_id.rating,
                                 description: feedback_id.description,
                                 responded: true,
+                                useremail: feedback_id.useremail,
                               })
                             }
                           >

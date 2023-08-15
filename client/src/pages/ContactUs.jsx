@@ -11,29 +11,38 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useState, useEffect } from 'react';
 
 function ContactUs() {
+  const [useremail, setUseremail] = useState(null);
   const navigate = useNavigate();
-    const [user, setUser] = useState(null);
-    const [authorized, setAuthorized] = useState(true);
+  //   const [user, setUser] = useState(null);
+  //   const [authorized, setAuthorized] = useState(true);
 
-    useEffect(() => {
-      try {
-          if (localStorage.getItem('accessToken')) {
-              http.get('/user/auth').then((res) => {
-                  setUser(res.data.user);
-                  });
-          } else {
-            setAuthorized(false);
-          }
-        } catch (error) {
-          console.error(error);
-          setAuthorized(false);
-        }
-    }, []);
+  //   useEffect(() => {
+  //     try {
+  //         if (localStorage.getItem('accessToken')) {
+  //             http.get('/user/auth').then((res) => {
+  //                 setUser(res.data.user);
+  //                 });
+  //         } else {
+  //           setAuthorized(false);
+  //         }
+  //       } catch (error) {
+  //         console.error(error);
+  //         setAuthorized(false);
+  //       }
+  //   }, []);
+  useEffect(() => {
+    // Fetch user email
+    http.get('/user/auth').then((res) => {
+      setUseremail(res.data.user.email);
+      console.log(res.data.user.email);
+    });
+  }, []);
   const formik = useFormik({
     initialValues: {
       rating: "",
       description: "",
       status: false,
+      useremail: `${useremail}`,
     },
     validationSchema: yup.object().shape({
       rating: yup.string().trim().min(1).required("Rating is required"),
@@ -45,9 +54,10 @@ function ContactUs() {
         .required("Description is required"),
     }),
     onSubmit: (data) => {
+      console.log(useremail);
       data.rating = data.rating.trim();
       data.description = data.description.trim();
-      data.userId = user.id;
+      data.useremail = useremail;
       http.post("/feedback", data).then((res) => {
         console.log(res.data);
         navigate("/home");
