@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import http from '../http';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Container } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { ToastContainer, toast } from 'react-toastify';
@@ -58,7 +58,6 @@ function EditCarListings() {
             data.range = Number(data.range);
             data.price = Number(data.price);
             http.put(`/listings/${id}`, data).then((res) => {
-                console.log(res.data);
                 navigate("/listings");
             });
         }
@@ -88,77 +87,79 @@ function EditCarListings() {
     };
 
     return (
-        <Box>
-            <Typography variant="h5" sx={{ my: 2 }}>
-                Edit Car Listing
-            </Typography>
-            <Box component="form" onSubmit={formik.handleSubmit}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <TextField
-                            fullWidth margin="normal" autoComplete="off"
-                            label="Make"
-                            name="make"
-                            value={formik.values.make}
-                            onChange={formik.handleChange}
-                            error={formik.touched.make && Boolean(formik.errors.make)}
-                            helperText={formik.touched.make && formik.errors.make}
-                        />
-                        <TextField
-                            fullWidth margin="normal" autoComplete="off"
-                            multiline minRows={2}
-                            label="Model"
-                            name="model"
-                            value={formik.values.model}
-                            onChange={formik.handleChange}
-                            error={formik.touched.model && Boolean(formik.errors.model)}
-                            helperText={formik.touched.model && formik.errors.model}
-                        />
-                        <TextField type="number" fullWidth margin="normal" autoComplete="off"
-                            label="Range (EPA est.):"
-                            name="range"
-                            value={formik.values.range}
-                            onChange={formik.handleChange}
-                            error={formik.touched.range && Boolean(formik.errors.range)}
-                            helperText={formik.touched.range && formik.errors.range}
-                        />
-                        <TextField type="number" fullWidth margin="normal" autoComplete="off"
-                            label="Price/day: S$"
-                            name="price"
-                            value={formik.values.price}
-                            onChange={formik.handleChange}
-                            error={formik.touched.price && Boolean(formik.errors.price)}
-                            helperText={formik.touched.price && formik.errors.price}
-                        />
-                        <Box sx={{ mt: 2 }}>
-                            <Button variant="contained" type="submit">
-                                Update Listing
-                            </Button>
-                        </Box>
+        <Container>
+            <Box>
+                <Typography variant="h5" sx={{ my: 2 }}>
+                    Edit Car Listing
+                </Typography>
+                <Box component="form" onSubmit={formik.handleSubmit}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6} lg={8}>
+                            <TextField
+                                fullWidth margin="normal" autoComplete="off"
+                                label="Make"
+                                name="make"
+                                value={formik.values.make}
+                                onChange={formik.handleChange}
+                                error={formik.touched.make && Boolean(formik.errors.make)}
+                                helperText={formik.touched.make && formik.errors.make}
+                            />
+                            <TextField
+                                fullWidth margin="normal" autoComplete="off"
+                                multiline minRows={2}
+                                label="Model"
+                                name="model"
+                                value={formik.values.model}
+                                onChange={formik.handleChange}
+                                error={formik.touched.model && Boolean(formik.errors.model)}
+                                helperText={formik.touched.model && formik.errors.model}
+                            />
+                            <TextField type="number" fullWidth margin="normal" autoComplete="off"
+                                label="Range (EPA est.):"
+                                name="range"
+                                value={formik.values.range}
+                                onChange={formik.handleChange}
+                                error={formik.touched.range && Boolean(formik.errors.range)}
+                                helperText={formik.touched.range && formik.errors.range}
+                            />
+                            <TextField type="number" fullWidth margin="normal" autoComplete="off"
+                                label="Price/day: S$"
+                                name="price"
+                                value={formik.values.price}
+                                onChange={formik.handleChange}
+                                error={formik.touched.price && Boolean(formik.errors.price)}
+                                helperText={formik.touched.price && formik.errors.price}
+                            />
+                            <Box sx={{ mt: 2 }}>
+                                <Button variant="contained" type="submit">
+                                    Update Listing
+                                </Button>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} md={6} lg={4}>
+                            <Box sx={{ textAlign: 'center', mt: 2 }} >
+                                <Button variant="contained" component="label">
+                                    Upload Image
+                                    <input hidden accept="image/*" multiple type="file" onChange={onFileChange} />
+                                </Button>
+                                {
+                                    imageFile && (
+                                        <JoyCssVarsProvider>
+                                            <AspectRatio>
+                                                <Box component="img" alt="tutorial"
+                                                    src={`${import.meta.env.VITE_FILE_BASE_URL}${imageFile}`}>
+                                                </Box>
+                                            </AspectRatio>
+                                        </JoyCssVarsProvider>
+                                    )
+                                }
+                            </Box>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={4}>
-                        <Box sx={{ textAlign: 'center', mt: 2 }} >
-                            <Button variant="contained" component="label">
-                                Upload Image
-                                <input hidden accept="image/*" multiple type="file" onChange={onFileChange} />
-                            </Button>
-                            {
-                                imageFile && (
-                                    <JoyCssVarsProvider>
-                                        <AspectRatio>
-                                            <Box component="img" alt="tutorial"
-                                                src={`${import.meta.env.VITE_FILE_BASE_URL}${imageFile}`}>
-                                            </Box>
-                                        </AspectRatio>
-                                    </JoyCssVarsProvider>
-                                )
-                            }
-                        </Box>
-                    </Grid>
-                </Grid>
+                </Box>
+                <ToastContainer />
             </Box>
-            <ToastContainer />
-        </Box>
+        </Container>
     )
 }
 

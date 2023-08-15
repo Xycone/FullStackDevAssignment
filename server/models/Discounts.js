@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
-        cartype:{
-            type: DataTypes.STRING,
+        listingId:{
+            type: DataTypes.DECIMAL(20,0),
             allowNull: true
         },
         minspend:{

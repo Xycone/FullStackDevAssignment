@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import http from "../http";
-import { Container, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Grid,
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
@@ -11,12 +18,15 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import AspectRatio from "@mui/joy/AspectRatio";
+import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
 function UpdateUser() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [imageFile, setImageFile] = useState(null);
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -47,16 +57,17 @@ function UpdateUser() {
     onSubmit: (data) => {
       data.name = data.name.trim();
       data.email = data.email.trim();
+      data.filename = imageFile;
       http.put(`/user/update/${id}`, data).then((res) => {
         console.log(res.data);
-        navigate("/usertable");
+        navigate("/userprofile");
       });
     },
   });
   const deleteUser = () => {
     http.delete(`/user/${id}`).then((res) => {
       console.log(res.data);
-      navigate("/usertable");
+      navigate("/");
     });
   };
   const [open, setOpen] = useState(false);
@@ -65,6 +76,30 @@ function UpdateUser() {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const onFileChange = (e) => {
+    let file = e.target.files[0];
+    if (file) {
+      if (file.size > 1024 * 1024) {
+        toast.error("Maximum file size is 1MB");
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append("file", file);
+      http
+        .post("/file/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          setImageFile(res.data.filename);
+        })
+        .catch(function (error) {
+          console.log(error.response);
+        });
+    }
   };
   return (
     <Container>
@@ -95,6 +130,50 @@ function UpdateUser() {
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
           />
+          <Grid item xs={12} md={6} lg={4}>
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Button variant="contained" component="label">
+                Upload Image
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={onFileChange}
+                />
+              </Button>
+              {imageFile && (
+                <JoyCssVarsProvider>
+                  <AspectRatio sx={{ width: "150px", height: "150px" }}>
+                    <Box
+                      component="div"
+                      alt="Profile Picture"
+                      sx={{
+                        width: "100%", // Set width to 100% to stretch the image to the container width
+                        height: "100%", // Set height to 100% to stretch the image to the container height
+                        overflow: "hidden",
+                        backgroundColor: 'white',
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        alt="Profile Picture"
+                        src={`${
+                          import.meta.env.VITE_FILE_BASE_URL
+                        }${imageFile}`}
+                        style={{
+                          width: "auto", // Let the width adjust to maintain the aspect ratio
+                          height: "100%", // Stretch the image to cover the entire container height
+                          objectFit: "cover", // Maintain aspect ratio and cover the container
+                          transform: "translateX(-25%)", // Shift the image to crop the left portion
+                        }}
+                      />
+                    </Box>
+                  </AspectRatio>
+                </JoyCssVarsProvider>
+              )}
+            </Box>
+          </Grid>
           <Box sx={{ mt: 2 }}>
             <Button variant="contained" type="submit">
               Update
@@ -113,7 +192,7 @@ function UpdateUser() {
           <DialogTitle>Delete Tutorial</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Are you sure you want to delete this User?
+              Are you sure you want to delete your account?
             </DialogContentText>
           </DialogContent>
           <DialogActions>

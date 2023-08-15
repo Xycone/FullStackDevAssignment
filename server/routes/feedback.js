@@ -1,8 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { Feedback, Sequelize } = require('../models');
+const { Feedback, FeedbackUser, Sequelize } = require('../models');
 const yup = require("yup");
-router.put("/:id",  async (req, res) => {
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'totallyrealrental@gmail.com',
+        pass: 'tnozgoqkkzfnfier'
+    }
+});
+router.put("/:id", async (req, res) => {
     let id = req.params.id;
     // Check id not found
     let feedback = await Feedback.findByPk(id);
@@ -21,7 +29,8 @@ router.put("/:id",  async (req, res) => {
     let validationSchema = yup.object().shape({
         rating: yup.string().trim(),
         description: yup.string().trim().min(3).max(500),
-        responded: yup.boolean()
+        responded: yup.boolean(),
+        useremail: yup.string().trim(),
     });
     try {
         await validationSchema.validate(data, { abortEarly: false });
@@ -31,8 +40,8 @@ router.put("/:id",  async (req, res) => {
         res.status(400).json({ errors: err.errors });
         return;
     }
-    
 
+    console.log(data);
     let num = await Feedback.update(data, {
         where: { id: id }
     });
@@ -46,13 +55,31 @@ router.put("/:id",  async (req, res) => {
             message: `Cannot update feedback with id ${id}.`
         });
     }
+    const mailOptions = {
+        from: 'totallyrealrental@gmail.com',
+        to: `${data.useremail}`,
+        subject: 'Response for the provided feedback',
+        text: 'Hi valued customer, \n\nThank you for your feedback! We will react accordingly based off the feedback you have provided us!\n\nCheers,\nThe Rental Team.'
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
 });
-router.post("/",  async (req, res) => {
+router.post("/", async (req, res) => {
     let data = req.body;
+    // if (!data.userId) {
+    //     res.status(401).json({ message: "Unauthorized" });
+    //     return;
+    //   }
     let validationSchema = yup.object().shape({
         rating: yup.string().trim().required(),
         description: yup.string().trim().min(3).max(500).required(),
-        responded: yup.boolean()
+        responded: yup.boolean(),
+        useremail: yup.string().trim()
     });
     try {
         await validationSchema.validate(data, { abortEarly: false });
@@ -65,7 +92,7 @@ router.post("/",  async (req, res) => {
     data.rating = data.rating.trim();
     data.description = data.description.trim();
     data.responded = false;
-    // data.userId = req.user.id;
+    data.useremail = data.useremail.trim();
     let result = await Feedback.create(data);
     res.json(result);
 });
@@ -83,21 +110,25 @@ router.get("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
     let condition = {};
     let search = req.query.search;
+    let responded = req.query.responded;
     if (search) {
         condition[Sequelize.Op.or] = [
-            { rating: { [Sequelize.Op.like]: `%${search}%` } },
-            { description: { [Sequelize.Op.like]: `%${search}%` } },
-            { responded: { [Sequelize.Op.like]: `%${search}%` } }
+            { rating: { [Sequelize.Op.like]: `%${search}%` } }
         ];
+    }
+    if (responded == 1) {
+        condition.responded = true;
+    } else if (responded == 0) {
+        condition.responded = false;
     }
     let list = await Feedback.findAll({
         where: condition,
         order: [['createdAt', 'DESC']],
-        // include: { model: User, as: "user", attributes: ['name'] }
+        // include: { model: User, as: "user", attributes: ['userId'] }
     });
     res.json(list);
 });
-router.delete("/:id",  async (req, res) => {
+router.delete("/:id", async (req, res) => {
     let id = req.params.id;
     let num = await Feedback.destroy({
         where: { id: id }

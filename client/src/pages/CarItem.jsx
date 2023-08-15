@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button } from '@mui/material';
+import { Box, Typography, Grid, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Input, IconButton, Button , Container} from '@mui/material';
 import http from '../http';
 import { AccessTime, Search, Clear, Edit, Delete } from '@mui/icons-material';
 import dayjs from 'dayjs';
@@ -8,75 +8,76 @@ import { Link } from 'react-router-dom';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
 
 function CarItem() {
-    const [assignmentList, setAssignmentList] = useState([]);
-    const [search, setSearch] = useState('');
-    const [listingList, setListingList] = useState([]);
-  
-    const onSearchChange = (e) => {
-      setSearch(e.target.value);
-    };
+  const [assignmentList, setAssignmentList] = useState([]);
+  const [search, setSearch] = useState('');
+  const [listingList, setListingList] = useState([]);
 
-    const getListings = () => {
-      http.get('/listings').then((res) => {
-        setListingList(res.data);
-      });
-    };
-  
-    const getCars = () => {
-      http.get('/cars').then((res) => {
-        setAssignmentList(res.data);
-      });
-    };
-  
-    const searchCars = () => {
-      http.get(`/cars?search=${search}`).then((res) => {
-        setAssignmentList(res.data);
-      });
-    };
-  
-    useEffect(() => {
-      getCars();
-      getListings();
-    }, []);
-  
-    const onSearchKeyDown = (e) => {
-      if (e.key === "Enter") {
-        searchCars();
-      }
-    };
-  
-    const onClickSearch = () => {
+  const onSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const getListings = () => {
+    http.get('/listings').then((res) => {
+      setListingList(res.data);
+    });
+  };
+
+  const getCars = () => {
+    http.get('/cars').then((res) => {
+      setAssignmentList(res.data);
+    });
+  };
+
+  const searchCars = () => {
+    http.get(`/cars?search=${search}`).then((res) => {
+      setAssignmentList(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getCars();
+    getListings();
+  }, []);
+
+  const onSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
       searchCars();
     }
-  
-    const onClickClear = () => {
-      setSearch('');
-      getCars();
-    };
-  
-    const deleteCars = (id) => {
-      http.delete(`/cars/${id}`).then((res) => {
-        console.log(res.data);
-        window.location.reload();
-      });
-    }
-  
-    const [open, setOpen] = useState(false);
-    const [cars_id, setId] = useState(0);
-    const handleOpen = (id) => {
-      setId(id)
-      setOpen(true);
-    };
-    const handleClose = () => {
-      setOpen(false);
-    };
-  
-    return (
+  };
+
+  const onClickSearch = () => {
+    searchCars();
+  }
+
+  const onClickClear = () => {
+    setSearch('');
+    getCars();
+  };
+
+  const deleteCars = (id) => {
+    http.delete(`/cars/${id}`).then((res) => {
+      console.log(res.data);
+      window.location.reload();
+    });
+  }
+
+  const [open, setOpen] = useState(false);
+  const [cars_id, setId] = useState(0);
+  const handleOpen = (id) => {
+    setId(id)
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Container>
       <Box>
         <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
           Car
         </Typography>
-  
+
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
           <Input value={search} placeholder="Search by car location" onChange={onSearchChange} onKeyDown={onSearchKeyDown} />
           <IconButton color="primary" onClick={onClickSearch}>
@@ -85,17 +86,17 @@ function CarItem() {
           <IconButton color="primary" onClick={onClickClear}>
             <Clear />
           </IconButton>
-  
+
           <Box sx={{ flexGrow: 1 }} />
           {listingList.length > 0 && (
-          <Link to="/addcars" style={{ textDecoration: 'none' }}>
-            <Button variant='contained'>
-              Add Car
-            </Button>
-          </Link>
+            <Link to="/addcars" style={{ textDecoration: 'none' }}>
+              <Button variant='contained'>
+                Add Car
+              </Button>
+            </Link>
           )}
         </Box>
-  
+
         <Grid container spacing={2}>
           <TableContainer component={Paper}>
             <Table aria-label='car table'>
@@ -165,7 +166,8 @@ function CarItem() {
           </TableContainer>
         </Grid>
       </Box>
-    );
+    </Container>
+  );
 }
 
 export default CarItem

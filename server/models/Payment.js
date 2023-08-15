@@ -4,15 +4,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        make: {
+        carname: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        model: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        price: {
+        total: {
             type: DataTypes.DECIMAL(20,2),
             allowNull: false
         },

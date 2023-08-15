@@ -1,33 +1,21 @@
 import React from 'react';
-import { Box, Typography, TextField, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Typography, TextField, Button, Container } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import http from '../http';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Container } from "@mui/material";
 
-function Register() {
+function ResetPassword() {
     const navigate = useNavigate();
-
+    const { token } = useParams();
     const formik = useFormik({
         initialValues: {
-            name: "",
-            email: "",
             password: "",
             confirmPassword: ""
         },
         validationSchema: yup.object().shape({
-            name: yup.string().trim()
-                .matches(/^[a-z ,.'-]+$/i, 'Invalid name')
-                .min(3, 'Name must be at least 3 characters')
-                .max(50, 'Name must be at most 50 characters')
-                .required('Name is required'),
-            email: yup.string().trim()
-                .email('Enter a valid email')
-                .max(50, 'Email must be at most 50 characters')
-                .required('Email is required'),
             password: yup.string().trim()
                 .min(8, 'Password must be at least 8 characters')
                 .max(50, 'Password must be at most 50 characters')
@@ -37,10 +25,8 @@ function Register() {
                 .oneOf([yup.ref('password'), null], 'Passwords must match')
         }),
         onSubmit: (data) => {
-            data.name = data.name.trim();
-            data.email = data.email.trim().toLowerCase();
             data.password = data.password.trim();
-            http.post("/user/register", data)
+            http.put(`user/resetpassword/${token}`, data)
                 .then((res) => {
                     console.log(res.data);
                     navigate("/login");
@@ -57,31 +43,13 @@ function Register() {
                 marginTop: 8,
                 display: 'flex',
                 flexDirection: 'column',
-                alignProduct: 'center'
+                alignItems: 'center'
             }}>
                 <Typography variant="h5" sx={{ my: 2 }}>
                     Register
                 </Typography>
                 <Box component="form" sx={{ maxWidth: '500px' }}
                     onSubmit={formik.handleSubmit}>
-                    <TextField
-                        fullWidth margin="normal" autoComplete="off"
-                        label="Name"
-                        name="name"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
-                    />
-                    <TextField
-                        fullWidth margin="normal" autoComplete="off"
-                        label="Email"
-                        name="email"
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        error={formik.touched.email && Boolean(formik.errors.email)}
-                        helperText={formik.touched.email && formik.errors.email}
-                    />
                     <TextField
                         fullWidth margin="normal" autoComplete="off"
                         label="Password"
@@ -105,11 +73,10 @@ function Register() {
                         Register
                     </Button>
                 </Box>
-
                 <ToastContainer />
             </Box>
         </Container>
     );
 }
 
-export default Register;
+export default ResetPassword;

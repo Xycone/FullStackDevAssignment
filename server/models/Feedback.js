@@ -11,8 +11,12 @@ module.exports = (sequelize, DataTypes) => {
         responded: {
             type: DataTypes.BOOLEAN,
             allowNull: false
-        }
+        },
+        useremail: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
     });
-
+    
     return Feedback;
 }

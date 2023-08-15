@@ -4,7 +4,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
-const db = {};
+const db = {}
 require('dotenv').config();
 // Create sequelize instance using config
 let sequelize = new Sequelize(

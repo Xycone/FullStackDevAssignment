@@ -1,9 +1,12 @@
 const express = require("express");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User, Sequelize } = require("../models");
+const { User, Sequelize, Token } = require("../models");
 const yup = require("yup");
 const { sign } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/auth");
 require("dotenv").config();
 
@@ -87,6 +90,7 @@ router.post("/login", async (req, res) => {
     id: user.id,
     email: user.email,
     name: user.name,
+    admin: user.admin,
   };
   let accessToken = sign(userInfo, process.env.APP_SECRET, {
     expiresIn: "30d",
@@ -98,7 +102,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.put("/update/:id", async (req, res) => {
-  console.log("method called")
+  console.log("method called");
   let id = req.params.id;
   let data = req.body;
   // Check id not found
@@ -121,26 +125,28 @@ router.put("/update/:id", async (req, res) => {
     res.status(400).json({ errors: err.errors });
     return;
   }
-  // Check request user id
-  let userId = req.user.id;
-  if (user.userId != userId) {
-    res.sendStatus(403);
-    return;
-  }
   if (!user) {
     res.sendStatus(404);
     return;
   }
-  let num = await User.update(data, {
-    where: { id: id },
-  });
-  if (num == 1) {
+
+  // Update user data
+  if (data.filename) {
+    // Update imageFile if data.filename is provided
+    user.imageFile = data.filename;
+  }
+  user.name = data.name;
+  user.email = data.email;
+
+  try {
+    await user.save();
     res.json({
       message: "User was updated successfully.",
     });
-  } else {
-    res.status(400).json({
-      message: `Cannot update user with id ${id}.`,
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: `An error occurred while updating user with id ${id}.`,
     });
   }
 });
@@ -150,6 +156,7 @@ router.get("/auth", validateToken, (req, res) => {
     id: req.user.id,
     email: req.user.email,
     name: req.user.name,
+    admin: req.user.admin,
   };
   res.json({
     user: userInfo,
@@ -166,16 +173,15 @@ router.delete("/:id", async (req, res) => {
   }
 
   let num = await User.destroy({
-    where: { id: id }
-  })
+    where: { id: id },
+  });
   if (num == 1) {
     res.json({
-      message: "User was deleted successfully."
+      message: "User was deleted successfully.",
     });
-  }
-  else {
+  } else {
     res.status(400).json({
-      message: `Cannot delete user with id ${id}.`
+      message: `Cannot delete user with id ${id}.`,
     });
   }
 });
@@ -186,13 +192,13 @@ router.get("/", async (req, res) => {
   if (search) {
     condition[Sequelize.Op.or] = [
       { name: { [Sequelize.Op.like]: `%${search}%` } },
-      { email: { [Sequelize.Op.like]: `%${search}%` } }
+      { email: { [Sequelize.Op.like]: `%${search}%` } },
     ];
   }
 
   let list = await User.findAll({
     where: condition,
-    order: [['createdAt', 'ASC']]
+    order: [["createdAt", "ASC"]],
   });
   res.json(list);
 });
@@ -208,4 +214,91 @@ router.get("/:id", async (req, res) => {
   res.json(user);
 });
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: 'totallyrealrental@gmail.com',
+    pass: 'tnozgoqkkzfnfier'
+  },
+});
+
+const generateToken = () => crypto.randomBytes(20).toString("hex");
+
+router.post("/forgotpassword/:email", async (req, res) => {
+  const email = req.params.email;
+  try {
+    // Find the user based on the email
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Generate a reset token and set the expiration time (1 hour in this case)
+    const token = generateToken();
+    const expiresAt = new Date(Date.now() + 3600000); // Token expires in 1 hour
+
+    // Store the reset token in the database
+    await Token.create({
+      token,
+      email,
+      expiresAt,
+    });
+    // Send password reset email
+    transporter.sendMail({
+      from: 'totallyrealrental@gmail.com',
+      to: email,
+      subject: "Password Reset",
+      text: `Click the link to reset your password: http://localhost:3000/resetpassword/${token}`,
+    });
+
+    res.json({ message: "Password reset email sent" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router.put("/resetpassword/:token", async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  try {
+    // Retrieve the token data from the database
+    const tokenData = await Token.findOne({
+      where: { token: token },
+    });
+
+    if (!tokenData || new Date() > tokenData.expiresAt) {
+      console.log("Expired token")
+      return res.status(404).json({ error: "Invalid or expired token" });
+    }
+
+    const { email } = tokenData;
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ error: "Invalid or expired token" });
+    }
+
+    const validationSchema = yup.object().shape({
+      password: yup.string().trim().min(8).max(50).required(),
+    });
+
+    try {
+      // Validate the password against the validation schema
+      await validationSchema.validate(
+        { password },
+        { abortEarly: false, strict: true }
+      );
+      user.password = await bcrypt.hash(password, 10);
+      await user.save();
+      await Token.destroy({ where: { token: token } });
+      res.json({ message: "Password reset successful" });
+    } catch (err) {
+      res.status(400).json({ errors: err.errors });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 module.exports = router;
