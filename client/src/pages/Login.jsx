@@ -43,7 +43,7 @@ function Login() {
         .then((res) => {
           localStorage.setItem("accessToken", res.data.accessToken);
           setUser(res.data.user);
-          navigate("/home");
+          navigate("/");
           window.location.reload();
         })
         .catch(function (err) {

@@ -172,7 +172,7 @@ function App() {
           <AppBar position="static" className="AppBar">
             <Container>
               <Toolbar sx={{ display: "flex", alignItems: "center" }}>
-                <Link to="/home">
+                <Link to="/">
                   <Typography variant="h6" component="div">
                     Rental
                   </Typography>

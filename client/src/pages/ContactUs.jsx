@@ -60,7 +60,7 @@ function ContactUs() {
       data.useremail = useremail;
       http.post("/feedback", data).then((res) => {
         console.log(res.data);
-        navigate("/home");
+        navigate("/");
       });
     },
   });

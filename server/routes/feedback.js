@@ -74,7 +74,7 @@ router.post("/", async (req, res) => {
     // if (!data.userId) {
     //     res.status(401).json({ message: "Unauthorized" });
     //     return;
-    //   }
+    // }
     let validationSchema = yup.object().shape({
         rating: yup.string().trim().required(),
         description: yup.string().trim().min(3).max(500).required(),
