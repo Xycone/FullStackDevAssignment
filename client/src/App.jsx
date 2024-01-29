@@ -40,6 +40,13 @@ import ContactUs from "./pages/ContactUs";
 import Payment from "./pages/PaymentRecords";
 import Success from "./pages/Success";
 import TransactionRecords from "./pages/TransactionRecords";
+import TicketsPage from './pages/TicketsPage';
+import AddTickets from './pages/AddTickets';
+import DelTickets from './pages/DelTickets';
+import AddReviews from './pages/AddReviews';
+import Reviews from './pages/Reviews';
+import EditReviews from './pages/EditReviews';
+import DelReviews from './pages/DelReviews';
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import AspectRatio from "@mui/joy/AspectRatio";
 import {
@@ -321,6 +328,13 @@ function App() {
             <Route path={"/createbooking/:id"} element={<CreateBooking />} />
             <Route path={"/paymentrecords"} element={<Payment />} />
             <Route path={"/success"} element={<Success />} />
+            <Route path={"/reviews"} element={<Reviews />} />
+            <Route path={"/addreviews"} element={<AddReviews />} />
+            <Route path={"/editreviews/:id"} element={<EditReviews />} />
+            <Route path={"/delreviews/:id"} element={<DelReviews />} />
+            <Route path = {"/ticketspage"} element = {<TicketsPage/>} />
+            <Route path={"/addtickets"} element={<AddTickets />} />
+            <Route path={"/deltickets/:id"} element={<DelTickets />} />
             <Route
               path={"/transactionrecords"}
               element={<TransactionRecords />}
